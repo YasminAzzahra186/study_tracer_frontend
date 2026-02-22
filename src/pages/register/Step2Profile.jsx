@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   User,
   ArrowLeft,
@@ -12,33 +12,45 @@ import YearsInput from "../../components/YearsInput";
 import SosmedInput from "../../components/SosmedInput";
 import SkillInput from "../../components/SkillsInput";
 import DateOfBirthInput from "../../components/DateOfBirthInput";
+import { masterDataApi } from "../../api/masterData";
 
-export default function Step2Profile({ onNext, onBack }) {
+export default function Step2Profile({ onNext, onBack, formData, updateFormData }) {
   const [preview, setPreview] = useState(null);
   const fileRef = useRef(null);
+  const [jurusanOptions, setJurusanOptions] = useState([]);
+  const [jurusanMap, setJurusanMap] = useState({});
+
+  // Fetch jurusan from API
+  useEffect(() => {
+    masterDataApi.getJurusan()
+      .then((res) => {
+        const data = res.data.data || [];
+        const options = data.map((j) => j.nama_jurusan || j.nama);
+        const map = {};
+        data.forEach((j) => { map[j.nama_jurusan || j.nama] = j.id; });
+        setJurusanOptions(options);
+        setJurusanMap(map);
+      })
+      .catch(() => {
+        // Fallback
+        setJurusanOptions(["Rekayasa Perangkat Lunak", "Teknik Komputer Jaringan", "Multi Media"]);
+      });
+  }, []);
+
   const handleImage = (e) => {
     const file = e.target.files[0];
-
     if (!file) return;
-
-    if (preview) {
-      URL.revokeObjectURL(preview);
-    }
-
+    if (preview) URL.revokeObjectURL(preview);
     const url = URL.createObjectURL(file);
     setPreview(url);
+    updateFormData({ foto: file });
   };
 
   const removeImage = () => {
-    if (preview) {
-      URL.revokeObjectURL(preview);
-    }
-
+    if (preview) URL.revokeObjectURL(preview);
     setPreview(null);
-
-    if (fileRef.current) {
-      fileRef.current.value = "";
-    }
+    updateFormData({ foto: null });
+    if (fileRef.current) fileRef.current.value = "";
   };
 
   return (
@@ -65,6 +77,8 @@ export default function Step2Profile({ onNext, onBack }) {
           <input
             type="text"
             placeholder="Nama lengkap"
+            value={formData.nama_alumni}
+            onChange={(e) => updateFormData({ nama_alumni: e.target.value })}
             className="mt-2 w-full p-3 bg-white border border-fourth rounded-xl text-sm outline-none focus:ring-2 focus:ring-primary"
           />
         </div>
@@ -72,13 +86,10 @@ export default function Step2Profile({ onNext, onBack }) {
         <div className="space-y-1">
           <SmoothDropdown
             label="Jurusan"
-            options={[
-              "Rekayasa Perangkat Lunak",
-              "Teknik Komputer Jaringan",
-              "Multi Media",
-            ]}
+            options={jurusanOptions}
             placeholder="Pilih jurusan"
             isRequired={true}
+            onSelect={(val) => updateFormData({ id_jurusan: jurusanMap[val] || val })}
           />
         </div>
 
@@ -89,6 +100,7 @@ export default function Step2Profile({ onNext, onBack }) {
             options={["Laki-laki", "Perempuan"]}
             placeholder="Pilih jenis kelamin"
             isRequired={true}
+            onSelect={(val) => updateFormData({ jenis_kelamin: val })}
           />
         </div>
 
@@ -100,6 +112,8 @@ export default function Step2Profile({ onNext, onBack }) {
           <input
             type="text"
             placeholder="08..."
+            value={formData.no_hp}
+            onChange={(e) => updateFormData({ no_hp: e.target.value })}
             className="mt-2 w-full p-3 bg-white border border-fourth rounded-xl text-sm outline-none focus:ring-2 focus:ring-primary"
           />
         </div>
@@ -112,6 +126,8 @@ export default function Step2Profile({ onNext, onBack }) {
           <input
             type="text"
             placeholder="Nomor induk sekolah"
+            value={formData.nis}
+            onChange={(e) => updateFormData({ nis: e.target.value })}
             className="mt-2 w-full p-3 bg-white border border-fourth rounded-xl text-sm outline-none focus:ring-2 focus:ring-primary"
           />
         </div>
@@ -124,18 +140,20 @@ export default function Step2Profile({ onNext, onBack }) {
           <input
             type="text"
             placeholder="Nomor induk nasional"
+            value={formData.nisn}
+            onChange={(e) => updateFormData({ nisn: e.target.value })}
             className="mt-2 w-full p-3 bg-white border border-fourth rounded-xl text-sm outline-none focus:ring-2 focus:ring-primary"
           />
         </div>
 
         {/* Tahun Masuk */}
         <div className="space-y-1">
-          <YearsInput label={"Tahun Masuk"} />
+          <YearsInput label={"Tahun Masuk"} onSelect={(val) => updateFormData({ tahun_masuk: val })} />
         </div>
 
         {/* Tahun Lulus */}
         <div className="space-y-1">
-          <YearsInput label={"Tahun Lulus"} />
+          <YearsInput label={"Tahun Lulus"} onSelect={(val) => updateFormData({ tahun_lulus: val })} />
         </div>
 
         {/* Alamat*/}
@@ -146,6 +164,8 @@ export default function Step2Profile({ onNext, onBack }) {
           <textarea
             placeholder="Alamat lengkap rumah..."
             rows="6"
+            value={formData.alamat}
+            onChange={(e) => updateFormData({ alamat: e.target.value })}
             className="mt-2 w-full h-38 p-3 bg-white border border-fourth rounded-xl text-sm outline-none focus:ring-2 focus:ring-primary resize-none transition-all"
           ></textarea>
         </div>
@@ -215,6 +235,8 @@ export default function Step2Profile({ onNext, onBack }) {
             <input
               type="text"
               placeholder="Kota kelahiran (Contoh: Bandung)"
+              value={formData.tempat_lahir}
+              onChange={(e) => updateFormData({ tempat_lahir: e.target.value })}
               className="w-full pl-14 p-3 bg-white border border-fourth rounded-xl text-sm outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder:text-third/50"
             />
           </div>
@@ -222,17 +244,17 @@ export default function Step2Profile({ onNext, onBack }) {
 
         {/* Tanggal Lahir */}
         <div className="space-y-1">
-          <DateOfBirthInput isRequired={true} />
+          <DateOfBirthInput isRequired={true} onChange={(val) => updateFormData({ tanggal_lahir: val })} />
         </div>
 
         {/* Sosmed*/}
         <div className="space-y-1">
-          <SosmedInput />
+          <SosmedInput onChange={(val) => updateFormData({ social_media: val })} />
         </div>
 
         {/* Skills*/}
         <div className="space-y-1">
-          <SkillInput />
+          <SkillInput onChange={(val) => updateFormData({ skills: val })} />
         </div>
       </div>
 

@@ -1,63 +1,54 @@
 import React, { useState, useEffect } from "react";
 import InputDropdownEdit from "./InputDropdownEdit";
+import { masterDataApi } from "../api/masterData";
 
-const universityData = {
-  "Universitas Indonesia": [
-    "Ilmu Komputer",
-    "Sastra Jepang",
-    "Hukum",
-    "Teknik Elektro",
-  ],
-  "Telkom University": [
-    "S1 Informatika",
-    "S1 Sistem Informasi",
-    "Digital Marketing",
-    "DKV",
-  ],
-  "Politeknik Negeri Malang": [
-    "Teknologi Informasi",
-    "Teknik Mesin",
-    "Akuntansi",
-    "Administrasi Niaga",
-  ],
-  "Institut Teknologi Bandung": [
-    "Teknik Informatika",
-    "Seni Rupa",
-    "Aeronautika",
-    "Farmasi",
-  ],
-};
-
-// Daftar jurusan umum sebagai default jika univ tidak terdaftar
-const defaultMajors = [
-  "Teknik Informatika",
-  "Sistem Informasi",
-  "Manajemen",
-  "Akuntansi",
-  "Ilmu Komunikasi",
-  "Teknik Sipil",
-  "Hukum",
-];
-
-export default function UniversitySelector() {
+export default function UniversitySelector({ onUnivSelect, onJurusanSelect }) {
+  const [universities, setUniversities] = useState([]);
+  const [univMap, setUnivMap] = useState({});
   const [selectedUniv, setSelectedUniv] = useState("");
   const [availableMajors, setAvailableMajors] = useState([]);
+  const [majorMap, setMajorMap] = useState({});
 
-  const universities = Object.keys(universityData);
-
+  // Fetch universities on mount
   useEffect(() => {
-    if (selectedUniv) {
-      const majorsFromData = universityData[selectedUniv];
+    masterDataApi.getUniversitas()
+      .then((res) => {
+        const data = res.data.data || [];
+        setUniversities(data.map((u) => u.nama_universitas || u.nama));
+        const map = {};
+        data.forEach((u) => { map[u.nama_universitas || u.nama] = u.id; });
+        setUnivMap(map);
+      })
+      .catch(() => {
+        setUniversities(["Universitas Indonesia", "Telkom University", "Politeknik Negeri Malang", "Institut Teknologi Bandung"]);
+      });
+  }, []);
 
-      if (majorsFromData) {
-        setAvailableMajors(majorsFromData);
-      } else {
-        setAvailableMajors(defaultMajors);
-      }
-    } else {
-      setAvailableMajors([]);
-    }
-  }, [selectedUniv]);
+  // Fetch jurusan kuliah (all at once)
+  useEffect(() => {
+    masterDataApi.getJurusanKuliah()
+      .then((res) => {
+        const data = res.data.data || [];
+        setAvailableMajors(data.map((j) => j.nama_jurusan_kuliah || j.nama));
+        const map = {};
+        data.forEach((j) => { map[j.nama_jurusan_kuliah || j.nama] = j.id; });
+        setMajorMap(map);
+      })
+      .catch(() => {
+        setAvailableMajors(["Teknik Informatika", "Sistem Informasi", "Manajemen", "Akuntansi", "Ilmu Komunikasi"]);
+      });
+  }, []);
+
+  const handleUnivSelect = (val) => {
+    setSelectedUniv(val);
+    const univId = univMap[val];
+    if (onUnivSelect) onUnivSelect(univId || val);
+  };
+
+  const handleJurusanSelect = (val) => {
+    const majorId = majorMap[val];
+    if (onJurusanSelect) onJurusanSelect(majorId || val);
+  };
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 col-span-full">
@@ -68,7 +59,7 @@ export default function UniversitySelector() {
           options={universities}
           placeholder="Cari atau ketik nama kampus"
           isRequired={true}
-          onSelect={(val) => setSelectedUniv(val)}
+          onSelect={handleUnivSelect}
         />
       </div>
 
@@ -84,12 +75,8 @@ export default function UniversitySelector() {
             selectedUniv ? "Cari atau ketik jurusan" : "Pilih universitas dulu"
           }
           isRequired={true}
+          onSelect={handleJurusanSelect}
         />
-        {selectedUniv && !universityData[selectedUniv] && (
-          <p className="text-[9px] text-blue-500 italic mt-1">
-            *Menampilkan pilihan jurusan umum untuk kampus kustom
-          </p>
-        )}
         {!selectedUniv && (
           <p className="text-[9px] text-third italic">
             *Pilih universitas untuk melihat daftar jurusan

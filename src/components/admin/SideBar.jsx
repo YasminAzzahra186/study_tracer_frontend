@@ -8,10 +8,13 @@ import {
   LogOut
 } from 'lucide-react';
 import Logo from '../../assets/icon.png';
-import { Link  } from 'react-router-dom';
+import { Link, useNavigate  } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
 export default function SideBar() {
   const [activeMenu, setActiveMenu] = useState('Beranda');
+  const { logout } = useAuth();
+  const navigate = useNavigate();
 
   const menuItems = [
       { name: 'Beranda', icon: <LayoutDashboard size={20} />, path: '/wb-admin' },
@@ -64,7 +67,13 @@ export default function SideBar() {
 
       {/* Logout Button */}
       <div className="pt-4 border-t border-fourth">
-        <button className="w-full flex items-center justify-center gap-2 bg-primary text-white py-3 rounded-xl hover:opacity-90 transition-all shadow-md shadow-primary/20 cursor-pointer">
+        <button
+          onClick={async () => {
+            await logout();
+            navigate('/login');
+          }}
+          className="w-full flex items-center justify-center gap-2 bg-primary text-white py-3 rounded-xl hover:opacity-90 transition-all shadow-md shadow-primary/20 cursor-pointer"
+        >
           <LogOut size={18} />
           <span className="text-sm font-semibold">Logout</span>
         </button>

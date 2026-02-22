@@ -1,10 +1,38 @@
-import React from 'react';
-import LoginImage from '../assets/login_image.webp'
-import Logo from '../assets/icon.png'
-import { Mail, MoveRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import LoginImage from '../assets/login_image.webp';
+import Logo from '../assets/icon.png';
+import { Mail, MoveRight, Loader2 } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 export default function Login() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const { login } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+
+    try {
+      const user = await login({ email, password });
+      if (user.role === 'admin') {
+        navigate('/wb-admin');
+      } else {
+        navigate('/');
+      }
+    } catch (err) {
+      const msg = err.response?.data?.message || 'Login gagal. Periksa email dan password Anda.';
+      setError(msg);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="flex h-screen w-full bg-fourtd items-center justify-center p-4 overflow-hidden">
       <div className="flex w-full max-w-5xl bg-white rounded-xl shadow-2xl overflow-hidden h-[85vh]">
@@ -31,16 +59,21 @@ export default function Login() {
           <div className="max-w-md mx-auto w-full">
             <h2 className="text-3xl font-bold text-secondary mb-6">Selamat Datang</h2>
 
-            {/* Social Buttons */}
             <div className="flex flex-col sm:flex-row gap-3 mb-6">
-              <p className='text-secondary' >Masukan email dan password untuk mengakses akun anda</p>
+              <p className='text-secondary'>Masukan email dan password untuk mengakses akun anda</p>
             </div>
 
+            {/* Error Message */}
+            {error && (
+              <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm">
+                {error}
+              </div>
+            )}
+
             {/* Form */}
-            <form className="space-y-4">
+            <form className="space-y-4" onSubmit={handleSubmit}>
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-1">Email</label>
-
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-third">
                     <Mail size={18} />
@@ -48,8 +81,11 @@ export default function Login() {
                   <input
                     type="email"
                     placeholder="name@example.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     className="w-full pl-10 p-3 bg-fourth border border-third rounded-lg outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
                     required
+                    disabled={loading}
                   />
                 </div>
               </div>
@@ -58,7 +94,10 @@ export default function Login() {
                 <input
                   type="password"
                   placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   className="w-full p-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all"
+                  disabled={loading}
                 />
               </div>
 
@@ -70,9 +109,22 @@ export default function Login() {
                 <Link to={"/reset-password"} className="text-blue-600 hover:underline font-semibold">Lupa password?</Link>
               </div>
 
-              <button className="flex items-center justify-center gap-2 w-full bg-primary hover:bg-secondary text-white font-bold py-3 rounded-lg transition-colors mt-2 cursor-pointer">
-                <span>Masuk</span>
-                <MoveRight width={20} />
+              <button
+                type="submit"
+                disabled={loading}
+                className="flex items-center justify-center gap-2 w-full bg-primary hover:bg-secondary text-white font-bold py-3 rounded-lg transition-colors mt-2 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+              >
+                {loading ? (
+                  <>
+                    <Loader2 size={20} className="animate-spin" />
+                    <span>Memproses...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>Masuk</span>
+                    <MoveRight width={20} />
+                  </>
+                )}
               </button>
             </form>
 
