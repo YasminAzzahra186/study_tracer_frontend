@@ -1,7 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Users, ShieldCheck, FileText, Clock } from "lucide-react";
-import { ArrowRight, UserPlus, Briefcase, CheckCircle2 } from "lucide-react";
-import React from "react";
 import {
   Users,
   ShieldCheck,
@@ -20,8 +17,6 @@ import {
   ChartKarir,
   ChartsPenyelesaian,
 } from "../../components/admin/Chart";
-
-import { Building2, Store, Factory, Landmark } from 'lucide-react';
 import { adminApi } from '../../api/admin';
 
 const StatCard = ({ icon: Icon, label, value, badge, badgeColor }) => (
@@ -120,7 +115,6 @@ const geographicDist = [
   { region: "Luar Negeri", percentage: 4 },
 ];
 
-export default function Dashboard() {
   const [dashData, setDashData] = useState(null);
 
   useEffect(() => {
@@ -131,7 +125,8 @@ export default function Dashboard() {
       .catch(() => {});
   }, []);
 
-  const stats = [
+  // Update stats with dynamic data
+  const dynamicStats = [
     {
       label: "Total Pengguna Aktif",
       value: dashData?.total_users ?? "12,450",
@@ -140,7 +135,7 @@ export default function Dashboard() {
       badgeColor: "bg-green-100 text-green-600",
     },
     {
-      label: "Status pekerja",
+      label: "Status Pekerja",
       value: dashData?.worker_percentage ? `${dashData.worker_percentage}%` : "60%",
       icon: ShieldCheck,
       badge: "Optimal",
@@ -157,22 +152,16 @@ export default function Dashboard() {
       label: "Total Menunggu",
       value: dashData?.pending_count ?? "60",
       icon: Clock,
-      badge: "Butuh Akasi",
+      badge: "Butuh Aksi",
       badgeColor: "bg-orange-100 text-orange-600",
     },
-  const geographicDist = [
-    { region: "DKI Jakarta", percentage: 45 },
-    { region: "Jawa Barat", percentage: 28 },
-    { region: "Banten", percentage: 15 },
-    { region: "Jawa Timur", percentage: 8 },
-    { region: "Luar Negeri", percentage: 4 },
   ];
 
   return (
     <div className="space-y-6 max-w-full overflow-hidden p-1">
       {/* 1. Stats Grid - 2 kolom di HP, 4 di Desktop */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-        {stats.map((stat, index) => (
+        {dynamicStats.map((stat, index) => (
           <StatCard key={index} {...stat} />
         ))}
       </div>
