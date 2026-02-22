@@ -55,15 +55,15 @@ export default function SosmedInput() {
       </div>
 
       {/* List Inputan */}
-      <div className="space-y-3">
+      <div className="space-y-3 ">
         {socials.map((item, index) => {
           const selectedPlatform = allPlatforms.find(p => p.id === item.platform);
           const usedIds = socials.map(s => s.platform).filter(id => id !== item.platform);
           const availablePlatforms = allPlatforms.filter(p => !usedIds.includes(p.id));
 
           return (
-            <div key={index} className="flex items-center gap-2 group animate-in fade-in slide-in-from-top-1 duration-300">
-              <div className={`flex-1 flex items-center bg-white border-2 rounded-xl transition-all duration-300
+            <div key={index} className="realtive w-full flex items-center gap-2 group animate-in fade-in slide-in-from-top-1 duration-300">
+              <div className={`w-full flex items-center bg-white border-2 rounded-xl transition-all duration-300
                 ${openDropdownIndex === index ? 'border-primary ring-2 ring-primary/10' : 'border-fourth hover:border-primary/50'}`}>
 
                 {/* Dropdown Custom */}
@@ -115,7 +115,7 @@ export default function SosmedInput() {
                 <button
                   type="button"
                   onClick={() => removeSocial(index)}
-                  className="p-3 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all cursor-pointer"
+                  className="absolute right-15 bg-white border-l border-fourth p-3 text-red-400 hover:text-red-600 hover:bg-red-50 transition-all cursor-pointer"
                 >
                   <Trash2 size={18} />
                 </button>
