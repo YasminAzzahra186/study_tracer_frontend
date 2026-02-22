@@ -1,20 +1,38 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { ChevronDown, Check, Plus, X } from 'lucide-react';
+import { masterDataApi } from '../api/masterData';
 
-const initialSkills = [
+const fallbackSkills = [
   "JavaScript", "React JS", "Node.js", "Python",
   "UI/UX Design", "Graphic Design", "Digital Marketing",
   "Public Speaking", "Data Analysis", "Laravel"
 ];
 
-export default function SkillInput() {
+export default function SkillInput({ onChange }) {
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [selectedSkills, setSelectedSkills] = useState([]);
+  const [allSkills, setAllSkills] = useState([]);
+  const [skillMap, setSkillMap] = useState({}); // name -> id
   const dropdownRef = useRef(null);
 
+  // Fetch skills from API on mount
+  useEffect(() => {
+    masterDataApi.getSkills()
+      .then((res) => {
+        const data = res.data.data || [];
+        setAllSkills(data.map((s) => s.nama_skill || s.nama));
+        const map = {};
+        data.forEach((s) => { map[s.nama_skill || s.nama] = s.id; });
+        setSkillMap(map);
+      })
+      .catch(() => {
+        setAllSkills(fallbackSkills);
+      });
+  }, []);
+
   // Filter skill berdasarkan apa yang diketik user
-  const filteredSkills = initialSkills.filter(skill =>
+  const filteredSkills = allSkills.filter(skill =>
     skill.toLowerCase().includes(query.toLowerCase()) &&
     !selectedSkills.includes(skill)
   );
@@ -23,14 +41,24 @@ export default function SkillInput() {
   const addSkill = (skill) => {
     const trimmedSkill = skill.trim();
     if (trimmedSkill && !selectedSkills.includes(trimmedSkill)) {
-      setSelectedSkills([...selectedSkills, trimmedSkill]);
+      const updated = [...selectedSkills, trimmedSkill];
+      setSelectedSkills(updated);
+      if (onChange) {
+        const ids = updated.map(s => skillMap[s]).filter(Boolean);
+        onChange(ids);
+      }
     }
     setQuery("");
     setIsOpen(false);
   };
 
   const removeSkill = (skillToRemove) => {
-    setSelectedSkills(selectedSkills.filter(skill => skill !== skillToRemove));
+    const updated = selectedSkills.filter(skill => skill !== skillToRemove);
+    setSelectedSkills(updated);
+    if (onChange) {
+      const ids = updated.map(s => skillMap[s]).filter(Boolean);
+      onChange(ids);
+    }
   };
 
   return (
@@ -96,7 +124,7 @@ export default function SkillInput() {
           ))}
 
           {/* Opsi Tambah Skill Custom jika tidak ada di list */}
-          {query && !initialSkills.some(s => s.toLowerCase() === query.toLowerCase()) && (
+          {query && !allSkills.some(s => s.toLowerCase() === query.toLowerCase()) && (
             <li
               onClick={() => addSkill(query)}
               className="flex items-center gap-2 px-4 py-3 text-sm cursor-pointer bg-primary/5 text-primary font-bold hover:bg-primary/10"

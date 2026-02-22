@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { Calendar } from 'lucide-react';
 
-export default function DateOfBirthInput({ isRequired = false }) {
+export default function DateOfBirthInput({ isRequired = false, onChange }) {
   const dateInputRef = useRef(null);
 
   // Fungsi untuk memicu kalender muncul saat area input diklik
@@ -42,6 +42,7 @@ export default function DateOfBirthInput({ isRequired = false }) {
           ref={dateInputRef}
           type="date"
           required={isRequired}
+          onChange={(e) => onChange && onChange(e.target.value)}
           className="w-full p-3 bg-transparent text-sm outline-none text-secondary cursor-pointer
                      appearance-none placeholder-transparent"
           style={{

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Users, ShieldCheck, FileText, Clock } from "lucide-react";
 import { ArrowRight, UserPlus, Briefcase, CheckCircle2 } from "lucide-react";
 import {
@@ -8,6 +8,7 @@ import {
 } from "../../components/admin/Chart";
 
 import { Building2, Store, Factory, Landmark } from 'lucide-react';
+import { adminApi } from '../../api/admin';
 
 const StatCard = ({ icon: Icon, label, value, badge, badgeColor }) => (
   <div className="bg-white p-6 rounded-2xl border border-fourth shadow-sm flex flex-col gap-4">
@@ -75,31 +76,41 @@ const geographicDist = [
 ];
 
 export default function Dashboard() {
+  const [dashData, setDashData] = useState(null);
+
+  useEffect(() => {
+    adminApi.getDashboardStats()
+      .then((res) => {
+        setDashData(res.data.data || res.data);
+      })
+      .catch(() => {});
+  }, []);
+
   const stats = [
     {
       label: "Total Pengguna Aktif",
-      value: "12,450",
+      value: dashData?.total_users ?? "12,450",
       icon: Users,
-      badge: "+12%",
+      badge: dashData?.users_growth ? `+${dashData.users_growth}%` : "+12%",
       badgeColor: "bg-green-100 text-green-600",
     },
     {
       label: "Status pekerja",
-      value: "60%",
+      value: dashData?.worker_percentage ? `${dashData.worker_percentage}%` : "60%",
       icon: ShieldCheck,
       badge: "Optimal",
       badgeColor: "bg-fourth text-secondary",
     },
     {
       label: "Kuesioner Aktif",
-      value: "4",
+      value: dashData?.active_kuesioner ?? "4",
       icon: FileText,
       badge: "Active",
       badgeColor: "bg-green-100 text-green-600",
     },
     {
       label: "Total Menunggu",
-      value: "60",
+      value: dashData?.pending_count ?? "60",
       icon: Clock,
       badge: "Butuh Akasi",
       badgeColor: "bg-orange-100 text-orange-600",
