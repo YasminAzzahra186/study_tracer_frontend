@@ -2,6 +2,7 @@ import React from 'react';
 import LoginImage from '../assets/login_image.webp'
 import Logo from '../assets/icon.png'
 import { MoveRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export default function Login() {
   return (
@@ -39,6 +40,7 @@ export default function Login() {
             <form className="space-y-4">
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-1">Email</label>
+
                 <input
                   type="email"
                   placeholder="name@example.com"
@@ -59,7 +61,7 @@ export default function Login() {
                   <input type="checkbox" className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-secondary" />
                   Ingatkan saya
                 </label>
-                <a href="#" className="text-blue-600 hover:underline font-semibold">Lupa password?</a>
+                <Link to={"/reset-password"} className="text-blue-600 hover:underline font-semibold">Lupa password?</Link>
               </div>
 
               <button className="flex items-center justify-center gap-2 w-full bg-primary hover:bg-secondary text-white font-bold py-3 rounded-lg transition-colors mt-2 cursor-pointer">
@@ -69,7 +71,7 @@ export default function Login() {
             </form>
 
             <p className="mt-8 text-sm text-gray-500 text-center">
-              Belum punya akun? <a href="#" className="text-blue-600 hover:underline font-bold">Daftar</a>
+              Belum punya akun alumni? <Link to={"/register"} className="text-blue-600 hover:underline font-bold">Daftar</Link>
             </p>
           </div>
         </div>

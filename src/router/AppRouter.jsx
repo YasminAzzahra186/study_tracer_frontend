@@ -7,16 +7,20 @@ import UserManagement from "../pages/admin/UserManagement";
 import JobsManagement from "../pages/admin/JobsManagement";
 import MasterTable from "../pages/admin/MasterTable";
 import KuisonerManage from "../pages/admin/KuisonerManage";
+import LupaPass from "../pages/LupaPass";
+import Register from "../pages/register/Register";
 
 export default function AppRouter() {
   const user = {
     isLoggedIn: true,
-    role: "admin"
+    role: "uss"
   }
 
   return (
     <Routes>
       <Route path="/login" element={<Login />}/>
+      <Route path="/reset-password" element={<LupaPass />}/>
+      <Route path="/register" element={<Register />}/>
       <Route path="/wb-admin" element={
         <ProtectedRoute isAllowed={user.isLoggedIn && user.role === 'admin'} redirectTo={"/login"}  />
       }>

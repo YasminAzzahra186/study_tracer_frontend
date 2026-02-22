@@ -1,7 +1,13 @@
 import React from "react";
 import { Users, ShieldCheck, FileText, Clock } from "lucide-react";
-import { ArrowRight, UserPlus, Briefcase, CheckCircle2 } from 'lucide-react';
-import Charts, { ChartsPenyelesaian } from "../../components/admin/Chart";
+import { ArrowRight, UserPlus, Briefcase, CheckCircle2 } from "lucide-react";
+import {
+  ChartJurusan,
+  ChartKarir,
+  ChartsPenyelesaian,
+} from "../../components/admin/Chart";
+
+import { Building2, Store, Factory, Landmark } from 'lucide-react';
 
 const StatCard = ({ icon: Icon, label, value, badge, badgeColor }) => (
   <div className="bg-white p-6 rounded-2xl border border-fourth shadow-sm flex flex-col gap-4">
@@ -26,6 +32,47 @@ const StatCard = ({ icon: Icon, label, value, badge, badgeColor }) => (
     </div>
   </div>
 );
+
+const topCompanies = [
+  {
+    name: "Tech Nusantara Ltd.",
+    location: "Jakarta, Indonesia",
+    count: "124 Alumni",
+    icon: Building2,
+  },
+  {
+    name: "Global Innovation Inc.",
+    location: "Bandung, Indonesia",
+    count: "98 Alumni",
+    icon: Building2,
+  },
+  {
+    name: "Creative Digital Agency",
+    location: "Remote",
+    count: "76 Alumni",
+    icon: Store,
+  },
+  {
+    name: "Manufacture Pro",
+    location: "Surabaya, Indonesia",
+    count: "54 Alumni",
+    icon: Factory,
+  },
+  {
+    name: "State Bank Persero",
+    location: "Jakarta, Indonesia",
+    count: "42 Alumni",
+    icon: Landmark,
+  },
+];
+
+const geographicDist = [
+  { region: "DKI Jakarta", percentage: 45 },
+  { region: "Jawa Barat", percentage: 28 },
+  { region: "Banten", percentage: 15 },
+  { region: "Jawa Timur", percentage: 8 },
+  { region: "Luar Negeri", percentage: 4 },
+];
 
 export default function Dashboard() {
   const stats = [
@@ -78,7 +125,7 @@ export default function Dashboard() {
       {/* Bagian Pendaftaran Alumni yang Menunggu */}
       <div className="bg-white border border-fourth rounded-2xl p-6 shadow-sm">
         {/* Header Section */}
-        <div className="flex justify-between items-start mb-8">
+        <div className="flex justify-between items-center mb-8">
           <div>
             <h2 className="text-xl font-bold text-primary">
               Pendaftaran Alumni yang Menunggu
@@ -152,7 +199,95 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className="bg-white border border-fourth rounded-2xl p-6 shadow-sm">as</div>
+      <div className="bg-white border border-fourth rounded-2xl p-6 shadow-sm">
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h2 className="text-xl font-bold text-primary">
+              Profil & Statistik Alumni
+            </h2>
+          </div>
+          <div className="px-2 py-1 bg-fourth text-primary rounded-xl border">
+            <p className="text-xs">Perbaruan Hari ini</p>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="w-full overflow-hidden">
+            <h1 className="text-primary text-lg font-bold">Status Karir</h1>
+            <ChartKarir />
+          </div>
+          <div className="w-full col-span-2">
+            <h1 className="text-primary text-lg font-bold">
+              Top 5 Alumni Setiap Jurusan
+            </h1>
+            <ChartJurusan />
+          </div>
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-5">
+            {/* Sisi Kiri: 5 Perusahaan Perekrut Teratas */}
+            <div className="space-y-4">
+              <h2 className="text-xl font-bold text-primary">
+                5 Perusahaan Perekrut Teratas
+              </h2>
+              <div className="bg-white border border-fourth rounded-2xl overflow-hidden shadow-sm">
+                {topCompanies.map((company, index) => (
+                  <div
+                    key={index}
+                    className={`flex items-center justify-between p-4 hover:bg-fourth/30 transition-colors ${
+                      index !== topCompanies.length - 1
+                        ? "border-b border-fourth"
+                        : ""
+                    }`}
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="p-2.5 bg-fourth rounded-lg text-third">
+                        <company.icon size={20} />
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-primary text-sm">
+                          {company.name}
+                        </h4>
+                        <p className="text-third text-[11px]">
+                          {company.location}
+                        </p>
+                      </div>
+                    </div>
+                    <span className="bg-fourth text-primary px-3 py-1 rounded-full text-[10px] font-bold">
+                      {company.count}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Sisi Kanan: Distribusi Geografis */}
+            <div className="space-y-4">
+              <h2 className="text-xl font-bold text-primary">
+                Distribusi Geografis (5 Teratas)
+              </h2>
+              <div className="bg-white border border-fourth rounded-2xl p-8 shadow-sm h-full flex flex-col justify-between">
+                {geographicDist.map((item, index) => (
+                  <div key={index} className="space-y-2">
+                    <div className="flex justify-between items-center text-xs">
+                      <span className="font-bold text-primary uppercase tracking-wider">
+                        {item.region}
+                      </span>
+                      <span className="text-third font-medium">
+                        {item.percentage}%
+                      </span>
+                    </div>
+                    {/* Progress Bar */}
+                    <div className="w-full bg-fourth h-2 rounded-full overflow-hidden">
+                      <div
+                        className="bg-primary h-full rounded-full transition-all duration-1000"
+                        style={{ width: `${item.percentage}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+        </div>
+      </div>
     </div>
   );
 }
