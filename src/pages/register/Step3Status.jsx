@@ -103,7 +103,7 @@ export default function Step3Status({ onBack, formData, updateFormData, onSubmit
       </div>
 
       {/* Dynamic Form based on Selection */}
-      <div className="p-8 border border-third border-dashed rounded-2xl bg-gray-50/50">
+      <div className="p-4 md:p-8 border border-third border-dashed rounded-2xl bg-gray-50/50">
         {selectedStatus === 'Bekerja' && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
 

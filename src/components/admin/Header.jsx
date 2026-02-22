@@ -1,6 +1,7 @@
+import { Menu } from "lucide-react";
 import { useLocation } from "react-router-dom";
 
-export default function Header() {
+export default function Header({ toggleSidebar }) {
   const location = useLocation();
   const getTitle = () => {
     switch (location.pathname) {
@@ -22,7 +23,7 @@ export default function Header() {
 
       case "/wb-admin/master":
         return {
-          title: "Manajemen Data Master & Laporan",
+          title: "Manajemen Data Master",
           text: "Kelola konfigurasi sistem, jurusan, jenis pekerjaa, dan buat laporan studi penelusuran (tracer study).",
         };
 
@@ -36,14 +37,34 @@ export default function Header() {
     }
   };
 
-  const contentTitle = getTitle()
+  const contentTitle = getTitle();
 
   return (
-    <header className="h-20 bg-white border-b border-fourth shadow-md flex items-center w-full p-8 justify-between">
-      <div>
-        <h2 className="text-xl font-bold text-primary">{contentTitle.title}</h2>
-        <p className="text-sm text-third">{contentTitle.text}</p>
+    <header
+      className="
+          fixed top-0 right-0 z-40
+          h-20 bg-white/80 backdrop-blur-md border-b border-fourth
+          flex items-center justify-between
+          px-6 md:px-8
+          w-full lg:w-[calc(100%-16.25rem)]
+          transition-all duration-300
+        "
+    >
+      <div className="min-w-0">
+        <h2 className="text-lg md:text-xl font-bold text-primary">
+          {contentTitle.title}
+        </h2>
+        <p className="text-[10px] md:text-xs text-third truncate">
+          {contentTitle.text}
+        </p>
       </div>
+
+      <button
+        className="lg:hidden p-2 hover:bg-fourth rounded-xl transition-colors cursor-pointer"
+        onClick={toggleSidebar}
+      >
+        <Menu size={24} className="text-primary" />
+      </button>
     </header>
   );
 }

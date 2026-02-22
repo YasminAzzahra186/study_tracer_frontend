@@ -7,7 +7,7 @@ import Logo from '../assets/icon.png'
 export default function LupaPass() {
   return (
     <div className="flex h-screen w-full bg-gray-50 items-center justify-center p-4 overflow-hidden">
-      <div className="flex w-full max-w-5xl bg-white rounded-xl shadow-2xl overflow-hidden h-[85vh]">
+      <div className="flex w-full max-w-5xl bg-white rounded-xl shadow-2xl overflow-hidden h-[75vh] lg:h-[85vh]">
         <div className='hidden lg:block lg:w-1/2 h-full relative'>
           <img
             src={LoginImage}

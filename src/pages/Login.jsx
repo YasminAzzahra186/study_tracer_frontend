@@ -35,7 +35,7 @@ export default function Login() {
 
   return (
     <div className="flex h-screen w-full bg-fourtd items-center justify-center p-4 overflow-hidden">
-      <div className="flex w-full max-w-5xl bg-white rounded-xl shadow-2xl overflow-hidden h-[85vh]">
+      <div className="flex w-full max-w-5xl bg-white rounded-xl shadow-2xl overflow-hidden h-[75vh] lg:h-[85vh]">
 
         {/* Bagian Kiri: Banner Gambar */}
         <div className='hidden lg:block lg:w-1/2 h-full relative'>
@@ -55,12 +55,20 @@ export default function Login() {
         </div>
 
         {/* Bagian Kanan: Form Login */}
-        <div className="w-full lg:w-1/2 p-8 md:p-12 flex flex-col justify-center bg-white h-full">
+        <div className="w-full lg:w-1/2 py-3 px-8 md:p-12 flex flex-col justify-center bg-white">
           <div className="max-w-md mx-auto w-full">
-            <h2 className="text-3xl font-bold text-secondary mb-6">Selamat Datang</h2>
+            <div className='flex items-center gap-3 mb-6 lg:hidden'>
+              <img src={Logo} alt="logo" className='w-15' />
+              <div>
+                <h1 className='font-extrabold text-secondary'>Alumni Tracer Study</h1>
+                <p className='font-light text-xs text-third'>SMK Negeri 1 Gondang</p>
+              </div>
+            </div>
+            <h2 className="text-3xl font-bold text-secondary mb-3 ">Selamat Datang</h2>
 
+            {/* Social Buttons */}
             <div className="flex flex-col sm:flex-row gap-3 mb-6">
-              <p className='text-secondary'>Masukan email dan password untuk mengakses akun anda</p>
+              <p className='text-secondary text-sm' >Masukan email dan password untuk mengakses akun anda</p>
             </div>
 
             {/* Error Message */}
