@@ -1,7 +1,7 @@
 import React from 'react';
 import LoginImage from '../assets/login_image.webp'
 import Logo from '../assets/icon.png'
-import { MoveRight } from 'lucide-react';
+import { Mail, MoveRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function Login() {
@@ -41,11 +41,17 @@ export default function Login() {
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-1">Email</label>
 
-                <input
-                  type="email"
-                  placeholder="name@example.com"
-                  className="w-full p-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all"
-                />
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-third">
+                    <Mail size={18} />
+                  </div>
+                  <input
+                    type="email"
+                    placeholder="name@example.com"
+                    className="w-full pl-10 p-3 bg-fourth border border-third rounded-lg outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                    required
+                  />
+                </div>
               </div>
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-1">Password</label>

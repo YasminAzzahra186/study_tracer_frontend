@@ -47,22 +47,17 @@ export default function UniversitySelector() {
 
   useEffect(() => {
     if (selectedUniv) {
-      // 1. Cek apakah univ ada di database kita
       const majorsFromData = universityData[selectedUniv];
 
       if (majorsFromData) {
-        // Jika ada, tampilkan jurusan spesifik kampus tersebut
         setAvailableMajors(majorsFromData);
       } else {
-        // 2. Jika univ diketik manual (Custom), berikan daftar jurusan umum (Default)
         setAvailableMajors(defaultMajors);
       }
     } else {
       setAvailableMajors([]);
     }
   }, [selectedUniv]);
-
-  console.log(selectedUniv);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 col-span-full">
