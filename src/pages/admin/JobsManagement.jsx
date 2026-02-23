@@ -17,6 +17,7 @@ import {
 // Mengasumsikan komponen ini sudah ada di folder component/admin Anda
 import Header from "../../components/admin/Header";
 import SideBar from "../../components/admin/SideBar";
+import TambahLowongan from "./TambahLowongan";
 
 const JobCard = ({ job }) => {
   const getStatusColor = (status) => {
@@ -84,6 +85,7 @@ const JobCard = ({ job }) => {
 
 export default function ManajemenPekerjaan() {
   const [activeTab, setActiveTab] = useState("Semua");
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const categories = ["Technology", "Engineering", "Design", "Marketing", "Finance", "Healthcare"];
 
   const jobs = [
@@ -108,7 +110,10 @@ export default function ManajemenPekerjaan() {
               <span className="hidden sm:inline">Eksport CSV</span>
               <span className="sm:hidden">Eksport</span>
             </button>
-            <button className="flex items-center gap-1 px-2.5 py-1.5 bg-slate-700 text-white font-semibold rounded-lg hover:bg-slate-800 active:scale-95 shadow-md text-xs md:text-sm whitespace-nowrap group transition-all">
+            <button 
+              onClick={() => setIsModalOpen(true)}
+              className="flex items-center gap-1 px-2.5 py-1.5 bg-slate-700 text-white font-semibold rounded-lg hover:bg-slate-800 active:scale-95 shadow-md text-xs md:text-sm whitespace-nowrap group transition-all"
+            >
               <Plus size={14} className="group-hover:scale-110 transition-transform" /> 
               <span className="hidden sm:inline">Buat Lowongan</span>
               <span className="sm:hidden">Buat</span>
@@ -227,6 +232,7 @@ export default function ManajemenPekerjaan() {
           </div>
         </div>
       </div>
+      <TambahLowongan isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
   );
 }

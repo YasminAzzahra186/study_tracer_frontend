@@ -61,7 +61,7 @@ export function ChartKarir() {
       type: "pie",
     },
 
-    labels: ["Bekerja", "Kuliah", "Wirausaha", "Pengangguran"],
+    labels: ["Bekerja", "Kuliah", "Wirausaha", "Pencari Kerja"],
 
     colors: [
       "#3C5759",
