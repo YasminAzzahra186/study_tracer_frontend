@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import {
   UserPlus, FileEdit, Users, Search,
-  Filter, Check, X, Image as ImageIcon, Clock
+  Filter, Check, X, Image as ImageIcon, Clock,
+  Download,
+  Plus,
+  CircleCheck
 } from 'lucide-react';
 
 // --- Components ---
@@ -93,6 +96,17 @@ export default function UserManagement() {
 
   return (
     <div className="space-y-10 pb-10">
+
+      <div className="flex flex-col sm:flex-row sm:items-center gap-2.5 pt-2">
+        <div className="flex items-center gap-4 flex-shrink-0">
+          <button className="cursor-pointer flex items-center gap-1 p-4 bg-white border border-gray-300 text-slate-700 font-semibold rounded-xl hover:bg-gray-50 active:scale-95 transition-all text-xs md:text-sm whitespace-nowrap group">
+            <Download size={18} className="group-hover:scale-110 transition-transform" />
+            <span className="hidden sm:inline">Eksport CSV</span>
+            <span className="sm:hidden">Eksport</span>
+          </button>
+        </div>
+      </div>
+
       {/* 1. Stats Row */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {stats.map((s, i) => <ManagementStatCard key={i} {...s} />)}

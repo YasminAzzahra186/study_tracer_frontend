@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { 
-  History, 
-  Save, 
-  Plus, 
-  GraduationCap, 
-  Briefcase, 
-  FileText, 
+import {
+  History,
+  Save,
+  Plus,
+  GraduationCap,
+  Briefcase,
+  FileText,
   Download,
   Trash2,
   Pencil,
@@ -14,23 +14,19 @@ import {
 
 const MasterTable = () => {
   const [selectedFormat, setSelectedFormat] = useState("PDF");
-  
+
   return (
-    <div className="space-y-4 pt-2">
+    <div className="space-y-6">
       {/* HEADER SECTION - Compact & Modern */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
-        <div className="flex-1 min-w-0">
-          <h1 className="text-xl md:text-2xl font-extrabold text-[#3C5759] leading-tight">Manajemen Data Master</h1>
-          <p className="text-xs text-gray-500 mt-0.5 line-clamp-1">Kelola konfigurasi sistem, jurusan, jenis pekerjaan, dan buat laporan studi penelusuran</p>
-        </div>
         <div className="flex items-center gap-2 flex-shrink-0">
-          <button className="flex items-center gap-1 px-2.5 py-1.5 bg-white border border-gray-300 text-[#3C5759] font-semibold rounded-lg hover:bg-gray-50 active:scale-95 transition-all shadow-sm text-xs md:text-sm whitespace-nowrap group">
-            <History size={14} className="group-hover:scale-110 transition-transform" /> 
-            <span className="hidden sm:inline">Log Audit</span>
-            <span className="sm:hidden">Log</span>
+          <button className="cursor-pointer flex items-center gap-1 p-4 bg-white border border-gray-300 text-slate-700 font-semibold rounded-xl hover:bg-gray-50 active:scale-95 transition-all text-xs md:text-sm whitespace-nowrap group">
+            <Download size={14} className="group-hover:scale-110 transition-transform" />
+            <span className="hidden sm:inline">Eksport CSV</span>
+            <span className="sm:hidden">Eksport</span>
           </button>
-          <button className="flex items-center gap-1 px-2.5 py-1.5 bg-[#3C5759] text-white font-semibold rounded-lg hover:bg-opacity-90 active:scale-95 shadow-md text-xs md:text-sm whitespace-nowrap group transition-all">
-            <Save size={14} className="group-hover:scale-110 transition-transform" /> 
+          <button className="cursor-pointer flex items-center gap-1 p-4 bg-slate-700 text-white font-semibold rounded-xl hover:bg-slate-800 active:scale-95  text-xs md:text-sm whitespace-nowrap group transition-all">
+            <Save size={14} className="group-hover:scale-110 transition-transform" />
             <span className="hidden sm:inline">Simpan Perubahan</span>
             <span className="sm:hidden">Simpan</span>
           </button>
@@ -40,7 +36,7 @@ const MasterTable = () => {
       <div className="flex flex-col lg:grid lg:grid-cols-12 gap-4">
         {/* KIRI: Manajemen Jurusan & Jenis Pekerjaan (8 Kolom) */}
         <div className="lg:col-span-8 space-y-4 order-last lg:order-first">
-          
+
           {/* Section Manajemen Jurusan */}
           <div className="bg-white rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition-shadow overflow-hidden">
             <div className="p-4 flex justify-between items-center border-b border-gray-100 bg-gradient-to-r from-white to-gray-50">
@@ -49,23 +45,21 @@ const MasterTable = () => {
                   <GraduationCap size={16} />
                 </div>
                 <div className="min-w-0">
-                  <h3 className="font-bold text-[#3C5759] text-sm">Manajemen Jurusan</h3>
-                  <p className="text-[9px] text-gray-400 font-medium uppercase tracking-wider truncate">Tentukan program akademik tersedia</p>
+                  <h3 className="font-bold text-[#3C5759] text-md">Manajemen Jurusan</h3>
                 </div>
               </div>
-              <button className="text-[#3C5759] flex items-center gap-1 text-xs font-bold hover:text-white hover:bg-[#3C5759] px-2.5 py-1.5 rounded-lg transition-all whitespace-nowrap ml-2 group">
-                <Plus size={12} className="group-hover:scale-125 transition-transform" /> 
+              <button className="text-fourth bg-primary flex items-center gap-1 text-xs font-bold hover:text-white hover:bg-secondary px-2.5 py-2 rounded-lg transition-all whitespace-nowrap ml-2 group cursor-pointer">
+                <Plus size={12} className="group-hover:scale-125 transition-transform" />
                 <span className="hidden sm:inline">Tambah Jurusan</span>
               </button>
             </div>
-            
+
             <div className="p-4 overflow-x-auto">
               <table className="w-full text-left">
                 <thead>
                   <tr className="text-gray-500 font-bold text-xs uppercase tracking-widest border-b-2 border-gray-200 bg-gray-50">
                     <th className="pb-4 px-3 py-3">Kode</th>
                     <th className="pb-4 px-3 py-3">Nama Jurusan</th>
-                    <th className="pb-4 px-3 py-3">Fakultas</th>
                     <th className="pb-4 px-3 py-3 text-right">Aksi</th>
                   </tr>
                 </thead>
@@ -74,13 +68,6 @@ const MasterTable = () => {
                   <tr className="hover:bg-blue-50 transition-colors bg-blue-50/30">
                     <td className="py-3 px-3"><input type="text" placeholder="CODE" className="w-20 px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3C5759] focus:border-transparent transition-all font-medium" /></td>
                     <td className="py-3 px-3"><input type="text" placeholder="Nama Jurusan" className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3C5759] focus:border-transparent transition-all font-medium" /></td>
-                    <td className="py-3 px-3">
-                      <select className="px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3C5759] focus:border-transparent bg-white transition-all w-full font-medium appearance-none cursor-pointer" style={{backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%233C5759' d='M6 9L1 4h10z'/%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 8px center', paddingRight: '28px'}}>
-                        <option>Select Faculty</option>
-                        <option>Computer Science</option>
-                        <option>Engineering</option>
-                      </select>
-                    </td>
                     <td className="py-3 px-3 text-right">
                       <div className="flex justify-end gap-2">
                         <button className="px-4 py-2 bg-gray-200 text-gray-600 rounded-lg text-sm font-bold hover:bg-gray-300 active:scale-90 transition-all shadow-sm">Batal</button>
@@ -96,9 +83,8 @@ const MasterTable = () => {
                     <tr key={i} className="group hover:bg-blue-50 transition-colors cursor-pointer">
                       <td className="py-3 px-3 font-bold text-[#3C5759] text-sm">{item.c}</td>
                       <td className="py-3 px-3 font-medium text-gray-700 text-sm group-hover:text-[#3C5759] transition-colors">{item.n}</td>
-                      <td className="py-3 px-3 text-gray-500 text-sm">{item.f}</td>
                       <td className="py-3 px-3 text-right">
-                        <div className="flex justify-end gap-1">
+                        <div className="flex justify-center gap-1">
                           <button className="p-2 text-gray-400 hover:text-[#3C5759] hover:bg-blue-100 rounded-lg transition-all active:scale-90 group/btn"><Pencil size={16} className="group-hover/btn:scale-110 transition-transform" /></button>
                           <button className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-100 rounded-lg transition-all active:scale-90 group/btn"><Trash2 size={16} className="group-hover/btn:scale-110 transition-transform" /></button>
                         </div>
@@ -124,7 +110,7 @@ const MasterTable = () => {
                 </div>
               </div>
               <button className="text-[#3C5759] flex items-center gap-1 text-xs font-bold hover:text-white hover:bg-[#3C5759] px-2.5 py-1.5 rounded-lg transition-all whitespace-nowrap ml-2 group">
-                <Plus size={12} className="group-hover:scale-125 transition-transform" /> 
+                <Plus size={12} className="group-hover:scale-125 transition-transform" />
                 <span className="hidden sm:inline">Tambah Tipe</span>
               </button>
             </div>
@@ -177,13 +163,13 @@ const MasterTable = () => {
 
         {/* KANAN: Status & Laporan (4 Kolom) */}
         <div className="lg:col-span-4 space-y-4 order-first lg:order-last">
-          
+
           {/* Status Tracer Study Card */}
           <div className="bg-gradient-to-br from-[#3C5759] to-[#2a3c3e] rounded-lg p-4 text-white shadow-lg hover:shadow-xl transition-all relative overflow-hidden group">
             <div className="relative z-10">
               <h3 className="font-bold text-base mb-0.5 group-hover:translate-x-1 transition-transform">Status Tracer Study</h3>
               <p className="text-[9px] text-white/60 uppercase font-bold tracking-widest mb-4">Periode 2024</p>
-              
+
               <div className="space-y-3">
                 <div className="group/progress">
                   <div className="flex justify-between text-[9px] font-bold mb-1">
@@ -194,7 +180,7 @@ const MasterTable = () => {
                     <div className="bg-white h-full rounded-full transition-all duration-1000 group-hover/progress:shadow-lg group-hover/progress:shadow-white/50" style={{width: '78%'}}></div>
                   </div>
                 </div>
-                
+
                 <div className="grid grid-cols-2 gap-2 pt-1">
                   <div className="bg-white/10 p-2.5 rounded-lg border border-white/20 hover:bg-white/20 hover:border-white/40 transition-all group/stat">
                     <p className="text-lg font-black leading-none mb-0.5">1,240</p>
@@ -242,13 +228,13 @@ const MasterTable = () => {
                 <div className="space-y-1.5">
                   <label className="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Format</label>
                   <div className="flex gap-2">
-                    <button 
+                    <button
                       onClick={() => setSelectedFormat("PDF")}
                       className={`flex-1 py-2 rounded-lg text-sm font-bold transition-all active:scale-95 ${ selectedFormat === "PDF" ? "bg-[#3C5759] text-white shadow-md hover:opacity-90" : "bg-gray-100 text-gray-400 border border-gray-200 hover:bg-gray-200"}`}
                     >
                       PDF
                     </button>
-                    <button 
+                    <button
                       onClick={() => setSelectedFormat("XLSX")}
                       className={`flex-1 py-2 rounded-lg text-sm font-bold transition-all active:scale-95 ${selectedFormat === "XLSX" ? "bg-[#3C5759] text-white shadow-md hover:opacity-90" : "bg-gray-100 text-gray-400 border border-gray-200 hover:bg-gray-200"}`}
                     >
