@@ -10,6 +10,7 @@ import KuisonerManage from "../pages/admin/KuisonerManage";
 import LupaPass from "../pages/LupaPass";
 import Register from "../pages/register/Register";
 import { useAuth } from "../context/AuthContext";
+import Logout from "../pages/Logout";
 
 export default function AppRouter() {
   const { isAuthenticated, isAdmin, loading } = useAuth();
@@ -26,6 +27,7 @@ export default function AppRouter() {
     <Routes>
       <Route path="/login" element={isAuthenticated ? <Navigate to={isAdmin ? "/wb-admin" : "/"} /> : <Login />} />
       <Route path="/reset-password" element={<LupaPass />} />
+      <Route path="/logout" element={<Logout /> } />
       <Route path="/register" element={isAuthenticated ? <Navigate to="/" /> : <Register />} />
       <Route path="/wb-admin" element={
         <ProtectedRoute isAllowed={isAuthenticated && isAdmin} redirectTo="/login" />

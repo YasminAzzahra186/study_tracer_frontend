@@ -1,3 +1,5 @@
 export default function MasterTable() {
-  return <div>haloo</div>
+  return (
+    <div>Hallo</div>
+  )
 }

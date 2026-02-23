@@ -93,7 +93,7 @@ export default function SideBar({ active, setActive }) {
           <button
             onClick={async () => {
               await logout();
-              navigate('/login');
+              navigate('/logout');
             }}
             className="w-full flex items-center justify-center gap-2 bg-primary text-white py-3.5 rounded-xl hover:opacity-90 active:scale-[0.98] transition-all shadow-lg shadow-primary/20 cursor-pointer"
           >
