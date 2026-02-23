@@ -106,7 +106,7 @@ export default function SosmedInput() {
                   value={item.url}
                   onChange={(e) => updateSocial(index, 'url', e.target.value)}
                   placeholder={`Url ${selectedPlatform?.label}`}
-                  className="flex-1 p-3 text-sm outline-none bg-transparent text-secondary placeholder:text-third/50"
+                  className="w-fullc p-3 text-sm outline-none bg-transparent text-secondary placeholder:text-third/50"
                 />
               </div>
 
@@ -115,7 +115,7 @@ export default function SosmedInput() {
                 <button
                   type="button"
                   onClick={() => removeSocial(index)}
-                  className="absolute right-15 bg-white border-l border-fourth p-3 text-red-400 hover:text-red-600 hover:bg-red-50 transition-all cursor-pointer"
+                  className=" bg-white border-l border-fourth p-3 text-red-400 hover:text-red-600 hover:bg-red-50 transition-all cursor-pointer"
                 >
                   <Trash2 size={18} />
                 </button>
