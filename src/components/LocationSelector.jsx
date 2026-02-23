@@ -1,35 +1,59 @@
 import React, { useState, useEffect } from 'react';
 import SmoothDropdown from './admin/SmoothDropdown';
-// Menggunakan dropdown reusable yang kita buat sebelumnya
+import { masterDataApi } from '../api/masterData';
 
-const locationData = {
-  "Jawa Timur": ["Batu", "Malang", "Surabaya", "Sidoarjo", "Blitar"],
-  "Jawa Barat": ["Bandung", "Bogor", "Depok", "Bekasi", "Cimahi"],
-  "DKI Jakarta": ["Jakarta Pusat", "Jakarta Selatan", "Jakarta Barat", "Jakarta Timur"],
-  "Jawa Tengah": ["Semarang", "Solo", "Magelang", "Tegal"],
-};
-
-export default function LocationSelector() {
+export default function LocationSelector({ onCitySelect }) {
+  const [provinces, setProvinces] = useState([]);
+  const [provinceMap, setProvinceMap] = useState({});
   const [selectedProvince, setSelectedProvince] = useState(null);
   const [availableCities, setAvailableCities] = useState([]);
+  const [cityMap, setCityMap] = useState({});
   const [selectedCity, setSelectedCity] = useState(null);
 
-  // Ambil daftar nama provinsi untuk dropdown pertama
-  const provinces = Object.keys(locationData);
+  // Fetch provinces on mount
+  useEffect(() => {
+    masterDataApi.getProvinsi()
+      .then((res) => {
+        const data = res.data.data || [];
+        setProvinces(data.map((p) => p.nama_provinsi || p.nama));
+        const map = {};
+        data.forEach((p) => { map[p.nama_provinsi || p.nama] = p.id; });
+        setProvinceMap(map);
+      })
+      .catch(() => {
+        setProvinces(["Jawa Timur", "Jawa Barat", "DKI Jakarta", "Jawa Tengah"]);
+      });
+  }, []);
 
-  // Efek untuk mengupdate daftar kota saat provinsi berubah
+  // Fetch cities when province changes
   useEffect(() => {
     if (selectedProvince) {
-      setAvailableCities(locationData[selectedProvince] || []);
-      setSelectedCity(null); // Reset kota jika provinsi diganti
+      const provinceId = provinceMap[selectedProvince];
+      if (provinceId) {
+        masterDataApi.getKota(provinceId)
+          .then((res) => {
+            const data = res.data.data || [];
+            setAvailableCities(data.map((k) => k.nama_kota || k.nama));
+            const map = {};
+            data.forEach((k) => { map[k.nama_kota || k.nama] = k.id; });
+            setCityMap(map);
+          })
+          .catch(() => setAvailableCities([]));
+      }
+      setSelectedCity(null);
     } else {
       setAvailableCities([]);
     }
-  }, [selectedProvince]);
+  }, [selectedProvince, provinceMap]);
+
+  const handleCitySelect = (cityName) => {
+    setSelectedCity(cityName);
+    const cityId = cityMap[cityName];
+    if (onCitySelect) onCitySelect(cityId || cityName);
+  };
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 col-span-full">
-      {/* Dropdown Provinsi */}
       <SmoothDropdown
         label="Provinsi"
         options={provinces}
@@ -38,15 +62,14 @@ export default function LocationSelector() {
         onSelect={(value) => setSelectedProvince(value)}
       />
 
-      {/* Dropdown Kota - Akan menyesuaikan berdasarkan provinsi */}
       <div className={`transition-all duration-500 ${!selectedProvince ? 'opacity-50 pointer-events-none' : 'opacity-100'}`}>
         <SmoothDropdown
           label="Kota / Kabupaten"
           options={availableCities}
           placeholder={selectedProvince ? "Pilih Kota" : "Pilih provinsi dulu"}
           isRequired={true}
-          onSelect={(value) => setSelectedCity(value)}
-          key={selectedProvince} // Key penting agar state internal dropdown reset saat provinsi ganti
+          onSelect={handleCitySelect}
+          key={selectedProvince}
         />
       </div>
     </div>

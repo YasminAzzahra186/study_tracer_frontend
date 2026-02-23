@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 import Login from "../pages/Login";
 import AdminLayout from "../layouts/AdminLayout";
 import Dashboard from "../pages/admin/Dashboard";
@@ -9,30 +9,37 @@ import MasterTable from "../pages/admin/MasterTable";
 import KuisonerManage from "../pages/admin/KuisonerManage";
 import LupaPass from "../pages/LupaPass";
 import Register from "../pages/register/Register";
+import { useAuth } from "../context/AuthContext";
 
 export default function AppRouter() {
-  const user = {
-    isLoggedIn: true,
-    role: "admin"
+  const { isAuthenticated, isAdmin, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    );
   }
 
   return (
     <Routes>
-      <Route path="/login" element={<Login />}/>
-      <Route path="/reset-password" element={<LupaPass />}/>
-      <Route path="/register" element={<Register />}/>
+      <Route path="/login" element={isAuthenticated ? <Navigate to={isAdmin ? "/wb-admin" : "/"} /> : <Login />} />
+      <Route path="/reset-password" element={<LupaPass />} />
+      <Route path="/register" element={isAuthenticated ? <Navigate to="/" /> : <Register />} />
       <Route path="/wb-admin" element={
-        <ProtectedRoute isAllowed={user.isLoggedIn && user.role === 'admin'} redirectTo={"/login"}  />
+        <ProtectedRoute isAllowed={isAuthenticated && isAdmin} redirectTo="/login" />
       }>
         <Route element={<AdminLayout />}>
           <Route index element={<Dashboard />} />
-          <Route path="manage-user" element={ <UserManagement /> } />
-          <Route path="jobs" element={ <JobsManagement /> } />
-          <Route path="master" element={ <MasterTable /> } />
-          <Route path="kuisoner" element={ <KuisonerManage /> } />
-       </Route>
+          <Route path="manage-user" element={<UserManagement />} />
+          <Route path="jobs" element={<JobsManagement />} />
+          <Route path="master" element={<MasterTable />} />
+          <Route path="kuisoner" element={<KuisonerManage />} />
+        </Route>
       </Route>
-      <Route path="*" element={<h1>404 Not Found</h1> } />
+      <Route path="/" element={isAuthenticated ? <div className="p-8 text-center"><h1 className="text-2xl font-bold text-primary">Selamat Datang, Alumni!</h1><p className="text-third mt-2">Halaman alumni akan segera hadir.</p></div> : <Navigate to="/login" />} />
+      <Route path="*" element={<h1>404 Not Found</h1>} />
     </Routes>
   );
 }

@@ -4,10 +4,13 @@ import {
   FileText, LogOut, X // Tambahkan X untuk tombol close
 } from 'lucide-react';
 import Logo from '../../assets/icon.png';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate  } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
 export default function SideBar({ active, setActive }) {
   const [activeMenu, setActiveMenu] = useState('Beranda');
+  const { logout } = useAuth();
+  const navigate = useNavigate();
 
   const menuItems = [
     { name: 'Beranda', icon: <LayoutDashboard size={20} />, path: '/wb-admin' },
@@ -87,7 +90,13 @@ export default function SideBar({ active, setActive }) {
 
         {/* Logout Section (Tetap di paling bawah) */}
         <div className="p-4 border-t border-fourth bg-white">
-          <button className="w-full flex items-center justify-center gap-2 bg-primary text-white py-3.5 rounded-xl hover:opacity-90 active:scale-[0.98] transition-all shadow-lg shadow-primary/20 cursor-pointer">
+          <button
+            onClick={async () => {
+              await logout();
+              navigate('/login');
+            }}
+            className="w-full flex items-center justify-center gap-2 bg-primary text-white py-3.5 rounded-xl hover:opacity-90 active:scale-[0.98] transition-all shadow-lg shadow-primary/20 cursor-pointer"
+          >
             <LogOut size={18} />
             <span className="text-sm font-semibold">Keluar Aplikasi</span>
           </button>

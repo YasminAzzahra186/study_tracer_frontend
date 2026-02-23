@@ -1,23 +1,144 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import Logo from '../../assets/icon.png';
 import Step1Account from './Step1Account';
 import Step2Profile from './Step2Profile';
 import Step3Status from './Step3Status';
 import { LogIn } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
 
 export default function Register() {
   const [currentStep, setCurrentStep] = useState(1);
-  const [presentase, setPresentase] = useState(0)
+  const [presentase, setPresentase] = useState(0);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const { register } = useAuth();
+  const navigate = useNavigate();
+
+  // Shared form data across all steps
+  const [formData, setFormData] = useState({
+    // Step 1 - Account
+    email: '',
+    password: '',
+    password_confirmation: '',
+    // Step 2 - Profile
+    nama_alumni: '',
+    id_jurusan: '',
+    jenis_kelamin: '',
+    no_hp: '',
+    nis: '',
+    nisn: '',
+    tahun_masuk: '',
+    tahun_lulus: '',
+    alamat: '',
+    foto: null,
+    tempat_lahir: '',
+    tanggal_lahir: '',
+    skills: [],
+    social_media: [],
+    // Step 3 - Career Status
+    id_status: '',
+    tahun_mulai: '',
+    tahun_selesai: '',
+    pekerjaan: null,
+    universitas: null,
+    wirausaha: null,
+  });
+
+  const updateFormData = (fields) => {
+    setFormData((prev) => ({ ...prev, ...fields }));
+  };
 
   const nextStep = () => {
-    setCurrentStep((prev) => prev + 1)
-    setPresentase((prev) => prev + 50)
+    setCurrentStep((prev) => prev + 1);
+    setPresentase((prev) => prev + 50);
+    setError('');
   };
+
   const prevStep = () => {
-    setCurrentStep((prev) => prev - 1)
-    setPresentase((prev) => prev - 50)
+    setCurrentStep((prev) => prev - 1);
+    setPresentase((prev) => prev - 50);
+    setError('');
+  };
+
+  const handleSubmit = async () => {
+    setError('');
+    setLoading(true);
+
+    try {
+      // Build FormData for multipart upload
+      const fd = new FormData();
+
+      // Step 1
+      fd.append('email', formData.email);
+      fd.append('password', formData.password);
+      fd.append('password_confirmation', formData.password_confirmation);
+
+      // Step 2
+      fd.append('nama_alumni', formData.nama_alumni);
+      fd.append('jenis_kelamin', formData.jenis_kelamin);
+      if (formData.id_jurusan) fd.append('id_jurusan', formData.id_jurusan);
+      if (formData.nis) fd.append('nis', formData.nis);
+      if (formData.nisn) fd.append('nisn', formData.nisn);
+      if (formData.no_hp) fd.append('no_hp', formData.no_hp);
+      if (formData.tahun_masuk) fd.append('tahun_masuk', formData.tahun_masuk);
+      if (formData.tahun_lulus) fd.append('tahun_lulus', formData.tahun_lulus);
+      if (formData.alamat) fd.append('alamat', formData.alamat);
+      if (formData.tempat_lahir) fd.append('tempat_lahir', formData.tempat_lahir);
+      if (formData.tanggal_lahir) fd.append('tanggal_lahir', formData.tanggal_lahir);
+      if (formData.foto) fd.append('foto', formData.foto);
+
+      // Skills array
+      formData.skills.forEach((skillId) => {
+        fd.append('skills[]', skillId);
+      });
+
+      // Social media array
+      formData.social_media.forEach((sm, i) => {
+        fd.append(`social_media[${i}][id_sosmed]`, sm.id_sosmed);
+        fd.append(`social_media[${i}][url]`, sm.url);
+      });
+
+      // Step 3 - Career status
+      if (formData.id_status) {
+        fd.append('id_status', formData.id_status);
+        if (formData.tahun_mulai) fd.append('tahun_mulai', formData.tahun_mulai);
+        if (formData.tahun_selesai) fd.append('tahun_selesai', formData.tahun_selesai);
+
+        if (formData.pekerjaan) {
+          fd.append('pekerjaan[posisi]', formData.pekerjaan.posisi);
+          fd.append('pekerjaan[nama_perusahaan]', formData.pekerjaan.nama_perusahaan);
+          if (formData.pekerjaan.id_kota) fd.append('pekerjaan[id_kota]', formData.pekerjaan.id_kota);
+          if (formData.pekerjaan.jalan) fd.append('pekerjaan[jalan]', formData.pekerjaan.jalan);
+        }
+
+        if (formData.universitas) {
+          fd.append('universitas[nama_universitas]', formData.universitas.nama_universitas);
+          if (formData.universitas.id_jurusanKuliah) fd.append('universitas[id_jurusanKuliah]', formData.universitas.id_jurusanKuliah);
+          fd.append('universitas[jalur_masuk]', formData.universitas.jalur_masuk);
+          fd.append('universitas[jenjang]', formData.universitas.jenjang);
+        }
+
+        if (formData.wirausaha) {
+          if (formData.wirausaha.id_bidang) fd.append('wirausaha[id_bidang]', formData.wirausaha.id_bidang);
+          fd.append('wirausaha[nama_usaha]', formData.wirausaha.nama_usaha);
+        }
+      }
+
+      await register(fd);
+      navigate('/');
+    } catch (err) {
+      const data = err.response?.data;
+      if (data?.errors) {
+        const firstError = Object.values(data.errors).flat()[0];
+        setError(firstError || data.message);
+      } else {
+        setError(data?.message || 'Registrasi gagal. Silakan coba lagi.');
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   const steps = [
@@ -84,9 +205,14 @@ export default function Register() {
 
         {/* Render Form Berdasarkan Step */}
         <div className="bg-white border border-fourth rounded-2xl p-8 shadow-sm transition-all duration-600">
-          {currentStep === 1 && <Step1Account onNext={nextStep} />}
-          {currentStep === 2 && <Step2Profile onNext={nextStep} onBack={prevStep} />}
-          {currentStep === 3 && <Step3Status onBack={prevStep} />}
+          {error && (
+            <div className="mb-6 p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm">
+              {error}
+            </div>
+          )}
+          {currentStep === 1 && <Step1Account onNext={nextStep} formData={formData} updateFormData={updateFormData} />}
+          {currentStep === 2 && <Step2Profile onNext={nextStep} onBack={prevStep} formData={formData} updateFormData={updateFormData} />}
+          {currentStep === 3 && <Step3Status onBack={prevStep} formData={formData} updateFormData={updateFormData} onSubmit={handleSubmit} loading={loading} />}
         </div>
       </main>
 
