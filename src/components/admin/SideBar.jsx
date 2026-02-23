@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import {
   LayoutDashboard, Users, Briefcase, Database,
-  FileText, LogOut, X // Tambahkan X untuk tombol close
+  FileText, LogOut, X
 } from 'lucide-react';
 import Logo from '../../assets/icon.png';
 import { Link, useNavigate  } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { alertConfirm } from '../../utilitis/alert';
 
 export default function SideBar({ active, setActive }) {
   const [activeMenu, setActiveMenu] = useState('Beranda');
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const { logout } = useAuth();
   const navigate = useNavigate();
 
@@ -19,6 +21,20 @@ export default function SideBar({ active, setActive }) {
     { name: 'Data Master', icon: <Database size={20} />, path: '/wb-admin/master' },
     { name: 'Kuesioner', icon: <FileText size={20} />, path: '/wb-admin/kuisoner' },
   ];
+
+  const handleLogout = async () => {
+    const confirm = await alertConfirm("Apakah Anda yakin ingin keluar?");
+    if (!confirm.isConfirmed) return;
+
+    setIsLoggingOut(true); // Mulai loading
+
+    try {
+      await logout();
+      navigate("/login");
+    } finally {
+      setIsLoggingOut(false); // Matikan loading jika gagal
+    }
+  };
 
   return (
     <>
@@ -91,10 +107,7 @@ export default function SideBar({ active, setActive }) {
         {/* Logout Section (Tetap di paling bawah) */}
         <div className="p-4 border-t border-fourth bg-white">
           <button
-            onClick={async () => {
-              await logout();
-              navigate('/logout');
-            }}
+            onClick={ handleLogout }
             className="w-full flex items-center justify-center gap-2 bg-primary text-white py-3.5 rounded-xl hover:opacity-90 active:scale-[0.98] transition-all shadow-lg shadow-primary/20 cursor-pointer"
           >
             <LogOut size={18} />
@@ -105,6 +118,15 @@ export default function SideBar({ active, setActive }) {
           <div className="h-2 lg:hidden"></div>
         </div>
       </div>
+      {isLoggingOut && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[9999]">
+          <div className="bg-white p-6 rounded-lg shadow-xl flex flex-col items-center">
+            {/* Spinner sederhana dengan Tailwind */}
+            <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+            <p className="mt-4 text-gray-700 font-medium">Menghapus sesi...</p>
+          </div>
+        </div>
+      )}
     </>
   );
 }

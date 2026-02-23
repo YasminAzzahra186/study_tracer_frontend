@@ -11,6 +11,7 @@ import {
   Pencil,
   FileSpreadsheet
 } from "lucide-react";
+import SmoothDropdown from "../../components/admin/SmoothDropdown";
 
 const MasterTable = () => {
   const [selectedFormat, setSelectedFormat] = useState("PDF");
@@ -207,23 +208,21 @@ const MasterTable = () => {
             </div>
 
             <div className="space-y-3">
-              <div className="space-y-1.5">
-                <label className="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Jenis Laporan</label>
-                <select className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm font-medium text-gray-700 outline-none focus:ring-2 focus:ring-[#3C5759] focus:border-transparent hover:bg-gray-100 transition-all appearance-none cursor-pointer" style={{backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%233C5759' d='M6 9L1 4h10z'/%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 8px center', paddingRight: '28px'}}>
-                  <option>Status Pekerjaan Lulusan</option>
-                  <option>Data Laporan Alumni</option>
-                  <option>Statistik Gaji</option>
-                </select>
+              <div className="space-y-1.5 relative z-40">
+                <SmoothDropdown
+                  label="JENIS LAPORAN"
+                  placeholder="Pilih Jenis Laporan"
+                  options={["Status Pekerjaan Lulusan", "Data Laporan Alumni", "Statistik Gaji"]}
+                />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-1.5">
-                  <label className="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Tahun Lulus</label>
-                  <select className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm font-medium text-gray-700 outline-none focus:ring-2 focus:ring-[#3C5759] focus:border-transparent hover:bg-gray-100 transition-all appearance-none cursor-pointer" style={{backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%233C5759' d='M6 9L1 4h10z'/%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 8px center', paddingRight: '28px'}}>
-                    <option>2024</option>
-                    <option>2023</option>
-                    <option>2022</option>
-                  </select>
+                <div className="space-y-1.5 relative z-30">
+                  <SmoothDropdown
+                    label="TAHUN LULUS"
+                    placeholder="Pilih Tahun"
+                    options={["2024", "2023", "2022"]}
+                  />
                 </div>
                 <div className="space-y-1.5">
                   <label className="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Format</label>
