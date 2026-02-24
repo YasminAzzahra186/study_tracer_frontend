@@ -20,8 +20,8 @@ import {
 } from "lucide-react";
 
 import banner from "../../assets/banner.jfif";
-// import Header from "../../components/admin/Header"; 
-// import SideBar from "../../components/admin/SideBar"; 
+// import Header from "../../components/admin/Header";
+// import SideBar from "../../components/admin/SideBar";
 import TambahLowongan from "./TambahLowongan";
 import { adminApi } from "../../api/admin";
 import { STORAGE_BASE_URL } from "../../api/axios";
@@ -61,20 +61,20 @@ const JobCard = ({ job, onApprove, onReject, onDelete }) => {
     }
   };
 
-  const fotoUrl = job.foto 
+  const fotoUrl = job.foto
     ? (job.foto.startsWith('http') ? job.foto : `${STORAGE_BASE_URL}/${job.foto}`)
     : banner;
 
   return (
-    <div 
+    <div
       onClick={() => navigate(`/wb-admin/job-detail/${job.id}`)}
       className={`bg-white p-5 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col md:flex-row items-start md:items-center justify-between gap-5 cursor-pointer group/card ${getBorderColor(displayStatus)}`}
     >
       <div className="flex flex-col sm:flex-row gap-5 flex-1 min-w-0 w-full">
         <div className="w-full sm:w-24 h-24 sm:h-24 rounded-xl overflow-hidden flex-shrink-0 bg-gray-50 border border-gray-100 relative group-hover/card:shadow-inner transition-all">
-          <img 
-            src={fotoUrl} 
-            alt={job.perusahaan?.nama || job.judul} 
+          <img
+            src={fotoUrl}
+            alt={job.perusahaan?.nama || job.judul}
             className="w-full h-full object-cover opacity-90 group-hover/card:scale-105 transition-transform duration-500"
             onError={(e) => { e.target.src = banner; }}
           />
@@ -92,9 +92,9 @@ const JobCard = ({ job, onApprove, onReject, onDelete }) => {
               </span>
             )}
           </div>
-          
+
           <div>
-            <h3 className="text-lg font-black text-gray-800 truncate group-hover/card:text-[#3C5759] transition-colors leading-tight">
+            <h3 className="text-lg font-black text-gray-800 truncate group-hover/card:text-primary transition-colors leading-tight">
               {job.judul}
             </h3>
             <p className="text-xs font-bold text-gray-400 mt-0.5">{job.perusahaan?.nama || '-'}</p>
@@ -112,7 +112,7 @@ const JobCard = ({ job, onApprove, onReject, onDelete }) => {
         </div>
       </div>
 
-      <div 
+      <div
         className="flex items-center gap-2 self-end md:self-center flex-shrink-0 w-full md:w-auto justify-end border-t md:border-t-0 border-gray-50 pt-3 md:pt-0 mt-2 md:mt-0"
         onClick={(e) => e.stopPropagation()}
       >
@@ -127,14 +127,14 @@ const JobCard = ({ job, onApprove, onReject, onDelete }) => {
                 </button>
             </div>
             <div className="w-px h-6 bg-gray-200 mx-1 hidden sm:block"></div>
-            <button title="Edit" className="p-2 text-gray-400 hover:text-[#3C5759] hover:bg-gray-50 rounded-lg transition-all active:scale-95"><Pencil size={18} /></button>
+            <button title="Edit" className="p-2 text-gray-400 hover:text-primary hover:bg-gray-50 rounded-lg transition-all active:scale-95"><Pencil size={18} /></button>
           </div>
         ) : (
           <div className="flex items-center gap-2">
              {(displayStatus === "BERAKHIR" || displayStatus === "DITOLAK") && (
                 <button title="Posting Ulang" className="p-2 text-blue-500 bg-blue-50 hover:bg-blue-100 rounded-xl transition-all active:scale-95 border border-blue-100"><RotateCcw size={18} /></button>
              )}
-            <button title="Edit" className="p-2 text-slate-500 bg-slate-50 hover:bg-slate-100 hover:text-[#3C5759] rounded-xl transition-all active:scale-95 border border-slate-100"><Pencil size={18} /></button>
+            <button title="Edit" className="p-2 text-slate-500 bg-slate-50 hover:bg-slate-100 hover:text-primary rounded-xl transition-all active:scale-95 border border-slate-100"><Pencil size={18} /></button>
             <button onClick={() => onDelete(job.id)} title="Hapus" className="p-2 text-rose-500 bg-rose-50 hover:bg-rose-100 rounded-xl transition-all active:scale-95 border border-rose-100"><Trash2 size={18} /></button>
           </div>
         )}
@@ -220,25 +220,25 @@ export default function ManajemenPekerjaan() {
 
         {/* TOMBOL MOBILE (Hanya muncul di Layar Kecil) */}
         <div className="grid grid-cols-2 gap-3 lg:hidden">
-            <button 
-                onClick={handleExportCSV} 
-                className="flex items-center justify-center gap-2 p-3 bg-white border border-gray-200 text-[#3C5759] font-bold rounded-xl hover:bg-gray-50 hover:border-[#3C5759] active:scale-95 transition-all text-xs shadow-sm"
+            <button
+                onClick={handleExportCSV}
+                className="flex items-center justify-center gap-2 p-3 bg-white border border-gray-200 text-primary font-bold rounded-xl hover:bg-gray-50 hover:border-primary active:scale-95 transition-all text-xs shadow-sm"
             >
-                <Download size={16} /> 
+                <Download size={16} />
                 <span>Eksport CSV</span>
             </button>
-            <button 
+            <button
                 onClick={() => setIsModalOpen(true)}
-                className="flex items-center justify-center gap-2 p-3 bg-[#3C5759] text-white font-bold rounded-xl hover:opacity-90 active:scale-95 transition-all text-xs shadow-md shadow-[#3C5759]/20"
+                className="flex items-center justify-center gap-2 p-3 bg-primary text-white font-bold rounded-xl hover:opacity-90 active:scale-95 transition-all text-xs shadow-md shadow-primary/20"
             >
-                <Plus size={16} /> 
+                <Plus size={16} />
                 <span>Buat Lowongan</span>
             </button>
         </div>
 
         {/* MAIN LAYOUT */}
         <div className="flex flex-col lg:grid lg:grid-cols-12 gap-6">
-          
+
           {/* Main Content (List Card) */}
           <div className="lg:col-span-8 space-y-4">
             {/* Filter Bar */}
@@ -249,8 +249,8 @@ export default function ManajemenPekerjaan() {
                   <button
                     key={tab}
                     onClick={() => setActiveTab(tab)}
-                    className={`px-3 py-2 rounded-md text-xs font-bold transition-all whitespace-nowrap ${
-                      activeTab === tab ? "bg-[#3C5759] text-white shadow-md scale-105" : "text-gray-500 hover:bg-gray-200"
+                    className={`cursor-pointer px-3 py-2 rounded-md text-xs font-bold transition-all whitespace-nowrap ${
+                      activeTab === tab ? "bg-primary text-white shadow-md scale-105" : "text-gray-500 hover:bg-gray-200"
                     }`}
                   >
                     {tab}
@@ -258,13 +258,13 @@ export default function ManajemenPekerjaan() {
                 ))}
               </div>
               <div className="relative flex-1 group w-full">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-hover:text-[#3C5759] transition-colors" size={16} />
-                <input 
-                  type="text" 
-                  placeholder="Cari Lowongan..." 
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-hover:text-primary transition-colors" size={16} />
+                <input
+                  type="text"
+                  placeholder="Cari Lowongan..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-8 pr-3 py-2 bg-white border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#3C5759]/20 transition-all shadow-sm" 
+                  className="w-full pl-8 pr-3 py-2 bg-white border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all shadow-sm"
                 />
               </div>
             </div>
@@ -287,21 +287,21 @@ export default function ManajemenPekerjaan() {
 
           {/* Sidebar */}
           <div className="lg:col-span-4 space-y-6">
-            
+
             {/* TOMBOL DESKTOP (Hanya muncul di Layar Besar/Sidebar) */}
             <div className="hidden lg:grid grid-cols-2 gap-3">
-                <button 
-                    onClick={handleExportCSV} 
-                    className="flex items-center justify-center gap-2 p-3 bg-white border border-gray-200 text-[#3C5759] font-bold rounded-xl hover:bg-gray-50 hover:border-[#3C5759] active:scale-95 transition-all text-xs shadow-sm group"
+                <button
+                    onClick={handleExportCSV}
+                    className="flex items-center justify-center gap-2 p-3 bg-white border border-gray-200 text-primary font-bold rounded-xl hover:bg-gray-50 hover:border-primary active:scale-95 transition-all text-xs shadow-sm group"
                 >
-                    <Download size={16} className="group-hover:scale-110 transition-transform"/> 
+                    <Download size={16} className="group-hover:scale-110 transition-transform"/>
                     <span>Eksport CSV</span>
                 </button>
-                <button 
+                <button
                     onClick={() => setIsModalOpen(true)}
-                    className="flex items-center justify-center gap-2 p-3 bg-[#3C5759] text-white font-bold rounded-xl hover:opacity-90 active:scale-95 transition-all text-xs shadow-md shadow-[#3C5759]/20 group"
+                    className="flex items-center justify-center gap-2 p-3 bg-primary text-white font-bold rounded-xl hover:opacity-90 active:scale-95 transition-all text-xs shadow-md shadow-primary/20 group"
                 >
-                    <Plus size={16} className="group-hover:rotate-90 transition-transform"/> 
+                    <Plus size={16} className="group-hover:rotate-90 transition-transform"/>
                     <span>Buat Lowongan</span>
                 </button>
             </div>
@@ -309,14 +309,14 @@ export default function ManajemenPekerjaan() {
             {/* Kategori */}
             <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
               <div className="flex justify-between items-center mb-4 gap-2">
-                <h2 className="font-black text-[#3C5759] text-sm uppercase tracking-wider">Kategori</h2>
+                <h2 className="font-black text-primary text-sm uppercase tracking-wider">Kategori</h2>
               </div>
               <div className="flex flex-wrap gap-2">
                 {categories.length > 0 ? (
                   <>
-                    <span onClick={() => setSelectedCategory(null)} className={`flex items-center gap-1 px-3 py-1.5 text-[11px] font-bold rounded-lg border cursor-pointer transition-all ${!selectedCategory ? 'bg-[#3C5759] text-white border-[#3C5759] shadow-md' : 'bg-gray-50 text-gray-500 border-gray-100 hover:border-gray-300 hover:bg-white'}`}>Semua</span>
+                    <span onClick={() => setSelectedCategory(null)} className={`flex items-center gap-1 px-3 py-1.5 text-[11px] font-bold rounded-lg border cursor-pointer transition-all ${!selectedCategory ? 'bg-primary text-white border-primary shadow-md' : 'bg-gray-50 text-gray-500 border-gray-100 hover:border-gray-300 hover:bg-white'}`}>Semua</span>
                     {categories.map((cat) => (
-                      <span key={cat.name} onClick={() => setSelectedCategory(selectedCategory === cat.name ? null : cat.name)} className={`flex items-center gap-1 px-3 py-1.5 text-[11px] font-bold rounded-lg border cursor-pointer transition-all ${selectedCategory === cat.name ? 'bg-[#3C5759] text-white border-[#3C5759] shadow-md' : 'bg-gray-50 text-gray-500 border-gray-100 hover:border-gray-300 hover:bg-white'}`}>
+                      <span key={cat.name} onClick={() => setSelectedCategory(selectedCategory === cat.name ? null : cat.name)} className={`flex items-center gap-1 px-3 py-1.5 text-[11px] font-bold rounded-lg border cursor-pointer transition-all ${selectedCategory === cat.name ? 'bg-primary text-white border-primary shadow-md' : 'bg-gray-50 text-gray-500 border-gray-100 hover:border-gray-300 hover:bg-white'}`}>
                         {cat.name} <span className={`text-[9px] ml-1 opacity-70`}>{cat.count}</span>
                       </span>
                     ))}
@@ -326,7 +326,7 @@ export default function ManajemenPekerjaan() {
             </div>
 
             {/* Ringkasan */}
-            <div className="bg-[#3C5759] p-6 rounded-2xl text-white shadow-lg shadow-[#3C5759]/20 relative overflow-hidden">
+            <div className="bg-primary p-6 rounded-2xl text-white shadow-lg shadow-primary/20 relative overflow-hidden">
               <div className="relative z-10">
                   <h2 className="font-bold text-lg mb-4 flex items-center gap-2"><ChartNoAxesCombined size={20} className="text-white/80"/> Ringkasan</h2>
                   <div className="space-y-3">
