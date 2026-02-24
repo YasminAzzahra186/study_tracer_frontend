@@ -10,9 +10,11 @@ import {
   TrendingUp,
   ClipboardList,
   Users,
-  Menu
+  Menu,
+  ArrowLeft
 } from "lucide-react";
 import SmoothDropdown from "../../components/admin/SmoothDropdown";
+import { Link } from "react-router-dom";
 
 export default function LihatJawaban() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -28,7 +30,14 @@ export default function LihatJawaban() {
   return (
     <div className="p-4 md:p-6 bg-gray-50 min-h-screen font-sans text-slate-700">
       {/* Header Section */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+      <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8">
+        <Link
+          to="/wb-admin/kuisoner"
+          className="flex items-center gap-2 text-third hover:text-primary transition-colors text-sm font-medium group"
+        >
+          <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
+          Kembali
+        </Link>
         <div className="flex flex-wrap gap-2 w-full sm:w-auto">
           <button className="flex-1 sm:flex-none justify-center flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm font-bold shadow-sm hover:bg-gray-50 transition-all">
             <FileDown size={18} className="text-slate-600" /> <span className="hidden md:inline">Eksport</span> PDF
