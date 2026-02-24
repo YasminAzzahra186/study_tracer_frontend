@@ -1,7 +1,8 @@
 import Chart from "react-apexcharts";
 
-export function ChartsPenyelesaian() {
-  const series = [85];
+export function ChartsPenyelesaian({ approved = 0, total = 0 }) {
+  const percentage = total > 0 ? Math.round((approved / total) * 100) : 0;
+  const series = [percentage];
 
   const options = {
     chart: {
@@ -53,21 +54,29 @@ export function ChartsPenyelesaian() {
   );
 }
 
-export function ChartKarir() {
-  const series = [44, 55, 10, 29];
+export function ChartKarir({ data = [] }) {
+  const defaultData = [
+    { status: "Bekerja", total: 44 },
+    { status: "Kuliah", total: 55 },
+    { status: "Wirausaha", total: 10 },
+    { status: "Mencari Kerja", total: 29 },
+  ];
+  const chartData = data.length > 0 ? data : defaultData;
+  const series = chartData.map((item) => item.total);
 
   const options = {
     chart: {
       type: "pie",
     },
 
-    labels: ["Bekerja", "Kuliah", "Wirausaha", "Pencari Kerja"],
+    labels: chartData.map((item) => item.status),
 
     colors: [
       "#3C5759",
       "#526061",
       "#9CA3AF",
       "#D0D5CE",
+      "#E8B44B",
     ],
 
     legend: {
@@ -115,15 +124,26 @@ export function ChartKarir() {
   );
 }
 
-export function ChartJurusan() {
-
-  const data = [
+export function ChartJurusan({ data: propData = [] }) {
+  const defaultData = [
     { jurusan: "RPL", total: 120 },
     { jurusan: "TKJ", total: 95 },
     { jurusan: "Multimedia", total: 70 },
     { jurusan: "Akuntansi", total: 55 },
     { jurusan: "BDP", total: 40 },
   ];
+  // Merge duplicates (same jurusan name from different IDs) and sort descending
+  const rawData = propData.length > 0 ? propData : defaultData;
+  const merged = rawData.reduce((acc, item) => {
+    const key = item.jurusan;
+    if (acc[key]) {
+      acc[key].total += item.total;
+    } else {
+      acc[key] = { ...item };
+    }
+    return acc;
+  }, {});
+  const data = Object.values(merged).sort((a, b) => b.total - a.total);
 
   const series = [
     {

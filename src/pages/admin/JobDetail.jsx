@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   ChevronLeft, 
   MapPin, 
@@ -8,41 +8,77 @@ import {
   Building2, 
   Share2, 
   CheckCircle2,
-  AlertCircle
+  AlertCircle,
+  Loader2
 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import api from '../../api/axios';
+import { STORAGE_BASE_URL } from '../../api/axios';
+import banner from '../../assets/banner.jfif';
 
 const JobDetail = () => {
   const navigate = useNavigate();
+  const { id } = useParams();
+  const [job, setJob] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Data dummy untuk detail lowongan
-  const job = {
-    title: "Senior UX Designer",
-    company: "Google",
-    location: "New York, NY (Remote Friendly)",
-    type: "Full-time",
-    category: "Design",
-    postedDate: "20 Feb 2026",
-    expiryDate: "24 Okt 2026",
-    status: "AKTIF",
-    salary: "Competitive",
-    description: "Kami mencari Senior UX Designer yang berpengalaman untuk bergabung dengan tim desain kami. Anda akan bertanggung jawab untuk menciptakan pengalaman pengguna yang luar biasa bagi jutaan pengguna di seluruh dunia.",
-    requirements: [
-      "Minimal 5 tahun pengalaman di bidang UI/UX Design.",
-      "Portofolio yang menunjukkan kemampuan pemecahan masalah desain.",
-      "Mahir menggunakan Figma, Adobe Creative Suite, dan tools prototyping lainnya.",
-      "Memahami dasar-dasar HTML/CSS adalah nilai tambah.",
-      "Kemampuan komunikasi yang baik dalam bahasa Inggris."
-    ],
-    benefits: [
-      "Gaji kompetitif dan bonus tahunan.",
-      "Asuransi kesehatan menyeluruh.",
-      "Lingkungan kerja fleksibel (Remote/Hybrid).",
-      "Anggaran pengembangan profesional."
-    ],
-    logo: "https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg",
-    banner: "https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?q=80&w=2070&auto=format&fit=crop"
+  useEffect(() => {
+    const fetchJob = async () => {
+      setLoading(true);
+      try {
+        const res = await api.get(`/lowongan/${id}`);
+        setJob(res.data?.data || res.data);
+      } catch (err) {
+        setError('Lowongan tidak ditemukan');
+      } finally {
+        setLoading(false);
+      }
+    };
+    if (id) fetchJob();
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#F8FAFC] flex items-center justify-center">
+        <Loader2 size={32} className="animate-spin text-[#3C5759]" />
+      </div>
+    );
+  }
+
+  if (error || !job) {
+    return (
+      <div className="min-h-screen bg-[#F8FAFC] flex flex-col items-center justify-center gap-4">
+        <AlertCircle size={48} className="text-gray-400" />
+        <p className="text-gray-500 font-medium">{error || 'Lowongan tidak ditemukan'}</p>
+        <button onClick={() => navigate(-1)} className="text-[#3C5759] font-semibold hover:underline">
+          Kembali
+        </button>
+      </div>
+    );
+  }
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'published': return 'bg-green-100 text-green-600';
+      case 'draft': return 'bg-gray-100 text-gray-600';
+      case 'closed': return 'bg-red-100 text-red-600';
+      default: return 'bg-gray-100 text-gray-600';
+    }
   };
+
+  const getApprovalLabel = (status) => {
+    switch (status) {
+      case 'approved': return 'DISETUJUI';
+      case 'pending': return 'MENUNGGU';
+      case 'rejected': return 'DITOLAK';
+      default: return status?.toUpperCase();
+    }
+  };
+
+  const fotoUrl = job.foto 
+    ? (job.foto.startsWith('http') ? job.foto : `${STORAGE_BASE_URL}/${job.foto}`)
+    : banner;
 
   return (
     <div className="min-h-screen bg-[#F8FAFC]">
@@ -65,27 +101,33 @@ const JobDetail = () => {
           {/* Card Header Detail */}
           <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
             <div className="h-48 w-full overflow-hidden">
-              <img src={job.banner} alt="Office" className="w-full h-full object-cover" />
+              <img src={fotoUrl} alt="Lowongan" className="w-full h-full object-cover" onError={(e) => { e.target.src = banner; }} />
             </div>
             <div className="p-8 -mt-12 relative">
               <div className="bg-white p-4 rounded-2xl shadow-md inline-block border border-gray-100 mb-4">
-                <img src={job.logo} alt={job.company} className="w-16 h-16 object-contain" />
+                <Building2 size={40} className="text-[#3C5759]" />
               </div>
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                  <h1 className="text-3xl font-black text-[#3C5759]">{job.title}</h1>
-                  <div className="flex items-center gap-2 mt-2 text-gray-500 font-medium">
+                  <h1 className="text-3xl font-black text-[#3C5759]">{job.judul}</h1>
+                  <div className="flex flex-wrap items-center gap-2 mt-2 text-gray-500 font-medium">
                     <Building2 size={18} />
-                    <span>{job.company}</span>
+                    <span>{job.perusahaan?.nama || '-'}</span>
                     <span className="mx-1">•</span>
-                    <span className="px-3 py-1 bg-green-100 text-green-600 text-[10px] font-bold rounded-full uppercase tracking-widest">
-                      {job.status}
+                    <span className={`px-3 py-1 text-[10px] font-bold rounded-full uppercase tracking-widest ${getStatusColor(job.status)}`}>
+                      {job.status?.toUpperCase()}
                     </span>
+                    {job.approval_status && (
+                      <span className={`px-3 py-1 text-[10px] font-bold rounded-full uppercase tracking-widest ${
+                        job.approval_status === 'approved' ? 'bg-green-100 text-green-600' :
+                        job.approval_status === 'pending' ? 'bg-orange-100 text-orange-600' :
+                        'bg-red-100 text-red-600'
+                      }`}>
+                        {getApprovalLabel(job.approval_status)}
+                      </span>
+                    )}
                   </div>
                 </div>
-                <button className="flex items-center justify-center gap-2 px-6 py-3 bg-[#3C5759] text-white font-bold rounded-2xl hover:opacity-90 transition-all shadow-lg shadow-[#3C5759]/20">
-                  Lamar Sekarang
-                </button>
               </div>
             </div>
           </div>
@@ -94,31 +136,7 @@ const JobDetail = () => {
           <div className="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm space-y-8">
             <section>
               <h2 className="text-xl font-black text-[#3C5759] mb-4">Deskripsi Pekerjaan</h2>
-              <p className="text-gray-600 leading-relaxed">{job.description}</p>
-            </section>
-
-            <section>
-              <h2 className="text-xl font-black text-[#3C5759] mb-4">Kualifikasi / Persyaratan</h2>
-              <ul className="space-y-3">
-                {job.requirements.map((req, i) => (
-                  <li key={i} className="flex items-start gap-3 text-gray-600">
-                    <CheckCircle2 size={20} className="text-[#3C5759] mt-0.5 shrink-0" />
-                    <span>{req}</span>
-                  </li>
-                ))}
-              </ul>
-            </section>
-
-            <section>
-              <h2 className="text-xl font-black text-[#3C5759] mb-4">Keuntungan (Benefits)</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {job.benefits.map((benefit, i) => (
-                  <div key={i} className="flex items-center gap-3 p-4 bg-gray-50 rounded-2xl border border-gray-100 text-gray-700 font-medium">
-                    <div className="w-2 h-2 rounded-full bg-[#3C5759]"></div>
-                    {benefit}
-                  </div>
-                ))}
-              </div>
+              <p className="text-gray-600 leading-relaxed whitespace-pre-line">{job.deskripsi || 'Tidak ada deskripsi.'}</p>
             </section>
           </div>
         </div>
@@ -135,30 +153,34 @@ const JobDetail = () => {
                 <div className="p-3 bg-gray-50 rounded-xl text-[#3C5759]"><MapPin size={20} /></div>
                 <div>
                   <p className="text-[10px] font-bold text-gray-400 uppercase">Lokasi</p>
-                  <p className="text-sm font-bold">{job.location}</p>
+                  <p className="text-sm font-bold">{job.lokasi || job.perusahaan?.kota?.nama || '-'}</p>
                 </div>
               </div>
-              <div className="flex items-center gap-4 text-gray-600">
-                <div className="p-3 bg-gray-50 rounded-xl text-[#3C5759]"><Clock size={20} /></div>
-                <div>
-                  <p className="text-[10px] font-bold text-gray-400 uppercase">Tipe Pekerjaan</p>
-                  <p className="text-sm font-bold">{job.type}</p>
+              {job.tipe_pekerjaan && (
+                <div className="flex items-center gap-4 text-gray-600">
+                  <div className="p-3 bg-gray-50 rounded-xl text-[#3C5759]"><Clock size={20} /></div>
+                  <div>
+                    <p className="text-[10px] font-bold text-gray-400 uppercase">Tipe Pekerjaan</p>
+                    <p className="text-sm font-bold">{job.tipe_pekerjaan}</p>
+                  </div>
                 </div>
-              </div>
+              )}
               <div className="flex items-center gap-4 text-gray-600">
                 <div className="p-3 bg-gray-50 rounded-xl text-[#3C5759]"><Calendar size={20} /></div>
                 <div>
                   <p className="text-[10px] font-bold text-gray-400 uppercase">Batas Melamar</p>
-                  <p className="text-sm font-bold">{job.expiryDate}</p>
+                  <p className="text-sm font-bold">{job.lowongan_selesai || '-'}</p>
                 </div>
               </div>
-              <div className="flex items-center gap-4 text-gray-600">
-                <div className="p-3 bg-gray-50 rounded-xl text-[#3C5759]"><Briefcase size={20} /></div>
-                <div>
-                  <p className="text-[10px] font-bold text-gray-400 uppercase">Kategori</p>
-                  <p className="text-sm font-bold">{job.category}</p>
+              {job.perusahaan?.nama && (
+                <div className="flex items-center gap-4 text-gray-600">
+                  <div className="p-3 bg-gray-50 rounded-xl text-[#3C5759]"><Briefcase size={20} /></div>
+                  <div>
+                    <p className="text-[10px] font-bold text-gray-400 uppercase">Perusahaan</p>
+                    <p className="text-sm font-bold">{job.perusahaan.nama}</p>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
 
             <button className="w-full flex items-center justify-center gap-2 py-3 border-2 border-gray-100 text-gray-500 font-bold rounded-2xl hover:bg-gray-50 transition-all">

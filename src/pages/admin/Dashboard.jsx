@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Users,
   ShieldCheck,
@@ -43,114 +44,76 @@ const StatCard = ({ icon: Icon, label, value, badge, badgeColor }) => (
 );
 
 export default function Dashboard() {
-  const stats = [
-    {
-      label: "Total Pengguna Aktif",
-      value: "12,450",
-      icon: Users,
-      badge: "+12%",
-      badgeColor: "bg-green-100 text-green-600",
-    },
-    {
-      label: "Status Pekerja",
-      value: "60%",
-      icon: ShieldCheck,
-      badge: "Optimal",
-      badgeColor: "bg-fourth text-secondary",
-    },
-    {
-      label: "Kuesioner Aktif",
-      value: "4",
-      icon: FileText,
-      badge: "Active",
-      badgeColor: "bg-green-100 text-green-600",
-    },
-    {
-      label: "Total Menunggu",
-      value: "60",
-      icon: Clock,
-      badge: "Butuh Aksi",
-      badgeColor: "bg-orange-100 text-orange-600",
-    },
-  ];
-
-  const topCompanies = [
-    {
-      name: "Tech Nusantara Ltd.",
-      location: "Jakarta, Indonesia",
-      count: "124 Alumni",
-      icon: Building2,
-    },
-    {
-      name: "Global Innovation Inc.",
-      location: "Bandung, Indonesia",
-      count: "98 Alumni",
-      icon: Building2,
-    },
-    {
-      name: "Creative Digital Agency",
-      location: "Remote",
-      count: "76 Alumni",
-      icon: Store,
-    },
-    {
-      name: "Manufacture Pro",
-      location: "Surabaya, Indonesia",
-      count: "54 Alumni",
-      icon: Factory,
-    },
-    {
-      name: "State Bank Persero",
-      location: "Jakarta, Indonesia",
-      count: "42 Alumni",
-      icon: Landmark,
-    },
-  ];
-
-const geographicDist = [
-  { region: "DKI Jakarta", percentage: 45 },
-  { region: "Jawa Barat", percentage: 28 },
-  { region: "Banten", percentage: 15 },
-  { region: "Jawa Timur", percentage: 8 },
-  { region: "Luar Negeri", percentage: 4 },
-];
-
+  const navigate = useNavigate();
   const [dashData, setDashData] = useState(null);
+  const [lowonganStats, setLowonganStats] = useState(null);
+  const [topCompanies, setTopCompanies] = useState([]);
+  const [geographicDist, setGeographicDist] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    adminApi.getDashboardStats()
-      .then((res) => {
-        setDashData(res.data.data || res.data);
-      })
-      .catch(() => {});
+    const fetchAll = async () => {
+      setLoading(true);
+      try {
+        const [dashRes, lowRes, compRes, geoRes] = await Promise.all([
+          adminApi.getDashboardStats().catch(() => null),
+          adminApi.getLowonganStats().catch(() => null),
+          adminApi.getTopCompanies().catch(() => null),
+          adminApi.getGeographicDistribution().catch(() => null),
+        ]);
+        setDashData(dashRes?.data?.data || dashRes?.data || null);
+        setLowonganStats(lowRes?.data?.data || lowRes?.data || null);
+        setTopCompanies(compRes?.data?.data || compRes?.data || []);
+        setGeographicDist(geoRes?.data?.data || geoRes?.data || []);
+      } catch {
+        // silently fail
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchAll();
   }, []);
 
-  // Update stats with dynamic data
+  const companyIcons = [Building2, Building2, Store, Factory, Landmark];
+
+  // Compute "Belum Bekerja" — alumni not present in any status
+  const statusDistribution = useMemo(() => {
+    const dist = dashData?.status_distribution ?? [];
+    if (dist.length > 0 && dashData?.total_users) {
+      const totalInStatus = dist.reduce((sum, item) => sum + (item.total || 0), 0);
+      const belumBekerja = dashData.total_users - totalInStatus;
+      if (belumBekerja > 0) {
+        return [...dist, { status: "Belum Bekerja", total: belumBekerja }];
+      }
+    }
+    return dist;
+  }, [dashData]);
+
   const dynamicStats = [
     {
       label: "Total Pengguna Aktif",
-      value: dashData?.total_users ?? "12,450",
+      value: dashData?.total_users ?? "-",
       icon: Users,
-      badge: dashData?.users_growth ? `+${dashData.users_growth}%` : "+12%",
+      badge: dashData?.users_growth != null ? `+${dashData.users_growth}%` : null,
       badgeColor: "bg-green-100 text-green-600",
     },
     {
       label: "Status Pekerja",
-      value: dashData?.worker_percentage ? `${dashData.worker_percentage}%` : "60%",
+      value: dashData?.percent_bekerja != null ? `${dashData.percent_bekerja}%` : "-",
       icon: ShieldCheck,
       badge: "Optimal",
       badgeColor: "bg-fourth text-secondary",
     },
     {
       label: "Kuesioner Aktif",
-      value: dashData?.active_kuesioner ?? "4",
+      value: dashData?.active_kuesioner ?? "-",
       icon: FileText,
       badge: "Active",
       badgeColor: "bg-green-100 text-green-600",
     },
     {
       label: "Total Menunggu",
-      value: dashData?.pending_count ?? "60",
+      value: dashData?.pending_count ?? "-",
       icon: Clock,
       badge: "Butuh Aksi",
       badgeColor: "bg-orange-100 text-orange-600",
@@ -172,15 +135,15 @@ const geographicDist = [
           <h2 className="text-lg md:text-xl font-bold text-primary leading-tight">
             Pendaftaran Alumni yang Menunggu
           </h2>
-          <button className="flex items-center gap-2 text-primary font-semibold text-xs md:text-sm hover:underline cursor-pointer flex-shrink-0">
-            Semua <ArrowRight size={16} />
-          </button>
         </div>
 
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
           {/* Chart Penyelesaian - Tengah di HP */}
           <div className="flex justify-center items-center">
-            <ChartsPenyelesaian />
+            <ChartsPenyelesaian 
+              approved={dashData?.total_users ? (dashData.total_users - (dashData?.pending_users ?? 0)) : 0}
+              total={dashData?.total_users ?? 0}
+            />
           </div>
 
           {/* List Tinjauan - Responsive Flex */}
@@ -188,17 +151,19 @@ const geographicDist = [
             {[
               {
                 title: "Pendaftaran Alumni Menunggu",
-                count: 42,
+                count: dashData?.pending_users ?? 0,
                 sub: "Permintaan akun baru menunggu verifikasi",
                 icon: UserPlus,
-                progress: "w-[70%]",
+                progress: dashData?.total_users ? `${Math.min(Math.round((dashData.pending_users / dashData.total_users) * 100), 100)}%` : "0%",
+                link: "/wb-admin/manage-user",
               },
               {
                 title: "Lowongan Kerja Menunggu",
-                count: 18,
+                count: dashData?.pending_lowongan ?? 0,
                 sub: "Postingan lowongan kerja yang menunggu",
                 icon: Briefcase,
-                progress: "w-[45%]",
+                progress: lowonganStats?.total ? `${Math.min(Math.round((dashData?.pending_lowongan / lowonganStats.total) * 100), 100)}%` : "0%",
+                link: "/wb-admin/jobs",
               },
             ].map((item, i) => (
               <div
@@ -223,12 +188,16 @@ const geographicDist = [
                     </p>
                     <div className="w-full bg-gray-100 h-1.5 rounded-full overflow-hidden">
                       <div
-                        className={`bg-primary/40 h-full ${item.progress} rounded-full`}
+                        className="bg-primary/40 h-full rounded-full"
+                        style={{ width: item.progress }}
                       ></div>
                     </div>
                   </div>
                 </div>
-                <button className="w-full sm:w-auto px-5 py-2 bg-primary text-white text-sm font-semibold rounded-lg hover:opacity-90 transition-all cursor-pointer">
+                <button 
+                  onClick={() => navigate(item.link)}
+                  className="w-full sm:w-auto px-5 py-2 bg-primary text-white text-sm font-semibold rounded-lg hover:opacity-90 transition-all cursor-pointer"
+                >
                   Tinjau
                 </button>
               </div>
@@ -261,7 +230,7 @@ const geographicDist = [
             </h1>
             {/* Container chart dipastikan responsive tanpa overflow */}
             <div className="w-full max-w-[300px] lg:max-w-full">
-              <ChartKarir />
+              <ChartKarir data={statusDistribution} />
             </div>
           </div>
 
@@ -271,7 +240,7 @@ const geographicDist = [
               Top 5 Alumni Setiap Jurusan
             </h1>
             <div className="w-full">
-              <ChartJurusan />
+              <ChartJurusan data={dashData?.alumni_per_jurusan ?? []} />
             </div>
           </div>
         </div>
@@ -284,29 +253,31 @@ const geographicDist = [
               5 Perusahaan Perekrut Teratas
             </h2>
             <div className="bg-white border border-fourth rounded-2xl overflow-hidden shadow-sm h-fit">
-              {topCompanies.map((company, index) => (
+              {topCompanies.length > 0 ? topCompanies.map((company, index) => (
                 <div
                   key={index}
                   className={`flex items-center justify-between p-4 hover:bg-fourth/30 transition-colors ${index !== topCompanies.length - 1 ? "border-b border-fourth" : ""}`}
                 >
                   <div className="flex items-center gap-3 md:gap-4 min-w-0">
                     <div className="p-2 bg-fourth rounded-lg text-third flex-shrink-0">
-                      <company.icon size={18} />
+                      {React.createElement(companyIcons[index % companyIcons.length], { size: 18 })}
                     </div>
                     <div className="min-w-0">
                       <h4 className="font-bold text-primary text-xs md:text-sm truncate">
-                        {company.name}
+                        {company.nama}
                       </h4>
                       <p className="text-third text-[10px] truncate">
-                        {company.location}
+                        {company.lokasi}
                       </p>
                     </div>
                   </div>
                   <span className="bg-fourth text-primary px-3 py-1 rounded-full text-[9px] font-bold flex-shrink-0 ml-2">
-                    {company.count}
+                    {company.alumni_count} Alumni
                   </span>
                 </div>
-              ))}
+              )) : (
+                <div className="p-4 text-center text-gray-400 text-sm">Belum ada data perusahaan</div>
+              )}
             </div>
           </div>
 
@@ -317,11 +288,11 @@ const geographicDist = [
             </h2>
             {/* Hapus h-full dan justify-between, ganti dengan gap-5 */}
             <div className="bg-white border border-fourth rounded-2xl p-5 md:p-8 shadow-sm flex flex-col gap-5 h-fit">
-              {geographicDist.map((item, index) => (
+              {geographicDist.length > 0 ? geographicDist.map((item, index) => (
                 <div key={index} className="space-y-2">
                   <div className="flex justify-between items-center text-[10px] md:text-xs">
                     <span className="font-bold text-primary uppercase tracking-wider">
-                      {item.region}
+                      {item.provinsi || item.region}
                     </span>
                     <span className="text-third font-medium">
                       {item.percentage}%
@@ -334,7 +305,9 @@ const geographicDist = [
                     ></div>
                   </div>
                 </div>
-              ))}
+              )) : (
+                <div className="text-center text-gray-400 text-sm">Belum ada data distribusi</div>
+              )}
             </div>
           </div>
         </div>
