@@ -108,7 +108,7 @@ export default function SideBar({ active, setActive }) {
         <div className="p-4 border-t border-fourth bg-white">
           <button
             onClick={ handleLogout }
-            className="w-full flex items-center justify-center gap-2 bg-primary text-white py-3.5 rounded-xl hover:opacity-90 active:scale-[0.98] transition-all shadow-lg shadow-primary/20 cursor-pointer"
+            className="w-full flex items-center justify-center gap-2 bg-primary text-white py-3.5 rounded-xl hover:opacity-90 active:scale-[0.98] transition-all cursor-pointer"
           >
             <LogOut size={18} />
             <span className="text-sm font-semibold">Keluar Aplikasi</span>

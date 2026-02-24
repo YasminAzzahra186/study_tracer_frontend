@@ -11,6 +11,7 @@ import LupaPass from "../pages/LupaPass";
 import Register from "../pages/register/Register";
 import { useAuth } from "../context/AuthContext";
 import Logout from "../pages/Logout";
+import TambahPertanyaan from "../pages/admin/TambahKuesioner";
 
 export default function AppRouter() {
   const { isAuthenticated, isAdmin, loading } = useAuth();
@@ -37,7 +38,10 @@ export default function AppRouter() {
           <Route path="manage-user" element={<UserManagement />} />
           <Route path="jobs" element={<JobsManagement />} />
           <Route path="master" element={<MasterTable />} />
-          <Route path="kuisoner" element={<KuisonerManage />} />
+          <Route path="kuisoner">
+            <Route index element={<KuisonerManage />} />
+            <Route path="tambah-pertanyaan" element={<TambahPertanyaan />} />
+          </Route>
         </Route>
       </Route>
       <Route path="/" element={isAuthenticated ? <div className="p-8 text-center"><h1 className="text-2xl font-bold text-primary">Selamat Datang, Alumni!</h1><p className="text-third mt-2">Halaman alumni akan segera hadir.</p></div> : <Navigate to="/login" />} />

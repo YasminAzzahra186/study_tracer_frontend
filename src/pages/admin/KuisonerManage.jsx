@@ -1,146 +1,207 @@
-import React from "react";
-import { 
-  Eye, 
-  PlusCircle, 
-  Pencil, 
-  Trash2, 
-  EyeOff, 
+import React, { useState } from "react";
+import {
+  Plus,
+  Eye,
+  Pencil,
+  Trash2,
   GripVertical,
-  ChevronDown,
-  Plus
+  EyeOff,
+  Archive
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
-// Sub-komponen Card untuk setiap pertanyaan
-const QuestionCard = ({ data }) => {
-  const isHidden = data.status === "TERSEMBUNYI";
+export default function KuisonerManage() {
+  const [filter, setFilter] = useState("Semua");
+  const [questions, setQuestions] = useState([
+    {
+      id: "Q1",
+      type: "Pilihan Tunggal",
+      status: "TERLIHAT", // Status bisa: TERLIHAT, TERSEMBUNYI, DRAF
+      text: "Apa status pekerjaan Anda saat ini?",
+      options: "Opsi: Bekerja Paruh Waktu, Bekerja Penuh Waktu...",
+      category: "Bekerja",
+    },
+    {
+      id: "Q2",
+      type: "Pilihan Ganda",
+      status: "TERLIHAT",
+      text: "Manakah dari keterampilan berikut yang paling relevan dengan pekerjaan Anda saat ini?",
+      options: "Opsi: Berpikir Kritis, Komunikasi, Teknologi...",
+      category: "Bekerja",
+    },
+    {
+      id: "Q3",
+      type: "TERSEMBUNYI",
+      status: "TERSEMBUNYI",
+      text: "Nilai relevansi program studi Anda dengan karier Anda saat ini",
+      options: "Skala: 1 (Tidak Relevan) hingga 5 (Sangat Relevan)",
+      category: "Kuliah",
+    },
+    {
+      id: "Q4",
+      type: "Teks Pendek",
+      status: "DRAF",
+      text: "Please specify your job title.",
+      options: "Open ended response",
+      category: "Bekerja",
+    },
+  ]);
+
+  // Fungsi Aksi
+  const updateStatus = (id, newStatus) => {
+    setQuestions((prev) =>
+      prev.map((q) => (q.id === id ? { ...q, status: newStatus } : q))
+    );
+  };
+
+  const deleteQuestion = (id) => {
+    setQuestions((prev) => prev.filter((q) => q.id !== id));
+  };
+
+  // Statistik
+  const hiddenCount = questions.filter((q) => q.status === "TERSEMBUNYI").length;
+  const draftCount = questions.filter((q) => q.status === "DRAF").length;
+  const activeCount = questions.filter((q) => q.status === "TERLIHAT").length;
+
+  const categories = ["Semua", "Kuisoner Bekerja", "Kuisoner Kuliah", "Kuisoner Wirausaha", "Kuisoner Pencari Kerja"];
+
+  const filteredQuestions = questions.filter((q) => {
+    if (filter === "Draf") return q.status === "DRAF";
+    if (filter === "Semua") return true;
+    return filter.includes(q.category);
+  });
+
+  const navigate = useNavigate()
 
   return (
-    <div className={`bg-white p-4 md:p-6 rounded-2xl border-l-4 border border-gray-100 shadow-sm flex items-center gap-4 transition-all duration-300 hover:shadow-md hover:border-gray-200 group ${isHidden ? 'border-l-gray-300 opacity-80 hover:opacity-90' : 'border-l-[#3C5759] hover:bg-blue-50/30'}`}>
-      {/* Handle untuk Drag (Visual Only) */}
-      <div className="cursor-grab text-gray-300 group-hover:text-gray-400">
-        <GripVertical size={20} />
-      </div>
-
-      {/* Konten Pertanyaan */}
-      <div className="flex-1 space-y-1 min-w-0">
-        <div className="flex items-center gap-2 flex-wrap">
-          <span className="bg-gray-100 text-[#3C5759] text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">
-            {data.id} • {data.type}
-          </span>
-          <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${isHidden ? 'bg-gray-100 text-gray-400' : 'bg-green-100 text-green-600'}`}>
-            {data.status}
-          </span>
-        </div>
-        <h3 className="font-bold text-slate-700 text-sm md:text-base leading-tight truncate">
-          {data.text}
-        </h3>
-        <p className="text-xs text-gray-400 italic font-medium">
-          {data.sub}
-        </p>
-      </div>
-
-      {/* Tombol Aksi */}
-      <div className="flex items-center gap-1 md:gap-2">
-        <button className="p-2 text-gray-400 hover:bg-[#3C5759]/10 hover:text-[#3C5759] rounded-lg transition-colors">
-          <Pencil size={18} />
-        </button>
-        <button className="p-2 text-gray-400 hover:bg-[#3C5759]/10 hover:text-[#3C5759] rounded-lg transition-colors">
-          {isHidden ? <EyeOff size={18} /> : <Eye size={18} />}
-        </button>
-        <button className="p-2 text-gray-400 hover:bg-red-50 hover:text-red-500 rounded-lg transition-colors">
-          <Trash2 size={18} />
-        </button>
-      </div>
-    </div>
-  );
-};
-
-const KuisonerManage = () => {
-  const [activeTab, setActiveTab] = React.useState("Semua");
-
-  const stats = [
-    { label: "TOTAL PERTANYAAN", value: "12", color: "text-[#3C5759]" },
-    { label: "AKTIF", value: "10", color: "text-green-600" },
-    { label: "DRAF", value: "2", color: "text-orange-500" },
-  ];
-
-  const tabs = ["Semua", "Kuisoner Bekerja", "Kuisoner Kuliah", "Kuisoner Wirusaha", "Kuisoner Pencari Kerja"];
-
-  const questions = [
-    { id: "Q1", type: "Pilihan Tunggal", status: "TERLIHAT", text: "Apa status pekerjaan Anda saat ini?", sub: "Opsi: Bekerja Paruh Waktu, Bekerja Penuh Waktu..." },
-    { id: "Q2", type: "Pilihan Ganda", status: "TERLIHAT", text: "Manakah dari keterampilan berikut yang paling relevan dengan pekerjaan Anda saat ini?", sub: "Opsi: Berpikir Kritis, Komunikasi, Teknologi..." },
-    { id: "Q3", type: "Skala (1-5)", status: "TERSEMBUNYI", text: "Nilai relevansi program studi Anda dengan karier Anda saat ini", sub: "Skala: 1 (Tidak Relevan) hingga 5 (Sangat Relevan)" },
-    { id: "Q4", type: "Teks Pendek", status: "TERLIHAT", text: "Please specify your job title.", sub: "Open ended response" },
-  ];
-
-  return (
-    <div className="space-y-8">
-      {/* HEADER SECTION */}
-      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
-        <div>
-          <h1 className="text-2xl md:text-3xl font-extrabold text-[#3C5759]">Kuesioner</h1>
-          <p className="text-gray-500 text-sm mt-1">Kelola dan atur kuesioner untuk Studi Penelusuran Lulusan (Tracer Study)</p>
-        </div>
-        <div className="flex flex-wrap gap-2 w-full lg:w-auto">
-          <button className="flex-1 lg:flex-none flex items-center justify-center gap-2 px-4 py-2 bg-[#3C5759] text-white rounded-lg text-sm font-semibold hover:bg-[#2e4344] hover:shadow-md transition-all">
-            <Eye size={18} /> Lihat Jawaban Alumni
+    <div className="p-6 bg-gray-50 min-h-screen font-sans text-slate-700">
+      {/* Header */}
+      <div className="flex justify-between items-start mb-8">
+        <div className="flex gap-3">
+          <button className="flex items-center cursor-pointer gap-2 p-4 bg-slate-700 text-white rounded-lg text-sm font-semibold hover:bg-slate-800 transition-all shadow-sm">
+            <Eye size={16} /> Lihat Jawaban Alumni
           </button>
-          <button className="flex-1 lg:flex-none flex items-center justify-center gap-2 px-4 py-2 bg-[#3C5759] text-white rounded-lg text-sm font-semibold hover:bg-[#2e4344] hover:shadow-md transition-all">
-            <PlusCircle size={18} /> Tambah Pertanyaan Baru
+          <button onClick={() => navigate("/wb-admin/kuisoner/tambah-pertanyaan")} className="flex items-center cursor-pointer gap-2 p-4 bg-[#436163] text-white rounded-lg text-sm font-semibold hover:opacity-90 transition-all shadow-sm">
+            <Plus size={16} /> Tambah Pertanyaan Baru
           </button>
         </div>
       </div>
 
-      {/* STATS GRID */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {stats.map((stat, i) => (
-          <div key={i} className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex flex-col justify-center min-h-[100px] hover:shadow-md hover:border-gray-200 transition-all">
-            <p className="text-[10px] font-black text-gray-400 tracking-widest mb-1">{stat.label}</p>
-            <h2 className={`text-3xl font-black ${stat.color}`}>{stat.value}</h2>
-          </div>
-        ))}
-        {/* Dropdown Mode Tampilan dengan Tab Filter */}
-        <div className="relative group bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex flex-col justify-between min-h-[100px] cursor-pointer hover:shadow-md hover:border-gray-200 transition-all">
-          <p className="text-[10px] font-black text-gray-400 tracking-widest uppercase">Mode Tampilan</p>
-          <div className="flex justify-between items-center">
-            <span className="font-bold text-[#3C5759] text-sm">Detail Lengkap</span>
-            <ChevronDown size={18} className="text-gray-400 group-hover:text-[#3C5759] transition-colors" />
-          </div>
-          {/* Hidden Dropdown Tabs */}
-          <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-100 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
-            {tabs.map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`w-full text-left px-4 py-3 text-sm font-medium transition-colors ${
-                  activeTab === tab
-                    ? "bg-[#3C5759] text-white"
-                    : "text-gray-700 hover:bg-gray-50"
-                }`}
-              >
-                {tab}
-              </button>
-            ))}
-          </div>
+      {/* Stats Cards */}
+      <div className="grid grid-cols-4 gap-4 mb-8">
+        <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
+          <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">Total Pertanyaan</p>
+          <p className="text-2xl font-bold text-slate-800">{questions.length}</p>
+        </div>
+        <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
+          <p className="text-[10px] font-bold text-green-500 uppercase mb-1">Aktif</p>
+          <p className="text-2xl font-bold text-green-600">{activeCount}</p>
+        </div>
+        <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm border-l-4 border-l-orange-400">
+          <p className="text-[10px] font-bold text-orange-400 uppercase mb-1">Draf</p>
+          <p className="text-2xl font-bold text-orange-500">{draftCount}</p>
+        </div>
+        <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm border-l-4 border-l-slate-400">
+          <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">Disembunyikan</p>
+          <p className="text-2xl font-bold text-slate-600">{hiddenCount}</p>
         </div>
       </div>
 
-      {/* LIST PERTANYAAN */}
+      {/* Filter & Draft Button */}
+      <div className="flex justify-between items-center mb-6">
+        <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setFilter(cat)}
+              className={`px-4 py-2 rounded-full text-xs font-bold transition-all ${
+                filter === cat ? "bg-slate-700 text-white shadow-md" : "bg-white text-slate-500 border border-gray-200 hover:bg-gray-100"
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+        <button
+          onClick={() => setFilter("Draf")}
+          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all border ${
+            filter === "Draf" ? "bg-orange-500 text-white border-orange-500" : "bg-white text-orange-500 border-orange-200 hover:bg-orange-50"
+          }`}
+        >
+          <Archive size={14} /> Lihat Draf ({draftCount})
+        </button>
+      </div>
+
+      {/* Questions List */}
       <div className="space-y-4">
-        {questions.map((q) => (
-          <QuestionCard key={q.id} data={q} />
-        ))}
-        
-        {/* Tombol Tambah yang putus-putus (Dashed) */}
-        <button className="w-full py-10 border-2 border-dashed border-gray-200 rounded-2xl flex flex-col items-center justify-center gap-2 text-gray-400 hover:border-[#3C5759] hover:text-[#3C5759] hover:bg-blue-50/30 transition-all group">
-          <div className="p-2 bg-gray-50 rounded-full group-hover:bg-[#3C5759]/10 transition-colors">
-             <Plus size={24} />
+        {filteredQuestions.map((q) => (
+          <div
+            key={q.id}
+            className={`group bg-white rounded-xl border-l-4 p-5 shadow-sm hover:shadow-md transition-all flex items-start gap-4 ${
+              q.status === "TERLIHAT" ? "border-l-[#436163]" : q.status === "DRAF" ? "border-l-orange-400" : "border-l-slate-300 bg-slate-50/50"
+            }`}
+          >
+            <div className="pt-1 cursor-move text-slate-300">
+              <GripVertical size={20} />
+            </div>
+
+            <div className="flex-1">
+              <div className="flex items-center gap-3 mb-2">
+                <span className="bg-slate-100 text-slate-500 text-[10px] font-bold px-2 py-0.5 rounded uppercase">
+                  {q.id} • {q.type}
+                </span>
+                <span className={`text-[9px] font-bold px-2 py-0.5 rounded ${
+                  q.status === "TERLIHAT" ? "bg-green-100 text-green-600" : q.status === "DRAF" ? "bg-orange-100 text-orange-600" : "bg-slate-200 text-slate-600"
+                }`}>
+                  {q.status}
+                </span>
+              </div>
+              <h4 className="font-bold text-slate-700 mb-1">{q.text}</h4>
+              <p className="text-xs text-slate-400 italic">{q.options}</p>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex items-center gap-1">
+              {/* EDIT */}
+              <button className="p-2 text-slate-400 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-all" title="Edit">
+                <Pencil size={18} />
+              </button>
+
+              {/* HIDE / SHOW */}
+              <button
+                onClick={() => updateStatus(q.id, q.status === "TERSEMBUNYI" ? "TERLIHAT" : "TERSEMBUNYI")}
+                className={`p-2 rounded-lg transition-all ${q.status === "TERSEMBUNYI" ? "text-blue-600 bg-blue-50" : "text-slate-400 hover:text-slate-600 hover:bg-slate-100"}`}
+                title={q.status === "TERSEMBUNYI" ? "Tampilkan" : "Sembunyikan"}
+              >
+                {q.status === "TERSEMBUNYI" ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+
+              {/* DRAFT */}
+              <button
+                onClick={() => updateStatus(q.id, "DRAF")}
+                className={`p-2 rounded-lg transition-all ${q.status === "DRAF" ? "text-orange-600 bg-orange-50" : "text-slate-400 hover:text-orange-500 hover:bg-orange-50"}`}
+                title="Pindahkan ke Draf"
+              >
+                <Archive size={18} />
+              </button>
+
+              {/* TRASH */}
+              <button
+                onClick={() => deleteQuestion(q.id)}
+                className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"
+                title="Hapus"
+              >
+                <Trash2 size={18} />
+              </button>
+            </div>
           </div>
-          <span className="font-bold text-sm">Tambah Pertanyaan Lain</span>
+        ))}
+
+        <button className="w-full py-10 border-2 border-dashed border-slate-200 rounded-2xl flex flex-col items-center justify-center gap-2 text-slate-400 hover:border-[#436163] hover:text-[#436163] transition-all bg-white/50 group">
+          <Plus size={24} className="group-hover:scale-110 transition-transform" />
+          <span className="text-sm font-bold">Tambah Pertanyaan Lain</span>
         </button>
       </div>
     </div>
   );
-};
-
-export default KuisonerManage;
+}

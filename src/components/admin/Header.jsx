@@ -28,6 +28,7 @@ export default function Header({ toggleSidebar }) {
         };
 
       case "/wb-admin/kuisoner":
+      case "/wb-admin/kuisoner/tambah-pertanyaan":
         return {
           title: "Manajemen Kuesioner",
           text: "Kelola dan atur kuesioner untuk Studi Penelusuran Lulusan (Tracer Study)",
