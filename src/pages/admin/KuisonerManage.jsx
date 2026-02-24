@@ -78,7 +78,7 @@ export default function KuisonerManage() {
       {/* Header */}
       <div className="flex justify-between items-start mb-8">
         <div className="flex gap-3">
-          <button className="flex items-center cursor-pointer gap-2 p-4 bg-slate-700 text-white rounded-lg text-sm font-semibold hover:bg-slate-800 transition-all shadow-sm">
+          <button onClick={() => navigate("/wb-admin/kuisoner/lihat-jawaban")} className="flex items-center cursor-pointer gap-2 p-4 bg-slate-700 text-white rounded-lg text-sm font-semibold hover:bg-slate-800 transition-all shadow-sm">
             <Eye size={16} /> Lihat Jawaban Alumni
           </button>
           <button onClick={() => navigate("/wb-admin/kuisoner/tambah-pertanyaan")} className="flex items-center cursor-pointer gap-2 p-4 bg-[#436163] text-white rounded-lg text-sm font-semibold hover:opacity-90 transition-all shadow-sm">

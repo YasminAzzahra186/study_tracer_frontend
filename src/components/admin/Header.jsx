@@ -33,6 +33,11 @@ export default function Header({ toggleSidebar }) {
           title: "Manajemen Kuesioner",
           text: "Kelola dan atur kuesioner untuk Studi Penelusuran Lulusan (Tracer Study)",
         };
+      case "/wb-admin/kuisoner/lihat-jawaban":
+        return {
+          title: "Jawaban Alumni",
+          text: "Kelola dan tinjau Jawaban Individu"
+        }
       default:
         return "Alumni Tracer";
     }

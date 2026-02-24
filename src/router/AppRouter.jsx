@@ -13,6 +13,7 @@ import Register from "../pages/register/Register";
 import { useAuth } from "../context/AuthContext";
 import Logout from "../pages/Logout";
 import TambahPertanyaan from "../pages/admin/TambahKuesioner";
+import LihatJawaban from "../pages/admin/LihatJawaban";
 
 export default function AppRouter() {
   const { isAuthenticated, isAdmin, loading } = useAuth();
@@ -43,6 +44,7 @@ export default function AppRouter() {
           <Route path="kuisoner">
             <Route index element={<KuisonerManage />} />
             <Route path="tambah-pertanyaan" element={<TambahPertanyaan />} />
+            <Route path="lihat-jawaban" element={<LihatJawaban />} />
           </Route>
         </Route>
       </Route>
