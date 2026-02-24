@@ -6,11 +6,22 @@ export const adminApi = {
     return api.get('/admin/dashboard-stats');
   },
 
+  getLowonganStats() {
+    return api.get('/admin/lowongan-stats');
+  },
+
+  getTopCompanies(limit = 5) {
+    return api.get('/admin/top-companies', { params: { limit } });
+  },
+
+  getGeographicDistribution() {
+    return api.get('/admin/geographic-distribution');
+  },
+
   // ── User Management ────────────────────────────
   getPendingUsers(perPage = 15) {
     return api.get('/admin/pending-users', { params: { per_page: perPage } });
   },
-
   approveUser(id) {
     return api.post(`/admin/approve-user/${id}`);
   },
