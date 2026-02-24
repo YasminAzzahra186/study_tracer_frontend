@@ -7,13 +7,13 @@ import {
   Download,
   Trash2,
   Pencil,
-  FileSpreadsheet,
-  Search
+  Search,
+  Building2 // Import icon baru untuk perusahaan
 } from "lucide-react";
 import SmoothDropdown from "../../components/admin/SmoothDropdown";
 import { Link } from "react-router-dom";
 
-// --- SUB-KOMPONEN REUSABLE TABLE ---
+// --- SUB-KOMPONEN REUSABLE TABLE (Tidak Berubah) ---
 const ManagedTable = ({ title, icon: Icon, data, placeholder, onAddLabel, viewAllLink }) => {
   const [isAdding, setIsAdding] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -96,7 +96,7 @@ const ManagedTable = ({ title, icon: Icon, data, placeholder, onAddLabel, viewAl
                     </div>
                   </td>
                 </tr>
-            ))}
+              ))}
           </tbody>
         </table>
         <Link to={viewAllLink} className="w-full mt-4 py-2 flex justify-center text-xs font-bold text-primary hover:text-secondary transition-all italic border-t border-dashed border-gray-100">
@@ -123,6 +123,13 @@ const MasterTable = () => {
     { c: "TYP-03", n: "Entrepreneur" }
   ];
 
+  // Data baru untuk perusahaan
+  const dataPerusahaan = [
+    { c: "CMP-01", n: "Tech Nusantara Ltd." },
+    { c: "CMP-02", n: "Global Innovation Inc." },
+    { c: "CMP-03", n: "Creative Digital Agency" }
+  ];
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col lg:grid lg:grid-cols-12 gap-4">
@@ -136,6 +143,16 @@ const MasterTable = () => {
             placeholder="Contoh: Teknik Mesin"
             onAddLabel="Tambah Jurusan"
             viewAllLink="/admin/jurusan"
+          />
+
+          {/* Tabel Baru: Manajemen Perusahaan */}
+          <ManagedTable
+            title="Manajemen Perusahaan"
+            icon={Building2}
+            data={dataPerusahaan}
+            placeholder="Contoh: PT. Maju Jaya"
+            onAddLabel="Tambah Perusahaan"
+            viewAllLink="/admin/companies"
           />
 
           <ManagedTable
@@ -156,20 +173,31 @@ const MasterTable = () => {
               <h3 className="font-bold text-primary text-sm">Laporan Sistem</h3>
             </div>
 
-            <div className="space-y-3">
-              <SmoothDropdown label="JENIS LAPORAN" options={["Data Jurusan", "Data Alumni", "Data Tipe Pekerjaan", "Data Perusahaan"]} />
-              <div className="grid grid-cols-2 gap-3">
-                <SmoothDropdown label="TAHUN" options={["2024", "2023"]} />
-                <div className="space-y-1">
-                  <label className="text-[12px] font-bold text-gray-400 uppercase">Format</label>
-                  <div className="flex gap-2 mt-4">
-                    {["PDF", "XLSX"].map(fmt => (
-                      <button key={fmt} onClick={() => setSelectedFormat(fmt)} className={`cursor-pointer flex-1 py-2 rounded-lg text-xs font-bold transition-all hover:opacity-90 ${selectedFormat === fmt ? "bg-primary text-white" : "bg-gray-50 text-gray-400 border"}`}>{fmt}</button>
-                    ))}
-                  </div>
+            <div className="space-y-4">
+              {/* Opsi "Data Alumni" dihapus dari list */}
+              <SmoothDropdown 
+                label="JENIS LAPORAN" 
+                options={["Data Jurusan", "Data Tipe Pekerjaan", "Data Perusahaan"]} 
+              />
+              
+              {/* Filter Tahun Dihapus */}
+              
+              <div className="space-y-1.5">
+                <label className="text-[12px] font-bold text-gray-400 uppercase">Format Laporan</label>
+                <div className="flex gap-2">
+                  {["PDF", "XLSX"].map(fmt => (
+                    <button 
+                      key={fmt} 
+                      onClick={() => setSelectedFormat(fmt)} 
+                      className={`cursor-pointer flex-1 py-2.5 rounded-lg text-xs font-bold transition-all hover:opacity-90 ${selectedFormat === fmt ? "bg-primary text-white shadow-md" : "bg-gray-50 text-gray-400 border border-gray-200"}`}
+                    >
+                      {fmt}
+                    </button>
+                  ))}
                 </div>
               </div>
-              <button className="cursor-pointer w-full py-2 bg-primary text-white rounded-lg font-bold text-sm flex items-center justify-center gap-2 hover:opacity-90 transition-all shadow-md">
+
+              <button className="cursor-pointer w-full py-2.5 bg-primary text-white rounded-lg font-bold text-sm flex items-center justify-center gap-2 hover:opacity-90 transition-all shadow-md mt-2">
                 <Download size={14} /> Buat Laporan
               </button>
             </div>
