@@ -4,15 +4,17 @@ import {
   FileText, LogOut, X
 } from 'lucide-react';
 import Logo from '../../assets/icon.png';
-import { Link, useNavigate  } from 'react-router-dom';
+import { Link, useLocation, useNavigate  } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { alertConfirm } from '../../utilitis/alert';
+import { useEffect } from 'react';
 
 export default function SideBar({ active, setActive }) {
   const [activeMenu, setActiveMenu] = useState('Beranda');
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const { logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation()
 
   const menuItems = [
     { name: 'Beranda', icon: <LayoutDashboard size={20} />, path: '/wb-admin' },
@@ -36,9 +38,31 @@ export default function SideBar({ active, setActive }) {
     }
   };
 
+  const getTitle = () => {
+    switch (location.pathname) {
+      case "/wb-admin":
+        return "Beranda"
+      case "/wb-admin/manage-user":
+        return "Manajemen Pengguna"
+      case "/wb-admin/jobs":
+        return "Manajemen Pekerjaan"
+      case "/wb-admin/master":
+        return "Data Master"
+      case "/wb-admin/kuisoner":
+      case "/wb-admin/kuisoner/tambah-pertanyaan":
+      case "/wb-admin/kuisoner/lihat-jawaban":
+        return "Kuesioner"
+      default:
+        return "Alumni Tracer";
+    }
+  };
+
+
+  useEffect(() => {
+    setActiveMenu(getTitle());
+  }, [location.pathname]);
   return (
     <>
-      {/* Overlay: Mencegah scroll di background saat sidebar buka di HP */}
       {active && (
         <div
           className="fixed inset-0 bg-black/40 z-[60] lg:hidden backdrop-blur-sm transition-opacity"
@@ -50,7 +74,7 @@ export default function SideBar({ active, setActive }) {
       <div className={`
         fixed lg:relative z-[70]
         w-72 md:w-65
-        h-[100dvh] /* Menggunakan Dynamic Viewport Height */
+        h-[100dvh]
         bg-white border-r border-fourth
         flex flex-col
         transition-all duration-300 ease-in-out

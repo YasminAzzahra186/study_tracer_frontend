@@ -114,19 +114,15 @@ export default function KuisonerManage() {
         </div>
       </div>
 
-      {/* --- FILTER & TOMBOL --- */}
-      {/* justify-between memisahkan Kiri (Kategori) dan Kanan (Status Button) */}
-      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-6">
-        
-        {/* KIRI: Filter Kategori */}
+      <div className="flex flex-col lg:flex-row items-center justify-between gap-4 mb-6">
         <div className="flex gap-2 overflow-x-auto pb-2 w-full lg:w-auto no-scrollbar mask-gradient">
           {categories.map((cat) => (
             <button
               key={cat}
               onClick={() => setFilter(cat)}
-              className={`px-4 py-2 rounded-lg text-xs font-bold transition-all whitespace-nowrap border ${
-                filter === cat 
-                  ? "bg-primary text-white border-primary shadow-md" 
+              className={`cursor-pointer px-4 py-2 rounded-lg text-xs font-bold transition-all whitespace-nowrap border ${
+                filter === cat
+                  ? "bg-primary text-white border-primary shadow-md"
                   : "bg-white text-slate-500 border-gray-200 hover:border-slate-300 hover:bg-slate-50"
               }`}
             >
@@ -150,9 +146,9 @@ export default function KuisonerManage() {
 
           <button
             onClick={() => setFilter("Draf")}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all border whitespace-nowrap ${
-              filter === "Draf" 
-                ? "bg-orange-500 text-white border-orange-500 shadow-md" 
+            className={`cursor-pointer flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all border whitespace-nowrap ${
+              filter === "Draf"
+                ? "bg-orange-500 text-white border-orange-500 shadow-md"
                 : "bg-white text-orange-600 border-orange-200 hover:bg-orange-50"
             }`}
           >
@@ -223,7 +219,7 @@ export default function KuisonerManage() {
 
         <button 
             onClick={() => navigate("/wb-admin/kuisoner/tambah-pertanyaan")}
-            className="w-full py-8 border-2 border-dashed border-slate-300 rounded-2xl flex flex-col items-center justify-center gap-3 text-slate-400 hover:border-primary hover:text-primary hover:bg-white transition-all group"
+            className="cursor-pointer w-full py-8 border-2 border-dashed border-slate-300 rounded-2xl flex flex-col items-center justify-center gap-3 text-slate-400 hover:border-primary hover:text-primary hover:bg-white transition-all group"
         >
           <div className="p-3 bg-slate-100 rounded-full group-hover:bg-primary group-hover:text-white transition-colors">
              <Plus size={24} />
