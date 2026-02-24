@@ -5,6 +5,7 @@ import Dashboard from "../pages/admin/Dashboard";
 import { ProtectedRoute } from "../utilitis/ProtectedRoute";
 import UserManagement from "../pages/admin/UserManagement";
 import JobsManagement from "../pages/admin/JobsManagement";
+import JobDetail from "../pages/admin/JobDetail";
 import MasterTable from "../pages/admin/MasterTable";
 import KuisonerManage from "../pages/admin/KuisonerManage";
 import LupaPass from "../pages/LupaPass";
@@ -37,6 +38,7 @@ export default function AppRouter() {
           <Route index element={<Dashboard />} />
           <Route path="manage-user" element={<UserManagement />} />
           <Route path="jobs" element={<JobsManagement />} />
+          <Route path="job-detail/:id" element={<JobDetail />} />
           <Route path="master" element={<MasterTable />} />
           <Route path="kuisoner">
             <Route index element={<KuisonerManage />} />

@@ -15,7 +15,7 @@ export const authApi = {
    * POST /login
    * @param {{ email: string, password: string }} credentials
    */
-  login(credentials) {
+  async login(credentials) {
     return api.post('/login', credentials);
   },
 
