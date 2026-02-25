@@ -16,6 +16,7 @@ export default function Header({ toggleSidebar }) {
           text: "Kelola pendaftaran alumni tertunda dan permintaan pembaruan profil",
         };
       case "/wb-admin/jobs":
+      case "/wb-admin/jobs/job-detail":
         return {
           title: "Manajemen Pekerjaan",
           text: "Tinjau, setujui, dan kelola postingan lowongan kerja dari alumni",

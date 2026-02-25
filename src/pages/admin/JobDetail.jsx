@@ -9,9 +9,10 @@ import {
   Share2, 
   AlertCircle,
   Loader2,
-  FileText
+  FileText,
+  ArrowLeft
 } from 'lucide-react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import api from '../../api/axios';
 import { STORAGE_BASE_URL } from '../../api/axios';
 import banner from '../../assets/banner.jfif';
@@ -88,15 +89,13 @@ const JobDetail = () => {
         
         {/* 1. TOMBOL KEMBALI - Diperbaiki */}
         {/* Tidak menggunakan fixed, tapi diletakkan di awal flow konten agar tidak tertutup sidebar */}
-        <div className="mb-6">
-          <button 
-            onClick={() => navigate(-1)}
-            className="inline-flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm hover:shadow-md border border-gray-200 text-gray-600 hover:text-[#3C5759] font-bold transition-all group text-sm"
-          >
-            <ChevronLeft size={18} className="group-hover:-translate-x-0.5 transition-transform" />
-            <span>Kembali</span>
-          </button>
-        </div>
+        <Link
+          to="/wb-admin/jobs"
+          className="flex items-center gap-2 text-third hover:text-primary transition-colors text-sm font-medium group mb-6 mt-4"
+        >
+          <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
+          Kembali
+        </Link>
 
         {/* Grid Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">

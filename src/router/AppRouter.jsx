@@ -14,6 +14,7 @@ import { useAuth } from "../context/AuthContext";
 import Logout from "../pages/Logout";
 import TambahPertanyaan from "../pages/admin/TambahKuesioner";
 import LihatJawaban from "../pages/admin/LihatJawaban";
+import LihatJawabanDetail from "../pages/admin/LihatJawabanDetail";
 
 export default function AppRouter() {
   const { isAuthenticated, isAdmin, loading } = useAuth();
@@ -38,13 +39,19 @@ export default function AppRouter() {
         <Route element={<AdminLayout />}>
           <Route index element={<Dashboard />} />
           <Route path="manage-user" element={<UserManagement />} />
-          <Route path="jobs" element={<JobsManagement />} />
-          <Route path="job-detail/:id" element={<JobDetail />} />
+          <Route path="jobs" >
+            <Route index element={<JobsManagement />} />
+            <Route path="job-detail/:id" element={<JobDetail />} />
+          </Route>
+          
           <Route path="master" element={<MasterTable />} />
           <Route path="kuisoner">
             <Route index element={<KuisonerManage />} />
             <Route path="tambah-pertanyaan" element={<TambahPertanyaan />} />
-            <Route path="lihat-jawaban" element={<LihatJawaban />} />
+            <Route path="lihat-jawaban" > 
+              <Route index element={<LihatJawaban />} />
+              <Route path="detail/:id" element={<LihatJawabanDetail />} />
+            </Route>
           </Route>
         </Route>
       </Route>

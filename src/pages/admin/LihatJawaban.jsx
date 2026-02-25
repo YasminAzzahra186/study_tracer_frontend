@@ -10,14 +10,29 @@ import {
   TrendingUp,
   ClipboardList,
   Users,
-  Menu,
   ArrowLeft
 } from "lucide-react";
 import SmoothDropdown from "../../components/admin/SmoothDropdown";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
+// Sub-komponen StatCard
+function StatCard({ icon, label, value, bgColor, iconColor, className = "" }) {
+  return (
+    <div className={`p-6 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-5 ${bgColor} ${className}`}>
+      <div className={`p-3.5 rounded-xl ${iconColor} bg-slate-50 border border-slate-100`}>
+        {icon}
+      </div>
+      <div>
+        <p className="text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">{label}</p>
+        <p className="text-2xl font-black text-slate-800">{value}</p>
+      </div>
+    </div>
+  );
+}
 
 export default function LihatJawaban() {
   const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate();
 
   const dataAlumni = [
     { id: 1, nama: "Sarah Jenkins", jurusan: "BS Computer Science", tahun: 2022, tanggal: "Oct 24, 2023", status: "Selesai" },
@@ -27,10 +42,15 @@ export default function LihatJawaban() {
     { id: 5, nama: "Marcus Johnson", jurusan: "BS Information Technology", tahun: 2020, tanggal: "Oct 20, 2023", status: "Selesai" },
   ];
 
+  const handleViewDetail = (id) => {
+    navigate(`/wb-admin/kuisoner/lihat-jawaban/detail/${id}`);
+  };
+
   return (
-    <div className="p-4 md:p-6 bg-gray-50 min-h-screen font-sans text-slate-700">
-      {/* Header Section */}
-      <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8">
+    <div className="p-4 md:p-8 bg-[#F8FAFC] min-h-screen font-sans text-slate-700">
+      
+      {/* --- Header Section --- */}
+      <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
         <Link
           to="/wb-admin/kuisoner"
           className="flex items-center gap-2 text-third hover:text-primary transition-colors text-sm font-medium group"
@@ -38,87 +58,133 @@ export default function LihatJawaban() {
           <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
           Kembali
         </Link>
-        <div className="flex flex-wrap gap-2 w-full sm:w-auto">
-          <button className="flex-1 sm:flex-none justify-center flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm font-bold shadow-sm hover:bg-gray-50 transition-all">
-            <FileDown size={18} className="text-slate-600" /> <span className="hidden md:inline">Eksport</span> PDF
+
+        <div className="flex gap-2 w-full sm:w-auto">
+          <button className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-2.5 bg-white border border-slate-200 rounded-xl text-slate-600 text-sm font-bold shadow-sm hover:bg-slate-50 hover:border-slate-300 transition-all">
+            <FileDown size={18} /> 
+            <span className="hidden sm:inline">PDF</span>
           </button>
-          <button className="flex-1 sm:flex-none justify-center flex items-center gap-2 px-4 py-2.5 bg-[#3D5A5C] text-white rounded-xl text-sm font-bold shadow-md hover:bg-[#2D4345] transition-all">
-            <FileSpreadsheet size={18} /> <span className="hidden md:inline">Eksport</span> Excel
+          <button className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-2.5 bg-[#3D5A5C] text-white rounded-xl text-sm font-bold shadow-md shadow-[#3D5A5C]/20 hover:bg-[#2D4345] transition-all active:scale-95">
+            <FileSpreadsheet size={18} /> 
+            <span className="hidden sm:inline">Excel</span>
           </button>
         </div>
       </div>
 
-      {/* Stats Cards */}
+      {/* --- Stats Cards --- */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-8">
-        <StatCard icon={<Users size={24} />} label="Total Responden" value="1,240" bgColor="bg-slate-50" iconColor="text-slate-400" />
-        <StatCard icon={<TrendingUp size={24} />} label="Baru Minggu Ini" value="+45" bgColor="bg-green-50" iconColor="text-green-500" />
-        <StatCard icon={<ClipboardList size={24} />} label="Menunggu Tinjauan" value="12" bgColor="bg-orange-50" iconColor="text-orange-400" className="sm:col-span-2 lg:col-span-1" />
+        <StatCard 
+          icon={<Users size={24} />} 
+          label="Total Responden" 
+          value="1,240" 
+          bgColor="bg-white" 
+          iconColor="text-[#3D5A5C]" 
+        />
+        <StatCard 
+          icon={<TrendingUp size={24} />} 
+          label="Baru Minggu Ini" 
+          value="+45" 
+          bgColor="bg-white" 
+          iconColor="text-emerald-500" 
+        />
+        <StatCard 
+          icon={<ClipboardList size={24} />} 
+          label="Menunggu Tinjauan" 
+          value="12" 
+          bgColor="bg-white" 
+          iconColor="text-orange-500" 
+          className="sm:col-span-2 lg:col-span-1" 
+        />
       </div>
 
-      {/* Filters Section */}
-      <div className="flex flex-col lg:flex-row gap-4 mb-8 items-center">
-        <div className="relative flex-1">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+      {/* --- Filters Section (FIXED ALIGNMENT) --- */}
+      {/* Menggunakan h-12 untuk semua elemen agar tingginya presisi sama */}
+      <div className="flex flex-col lg:flex-row gap-4 mb-6">
+        
+        {/* Search Bar (Flex-1 agar mengisi sisa ruang) */}
+        <div className="relative flex-1 h-12">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
           <input
             type="text"
-            placeholder="Cari berdasarkan nama, id alumni,.."
-            className="w-full pl-12 pr-4 py-3 bg-white border border-gray-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-[#3D5A5C]/10 transition-all shadow-sm"
+            placeholder="Cari nama alumni atau ID..."
+            className="w-full pl-12 pr-4 h-full bg-white border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#3D5A5C]/20 focus:border-[#3D5A5C] transition-all shadow-sm placeholder:text-slate-400"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
-        <div className="flex flex-col sm:flex-row gap-4">
-          <div className="w-full sm:w-48 lg:w-64">
+        
+        {/* Dropdowns (Fixed width atau proportional) */}
+        <div className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
+          {/* Wrapper div dengan h-12 untuk memaksa tinggi dropdown */}
+          <div className="w-full sm:w-56 h-12">
             <SmoothDropdown options={["Semua Jurusan", "Teknik", "Ekonomi"]} placeholder="Semua Jurusan" />
           </div>
-          <div className="w-full sm:w-48 lg:w-64">
+          <div className="w-full sm:w-56 h-12">
             <SmoothDropdown options={["2023", "2022", "2021"]} placeholder="Tahun Kelulusan" />
           </div>
         </div>
       </div>
 
-
-      {/* Table Section */}
-      <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
+      {/* --- Table Section --- */}
+      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse min-w-[800px]">
+          <table className="w-full text-left border-collapse min-w-[900px]">
             <thead>
-              <tr className="border-b border-gray-50 text-[11px] font-black text-slate-400 uppercase tracking-widest">
-                <th className="px-8 py-5">Nama Alumni</th>
-                <th className="px-4 py-5">Jurusan</th>
-                <th className="px-4 py-5 text-center">Tahun Lulus</th>
-                <th className="px-4 py-5">Tanggal Pengisian</th>
-                <th className="px-4 py-5 text-center">Status</th>
-                <th className="px-8 py-5 text-right">Aksi</th>
+              <tr className="bg-slate-50 border-b border-slate-200 text-[11px] font-black text-slate-400 uppercase tracking-wider">
+                <th className="px-6 py-5 pl-8">Nama Alumni</th>
+                <th className="px-6 py-5">Jurusan</th>
+                <th className="px-6 py-5 text-center">Tahun</th>
+                <th className="px-6 py-5">Tgl. Pengisian</th>
+                <th className="px-6 py-5 text-center">Status</th>
+                <th className="px-6 py-5 pr-8 text-right">Aksi</th>
               </tr>
             </thead>
-            <tbody className="text-sm font-medium">
+            <tbody className="text-sm">
               {dataAlumni.map((alumni) => (
-                <tr key={alumni.id} className="border-b border-gray-50 hover:bg-slate-50/50 transition-colors group">
-                  <td className="px-8 py-4 flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-slate-100 border border-gray-200 overflow-hidden flex-shrink-0">
-                      <img src={`https://i.pravatar.cc/150?u=${alumni.id}`} alt="avatar" className="w-full h-full object-cover" />
+                <tr key={alumni.id} className="border-b border-slate-100 hover:bg-slate-50/80 transition-colors group last:border-0">
+                  <td className="px-6 py-4 pl-8">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-slate-100 border border-slate-200 overflow-hidden flex-shrink-0">
+                        <img 
+                          src={`https://i.pravatar.cc/150?u=${alumni.id}`} 
+                          alt={alumni.nama} 
+                          className="w-full h-full object-cover" 
+                          onError={(e) => { e.target.src = 'https://via.placeholder.com/150' }} 
+                        />
+                      </div>
+                      <div>
+                        <p className="font-bold text-slate-800">{alumni.nama}</p>
+                        <p className="text-[11px] text-slate-400 font-medium">ID: ALM-{alumni.id}23</p>
+                      </div>
                     </div>
-                    <span className="font-bold text-slate-700 truncate">{alumni.nama}</span>
                   </td>
-                  <td className="px-4 py-4 text-slate-500 truncate max-w-[200px]">{alumni.jurusan}</td>
-                  <td className="px-4 py-4 text-center text-slate-500">{alumni.tahun}</td>
-                  <td className="px-4 py-4 text-slate-500">{alumni.tanggal}</td>
-                  <td className="px-4 py-4 text-center">
-                    <span className={`inline-block px-3 py-1 rounded-full text-[10px] font-bold ${
+                  <td className="px-6 py-4">
+                    <span className="font-medium text-slate-600 block truncate max-w-[200px]">{alumni.jurusan}</span>
+                  </td>
+                  <td className="px-6 py-4 text-center">
+                    <span className="bg-slate-100 text-slate-600 px-2 py-1 rounded text-xs font-bold">{alumni.tahun}</span>
+                  </td>
+                  <td className="px-6 py-4 text-slate-500 font-medium">{alumni.tanggal}</td>
+                  <td className="px-6 py-4 text-center">
+                    <span className={`inline-flex items-center px-3 py-1 rounded-full text-[10px] font-bold border ${
                       alumni.status === "Selesai"
-                      ? "bg-green-100 text-green-600"
-                      : "bg-orange-100 text-orange-600"
+                      ? "bg-emerald-50 text-emerald-600 border-emerald-100"
+                      : "bg-orange-50 text-orange-600 border-orange-100"
                     }`}>
                       {alumni.status}
                     </span>
                   </td>
-                  <td className="px-8 py-4 text-right">
-                    <div className="flex justify-end gap-1 md:gap-2">
-                      <button className="cursor-pointer p-2 text-slate-400 hover:text-[#3D5A5C] hover:bg-slate-100 rounded-xl transition-all shadow-sm sm:shadow-none" title="Lihat Detail">
+                  <td className="px-6 py-4 pr-8 text-right">
+                    <div className="flex justify-end gap-2">
+                      <button 
+                        onClick={() => handleViewDetail(alumni.id)}
+                        className="p-2 text-slate-400 hover:text-[#3D5A5C] hover:bg-[#3D5A5C]/10 rounded-lg transition-all active:scale-95" 
+                        title="Lihat Detail Jawaban"
+                      >
                         <Eye size={18} />
                       </button>
-                      <button className="cursor-pointer p-2 text-slate-400 hover:text-[#3D5A5C] hover:bg-slate-100 rounded-xl transition-all shadow-sm sm:shadow-none" title="Download PDF">
+                      
+                      <button className="p-2 text-slate-400 hover:text-[#3D5A5C] hover:bg-[#3D5A5C]/10 rounded-lg transition-all active:scale-95" title="Download PDF">
                         <Download size={18} />
                       </button>
                     </div>
@@ -129,33 +195,25 @@ export default function LihatJawaban() {
           </table>
         </div>
 
-        {/* Pagination Responsive */}
-        <div className="px-6 py-5 bg-slate-50/50 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs font-bold text-slate-400">
-          <p className="text-center sm:text-left">Tampilan 1 sampai 10 dari 1,240 hasil</p>
-          <div className="flex items-center gap-2 w-full sm:w-auto">
-            <button className="flex-1 sm:flex-none flex items-center justify-center gap-1 px-4 py-2 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 transition-all shadow-sm">
-              <ChevronLeft size={16} /> <span className="sm:inline">Sebelum</span>
+        {/* --- Pagination --- */}
+        <div className="px-6 py-4 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row justify-between items-center gap-4">
+          <p className="text-xs font-bold text-slate-400 text-center sm:text-left">
+            Menampilkan <span className="text-slate-700">1-5</span> dari <span className="text-slate-700">1,240</span> data
+          </p>
+          <div className="flex items-center gap-2">
+            <button className="flex items-center justify-center w-9 h-9 bg-white border border-slate-200 rounded-lg text-slate-400 hover:text-[#3D5A5C] hover:border-[#3D5A5C] transition-all disabled:opacity-50">
+              <ChevronLeft size={16} />
             </button>
-            <button className="flex-1 sm:flex-none flex items-center justify-center gap-1 px-4 py-2 bg-white border border-gray-200 rounded-xl text-slate-700 hover:bg-gray-50 shadow-sm transition-all">
-              <span className="sm:inline">Sesudah</span> <ChevronRight size={16} />
+            <div className="flex gap-1">
+              <button className="w-9 h-9 flex items-center justify-center rounded-lg text-xs font-bold bg-[#3D5A5C] text-white shadow-md shadow-[#3D5A5C]/20">1</button>
+              <button className="w-9 h-9 flex items-center justify-center rounded-lg text-xs font-bold text-slate-500 hover:bg-slate-200 transition-colors">2</button>
+              <button className="w-9 h-9 flex items-center justify-center rounded-lg text-xs font-bold text-slate-500 hover:bg-slate-200 transition-colors">3</button>
+            </div>
+            <button className="flex items-center justify-center w-9 h-9 bg-white border border-slate-200 rounded-lg text-slate-400 hover:text-[#3D5A5C] hover:border-[#3D5A5C] transition-all">
+              <ChevronRight size={16} />
             </button>
           </div>
         </div>
-      </div>
-    </div>
-  );
-}
-
-// Sub-komponen StatCard untuk menjaga kerapihan kode
-function StatCard({ icon, label, value, bgColor, iconColor, className = "" }) {
-  return (
-    <div className={`bg-white p-6 rounded-3xl border border-gray-100 shadow-sm flex items-center gap-4 ${className}`}>
-      <div className={`p-4 ${bgColor} ${iconColor} rounded-2xl`}>
-        {icon}
-      </div>
-      <div>
-        <p className="text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-wider">{label}</p>
-        <p className="text-xl md:text-2xl font-black text-slate-800">{value}</p>
       </div>
     </div>
   );

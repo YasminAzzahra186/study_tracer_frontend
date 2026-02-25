@@ -165,7 +165,7 @@ const MasterTable = () => {
           />
         </div>
 
-        {/* KANAN: 4 Kolom */}
+        {/* Kolom Bagian Kanan */}
         <div className="lg:col-span-4 space-y-4 order-first lg:order-last">
           <div className="bg-white rounded-lg border border-gray-100 shadow-sm p-4 space-y-4">
             <div className="flex items-center gap-2">
@@ -174,17 +174,17 @@ const MasterTable = () => {
             </div>
 
             <div className="space-y-4">
-              {/* Opsi "Data Alumni" dihapus dari list */}
               <SmoothDropdown 
                 label="JENIS LAPORAN" 
                 options={["Data Jurusan", "Data Tipe Pekerjaan", "Data Perusahaan"]} 
               />
               
-              {/* Filter Tahun Dihapus */}
-              
-              <div className="space-y-1.5">
-                <label className="text-[12px] font-bold text-gray-400 uppercase">Format Laporan</label>
-                <div className="flex gap-2">
+              {/* Tambahkan mt-2 agar lebih kebawah, dan tracking-wider agar font mirip label diatas */}
+              <div className="space-y-2 mt-2">
+                <label className="text-[11px] font-bold text-gray-400 uppercase tracking-wider block">
+                  Format Laporan
+                </label>
+                <div className="flex gap-3">
                   {["PDF", "XLSX"].map(fmt => (
                     <button 
                       key={fmt} 
