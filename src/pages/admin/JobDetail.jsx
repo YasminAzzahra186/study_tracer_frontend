@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  ChevronLeft, 
-  MapPin, 
-  Briefcase, 
-  Clock, 
-  Calendar, 
-  Building2, 
-  Share2, 
+import {
+  ChevronLeft,
+  MapPin,
+  Briefcase,
+  Clock,
+  Calendar,
+  Building2,
+  Share2,
   AlertCircle,
   Loader2,
-  FileText
+  FileText,
+  ArrowLeft
 } from 'lucide-react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import api from '../../api/axios';
 import { STORAGE_BASE_URL } from '../../api/axios';
 import banner from '../../assets/banner.jfif';
@@ -76,44 +77,44 @@ const JobDetail = () => {
     }
   };
 
-  const fotoUrl = job.foto 
+  const fotoUrl = job.foto
     ? (job.foto.startsWith('http') ? job.foto : `${STORAGE_BASE_URL}/${job.foto}`)
     : banner;
 
   return (
     // Tambahkan relative agar layout anak bisa diatur
     <div className="min-h-screen bg-[#F8FAFC] relative">
-      
+
       <main className="max-w-7xl mx-auto px-4 md:px-6 py-6">
-        
+
         {/* 1. TOMBOL KEMBALI - Diperbaiki */}
         {/* Tidak menggunakan fixed, tapi diletakkan di awal flow konten agar tidak tertutup sidebar */}
-        <div className="mb-6">
-          <button 
-            onClick={() => navigate(-1)}
-            className="inline-flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm hover:shadow-md border border-gray-200 text-gray-600 hover:text-[#3C5759] font-bold transition-all group text-sm"
+        <div>
+          <Link
+            to="/wb-admin/jobs"
+            className="flex items-center gap-2 text-third hover:text-primary transition-colors mb-8 text-sm font-medium group"
           >
-            <ChevronLeft size={18} className="group-hover:-translate-x-0.5 transition-transform" />
-            <span>Kembali</span>
-          </button>
+            <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
+            Kembali
+          </Link>
         </div>
 
         {/* Grid Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          
+
           {/* --- KOLOM KIRI (Konten Utama) --- */}
           <div className="lg:col-span-8 space-y-5">
-            
+
             {/* Header Card */}
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden group">
-              
+
               {/* Gambar Full */}
               <div className="w-full h-56 md:h-[400px] bg-gray-50 flex items-center justify-center relative p-2">
-                <img 
-                  src={fotoUrl} 
-                  alt="Lowongan" 
-                  className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-[1.01]" 
-                  onError={(e) => { e.target.src = banner; }} 
+                <img
+                  src={fotoUrl}
+                  alt="Lowongan"
+                  className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-[1.01]"
+                  onError={(e) => { e.target.src = banner; }}
                 />
               </div>
 
@@ -170,13 +171,13 @@ const JobDetail = () => {
           {/* --- KOLOM KANAN (Sidebar Ringkasan) --- */}
           <div className="lg:col-span-4 space-y-5">
             <div className="lg:sticky lg:top-6 space-y-5">
-              
+
               {/* Card Ringkasan */}
               <div className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm space-y-5 hover:shadow-md transition-shadow">
                 <h3 className="font-black text-[#3C5759] uppercase tracking-widest text-[11px] border-b border-gray-100 pb-3">
                   Detail Ringkasan
                 </h3>
-                
+
                 <div className="space-y-4">
                   {[
                     { icon: MapPin, label: "Lokasi", value: job.lokasi || job.perusahaan?.kota?.nama },

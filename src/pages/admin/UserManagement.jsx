@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import {
   UserPlus, FileEdit, Users, Search,
   Filter, Check, X, Image as ImageIcon, Clock,
-  Download, ArrowRight, ChevronLeft, ChevronRight
+  Download, ArrowRight, ChevronLeft, ChevronRight,
+  Eye
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 // --- Components ---
 
@@ -75,7 +77,8 @@ const UpdateRequestCard = ({ user, time, fields }) => (
 
 export default function UserManagement() {
   const [activeTab, setActiveTab] = useState('Semua');
-  
+  const navigate = useNavigate()
+
   // State untuk Filter Tahun
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [selectedYear, setSelectedYear] = useState('Semua');
@@ -100,10 +103,10 @@ export default function UserManagement() {
 
         {/* ======================= BAGIAN 1: TABEL REGISTRASI (FULL WIDTH) ======================= */}
         <div className="space-y-6">
-          
+
           {/* Table Controls */}
           <div className="bg-white p-2 rounded-2xl border border-slate-100 shadow-sm flex flex-col md:flex-row justify-between items-center gap-3">
-            
+
             {/* Tabs */}
             <div className="flex bg-slate-50 p-1 rounded-xl w-full md:w-auto overflow-x-auto no-scrollbar border border-slate-100">
               {tabs.map((tab) => (
@@ -111,8 +114,8 @@ export default function UserManagement() {
                   key={tab}
                   onClick={() => setActiveTab(tab)}
                   className={`px-6 py-2.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap
-                    ${activeTab === tab 
-                      ? 'bg-white text-primary shadow-sm ring-1 ring-slate-200' 
+                    ${activeTab === tab
+                      ? 'bg-white text-primary shadow-sm ring-1 ring-slate-200'
                       : 'text-slate-500 hover:text-slate-700 hover:bg-slate-200/50'}`}
                 >
                   {tab}
@@ -133,7 +136,7 @@ export default function UserManagement() {
               </div>
 
               {/* Tombol CSV (Kecil) */}
-              <button 
+              <button
                 className="flex items-center gap-2 px-5 py-2.5 bg-[#3C5759] text-white font-bold rounded-xl hover:opacity-90 active:scale-95 transition-all text-xs shadow-md shadow-[#3C5759]/20 whitespace-nowrap"
                 title="Eksport Data CSV"
               >
@@ -143,11 +146,11 @@ export default function UserManagement() {
 
               {/* Tombol Filter */}
               <div className="relative">
-                <button 
+                <button
                   onClick={() => setIsFilterOpen(!isFilterOpen)}
                   className={`p-2.5 rounded-xl transition-all border
-                    ${isFilterOpen || selectedYear !== 'Semua' 
-                      ? 'bg-primary/10 text-primary border-primary/20' 
+                    ${isFilterOpen || selectedYear !== 'Semua'
+                      ? 'bg-primary/10 text-primary border-primary/20'
                       : 'bg-white text-slate-500 border-slate-200 hover:bg-slate-50 hover:text-slate-700'
                     }`}
                 >
@@ -172,8 +175,8 @@ export default function UserManagement() {
                             setIsFilterOpen(false);
                           }}
                           className={`w-full text-left px-3 py-2 text-xs font-bold rounded-lg transition-colors flex justify-between items-center
-                            ${selectedYear === year 
-                              ? 'bg-[#3C5759] text-white shadow-sm' 
+                            ${selectedYear === year
+                              ? 'bg-[#3C5759] text-white shadow-sm'
                               : 'text-slate-600 hover:bg-slate-50'}`}
                         >
                           {year}
@@ -230,8 +233,8 @@ export default function UserManagement() {
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex items-center justify-center gap-2">
-                          <button title="Tolak" className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"><X size={18} /></button>
-                          <button title="Setujui" className="p-1.5 text-slate-400 hover:text-emerald-500 hover:bg-emerald-50 rounded-lg transition-all"><Check size={18} /></button>
+                          <button title="Tolak" className="cursor-pointer p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"><X size={18} /></button>
+                          <button title="Setujui" className="cursor-pointer p-1.5 text-slate-400 hover:text-emerald-500 hover:bg-emerald-50 rounded-lg transition-all"><Check size={18} /></button>
                         </div>
                       </td>
                     </tr>
@@ -239,7 +242,7 @@ export default function UserManagement() {
                 </tbody>
               </table>
             </div>
-            
+
             {/* Pagination */}
             <div className="p-4 border-t border-slate-100 bg-slate-50/50 flex items-center justify-between">
               <span className="text-xs text-slate-500 font-medium">Hal. 1 dari 5</span>

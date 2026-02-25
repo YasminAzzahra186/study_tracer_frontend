@@ -14,6 +14,8 @@ import { useAuth } from "../context/AuthContext";
 import Logout from "../pages/Logout";
 import TambahPertanyaan from "../pages/admin/TambahKuesioner";
 import LihatJawaban from "../pages/admin/LihatJawaban";
+import StatusKarir from "../pages/admin/StatusKarir";
+import NotFound from "../pages/NotFound";
 
 export default function AppRouter() {
   const { isAuthenticated, isAdmin, loading } = useAuth();
@@ -37,9 +39,16 @@ export default function AppRouter() {
       }>
         <Route element={<AdminLayout />}>
           <Route index element={<Dashboard />} />
-          <Route path="manage-user" element={<UserManagement />} />
-          <Route path="jobs" element={<JobsManagement />} />
-          <Route path="job-detail/:id" element={<JobDetail />} />
+          <Route path="manage-user" >
+            <Route index element={ <UserManagement /> } />
+          </Route>
+          <Route path="jobs">
+            <Route index element={<JobsManagement />} />
+            <Route path="job-detail/:id" element={<JobDetail />} />
+          </Route>
+          <Route path="status-karir">
+            <Route index element={<StatusKarir />} />
+          </Route>
           <Route path="master" element={<MasterTable />} />
           <Route path="kuisoner">
             <Route index element={<KuisonerManage />} />
@@ -49,7 +58,7 @@ export default function AppRouter() {
         </Route>
       </Route>
       <Route path="/" element={isAuthenticated ? <div className="p-8 text-center"><h1 className="text-2xl font-bold text-primary">Selamat Datang, Alumni!</h1><p className="text-third mt-2">Halaman alumni akan segera hadir.</p></div> : <Navigate to="/login" />} />
-      <Route path="*" element={<h1>404 Not Found</h1>} />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }
