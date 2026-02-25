@@ -628,7 +628,7 @@ const MasterTable = () => {
               <div className="p-1.5 bg-purple-100 rounded-lg text-primary"><FileText size={16} /></div>
               <h3 className="font-bold text-primary text-sm">Laporan Status</h3>
             </div>
-            <div className="space-y-4">
+            <div className="space-y-4 ">
               <div className="space-y-1.5">
                 <SmoothDropdown
                   label="Jenis Data"
