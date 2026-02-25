@@ -620,7 +620,7 @@ const MasterTable = () => {
 
         </div>
 
-        {/* KANAN: 4 Kolom */}
+        {/* Kolom Bagian Kanan */}
         <div className="lg:col-span-4 space-y-4 order-first lg:order-last">
           <div className="bg-white rounded-lg border border-gray-100 shadow-sm p-4 space-y-4">
             <div className="flex items-center gap-2">

@@ -21,15 +21,17 @@ export default function SmoothDropdown({
   return (
     <div className="space-y-1 w-full relative">
       {/* Label Dinamis */}
-      <label className="text-[11px] font-bold text-secondary uppercase tracking-wider">
-        {label} {isRequired ? <span className="text-red-500">*</span> : <span className="text-[9px] text-third italic">{message }</span>}
-      </label>
+      {label && (
+        <label className="text-[11px] font-bold text-secondary uppercase tracking-wider">
+          {label} {isRequired ? <span className="text-red-500">*</span> : <span className="text-[9px] text-third italic">{message }</span>}
+        </label>
+      )}
 
       {/* Trigger Button */}
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className={`mt-2 w-full p-3 bg-white cursor-pointer border-2 flex items-center justify-between rounded-xl text-sm transition-all duration-200 outline-none
+        className={`${label ? 'mt-2' : ''} w-full p-3 bg-white cursor-pointer border-2 flex items-center justify-between rounded-xl text-sm transition-all duration-200 outline-none
           ${isOpen ? 'border-primary shadow-sm' : 'border-fourth hover:border-primary/50'}`}
       >
         <span className={selected ? 'text-primary font-medium' : 'text-third'}>

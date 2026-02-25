@@ -14,6 +14,7 @@ import { useAuth } from "../context/AuthContext";
 import Logout from "../pages/Logout";
 import TambahPertanyaan from "../pages/admin/TambahKuesioner";
 import LihatJawaban from "../pages/admin/LihatJawaban";
+import LihatJawabanDetail from "../pages/admin/LihatJawabanDetail";
 import StatusKarir from "../pages/admin/StatusKarir";
 import NotFound from "../pages/NotFound";
 
@@ -53,7 +54,10 @@ export default function AppRouter() {
           <Route path="kuisoner">
             <Route index element={<KuisonerManage />} />
             <Route path="tambah-pertanyaan" element={<TambahPertanyaan />} />
-            <Route path="lihat-jawaban" element={<LihatJawaban />} />
+            <Route path="lihat-jawaban" > 
+              <Route index element={<LihatJawaban />} />
+              <Route path="detail/:id" element={<LihatJawabanDetail />} />
+            </Route>
           </Route>
         </Route>
       </Route>
