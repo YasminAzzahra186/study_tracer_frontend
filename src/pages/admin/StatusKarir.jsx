@@ -348,8 +348,7 @@ export default function StatusKarir() {
   const [univData, setUnivData] = useState([]);
   const [prodiData, setProdiData] = useState([]);
   const [wirausahaData, setWirausahaData] = useState([]);
-  const [posisiData, setPosisiData] = useState([]);
-  const [loading, setLoading] = useState({ univ: true, prodi: true, wirausaha: true, posisi: true });
+  const [loading, setLoading] = useState({ univ: true, prodi: true, wirausaha: true});
 
   // Fetch all data from API
   const fetchUniversitas = useCallback(async () => {
@@ -411,30 +410,12 @@ export default function StatusKarir() {
     }
   }, []);
 
-  const fetchPosisi = useCallback(async () => {
-    setLoading((prev) => ({ ...prev, posisi: true }));
-    try {
-      const res = await adminApi.getStatusKarierPosisi();
-      const data = res.data?.data || [];
-      setPosisiData(
-        data.map((p, idx) => ({
-          id: p.id || idx + 1,
-          nama: p.nama || p.posisi,
-        }))
-      );
-    } catch (err) {
-      console.error("Gagal memuat posisi:", err);
-    } finally {
-      setLoading((prev) => ({ ...prev, posisi: false }));
-    }
-  }, []);
 
   useEffect(() => {
     fetchUniversitas();
     fetchProdi();
     fetchWirausaha();
-    fetchPosisi();
-  }, [fetchUniversitas, fetchProdi, fetchWirausaha, fetchPosisi]);
+  }, [fetchUniversitas, fetchProdi, fetchWirausaha]);
 
   // CRUD Handlers
   const handleCreate = async (category, data) => {
@@ -503,7 +484,6 @@ export default function StatusKarir() {
         "Data Universitas": "universitas",
         "Data Program Studi": "prodi",
         "Bidang Wirausaha": "wirausaha",
-        "Posisi Pekerjaan": "posisi",
       };
       const type = typeMap[selectedReport] || "universitas";
       const format = selectedFormat.toLowerCase();
@@ -578,13 +558,6 @@ export default function StatusKarir() {
             onDelete={(id) => handleDelete('wirausaha', id)}
           />
 
-          <ManagedTable
-            title="Posisi Pekerjaan"
-            icon={Briefcase}
-            data={posisiData}
-            loading={loading.posisi}
-            readOnly={true}
-          />
         </div>
 
         <div className="lg:col-span-4 space-y-4 order-first lg:order-last">
@@ -597,7 +570,7 @@ export default function StatusKarir() {
               <div className="space-y-1.5">
                 <SmoothDropdown
                   label="Jenis Data"
-                  options={["Data Universitas", "Data Program Studi", "Bidang Wirausaha", "Posisi Pekerjaan"]}
+                  options={["Data Universitas", "Data Program Studi", "Bidang Wirausaha"]}
                   placeholder="Pilih data"
                   isRequired={true}
                   onSelect={(val) => setSelectedReport(val)}
