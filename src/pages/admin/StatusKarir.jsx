@@ -227,8 +227,8 @@ const ManagedTable = ({
       <div className={tableContainerClass}>
         <table className="w-full text-left">
           <thead>
-            <tr className="text-gray-500 font-bold text-[11px] uppercase tracking-widest border-b-2 border-gray-200 bg-gray-50">
-              <th className="px-3 py-3 w-1/3">Nama</th>
+            <tr className="text-slate-400 font-black text-[10px] uppercase tracking-widest border-b border-slate-200 bg-slate-50">
+              <th className={`px-3 py-3 ${withJurusan ? "w-1/3" : ""}`}>Nama</th>
               {withJurusan && <th className="px-3 py-3">Jurusan Tersedia</th>}
               {!readOnly && <th className="px-3 py-3 text-right w-24">Aksi</th>}
             </tr>

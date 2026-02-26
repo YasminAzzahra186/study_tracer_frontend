@@ -35,6 +35,10 @@ export const adminApi = {
     return api.post(`/admin/reject-user/${id}`, data);
   },
 
+  banUser(id, data = {}) {
+    return api.post(`/admin/ban-user/${id}`, data);
+  },
+
   getAllAlumni(filters = {}, perPage = 15) {
     return api.get('/admin/alumni', { params: { ...filters, per_page: perPage } });
   },
