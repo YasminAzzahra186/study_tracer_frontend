@@ -84,7 +84,7 @@ export default function Step1Account({ onNext, formData, updateFormData }) {
                 {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
             </div>
-            <p className="text-[10px] text-third italic">minimal 8 karakter dengan huruf dan angka</p>
+            <p className="text-[10px] text-third italic">minimal 8 karakter</p>
             {errors.password && <p className="text-xs text-red-500">{errors.password}</p>}
           </div>
 
