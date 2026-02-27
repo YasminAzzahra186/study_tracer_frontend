@@ -571,7 +571,7 @@ export default function StatusKarir() {
             onDelete={(id) => handleDelete('univ', id)}
           />
           <ManagedTable
-            title="Master Program Studi (Umum)"
+            title="Program Studi"
             icon={BookOpen}
             data={prodiData}
             loading={loading.prodi}

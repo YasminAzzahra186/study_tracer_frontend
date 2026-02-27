@@ -118,6 +118,7 @@ export default function Step2Profile({ onNext, onBack, formData, updateFormData 
   const [jurusanMapRev, setJurusanMapRev] = useState({});
   const [jurusanMap, setJurusanMap] = useState({});
   const [skillOptions, setSkillOptions] = useState([]);
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     masterDataApi.getJurusan().then((res) => {
@@ -149,6 +150,57 @@ export default function Step2Profile({ onNext, onBack, formData, updateFormData 
     updateFormData({ foto: null });
   };
 
+  const validate = () => {
+    const errs = {};
+    if (!formData.nama_alumni?.trim()) errs.nama_alumni = 'Nama lengkap wajib diisi';
+    if (!formData.id_jurusan) errs.id_jurusan = 'Jurusan wajib dipilih';
+    if (!formData.jenis_kelamin) errs.jenis_kelamin = 'Jenis kelamin wajib dipilih';
+    if (!formData.nis?.trim()) errs.nis = 'NIS wajib diisi';
+    if (!formData.nisn?.trim()) errs.nisn = 'NISN wajib diisi';
+    if (!formData.tempat_lahir?.trim()) errs.tempat_lahir = 'Tempat lahir wajib diisi';
+    if (!formData.tanggal_lahir) errs.tanggal_lahir = 'Tanggal lahir wajib diisi';
+    if (!formData.alamat?.trim()) errs.alamat = 'Alamat wajib diisi';
+    if (!formData.tahun_masuk) errs.tahun_masuk = 'Tahun masuk wajib diisi';
+
+    // No HP: required, min 10, max 13
+    if (!formData.no_hp?.trim()) {
+      errs.no_hp = 'No HP wajib diisi';
+    } else {
+      const digits = formData.no_hp.replace(/\D/g, '');
+      if (digits.length < 10) errs.no_hp = 'No HP minimal 10 digit';
+      else if (digits.length > 13) errs.no_hp = 'No HP maksimal 13 digit';
+    }
+
+    // Tahun lulus: must be >= 3 years after tahun masuk
+    if (formData.tahun_lulus) {
+      if (formData.tahun_masuk && (parseInt(formData.tahun_lulus) - parseInt(formData.tahun_masuk)) < 3) {
+        errs.tahun_lulus = 'Tahun lulus harus minimal 3 tahun setelah tahun masuk';
+      }
+    }
+
+    // Tanggal lahir: must be before tahun masuk
+    if (formData.tanggal_lahir && formData.tahun_masuk) {
+      const birthYear = new Date(formData.tanggal_lahir).getFullYear();
+      if (birthYear >= parseInt(formData.tahun_masuk)) {
+        errs.tanggal_lahir = 'Tanggal lahir invalid';
+      }
+    }
+
+    return errs;
+  };
+
+  const handleNext = () => {
+    const errs = validate();
+    if (Object.keys(errs).length > 0) {
+      setErrors(errs);
+      // Scroll to top to show errors
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+    setErrors({});
+    onNext();
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center mb-2">
@@ -163,50 +215,71 @@ export default function Step2Profile({ onNext, onBack, formData, updateFormData 
         {/* --- Baris 1 --- */}
         <div className="space-y-1">
           <label className="text-[11px] font-bold text-secondary uppercase">Nama Lengkap <span className="text-red-500">*</span></label>
-          <input type="text" value={formData.nama_alumni || ""} onChange={(e) => updateFormData({ nama_alumni: e.target.value })} className="w-full p-2.5 bg-white border border-fourth rounded-xl text-sm focus:ring-2 focus:ring-primary outline-none transition-all" placeholder="Nama lengkap" />
+          <input type="text" value={formData.nama_alumni || ""} onChange={(e) => { updateFormData({ nama_alumni: e.target.value }); setErrors(prev => ({ ...prev, nama_alumni: undefined })); }} className={`w-full p-2.5 bg-white border ${errors.nama_alumni ? 'border-red-400' : 'border-fourth'} rounded-xl text-sm focus:ring-2 focus:ring-primary outline-none transition-all`} placeholder="Nama lengkap" />
+          {errors.nama_alumni && <p className="text-xs text-red-500 mt-0.5">{errors.nama_alumni}</p>}
         </div>
 
-        <SelectInput label="Jurusan" placeholder="Pilih jurusan" options={jurusanOpts} value={jurusanMapRev[formData.id_jurusan] || formData.id_jurusan} onSelect={(val) => updateFormData({ id_jurusan: val ? jurusanMap[val] : "" })} />
+        <div className="space-y-1">
+          <SelectInput label="Jurusan" placeholder="Pilih jurusan" options={jurusanOpts} value={jurusanMapRev[formData.id_jurusan] || formData.id_jurusan} onSelect={(val) => { updateFormData({ id_jurusan: val ? jurusanMap[val] : "" }); setErrors(prev => ({ ...prev, id_jurusan: undefined })); }} />
+          {errors.id_jurusan && <p className="text-xs text-red-500 mt-0.5">{errors.id_jurusan}</p>}
+        </div>
 
         {/* --- Baris 2 --- */}
-        <SelectInput label="Jenis Kelamin" placeholder="Pilih..." options={["Laki-laki", "Perempuan"]} value={formData.jenis_kelamin || ""} onSelect={(val) => updateFormData({ jenis_kelamin: val })} />
+        <div className="space-y-1">
+          <SelectInput label="Jenis Kelamin" placeholder="Pilih..." options={["Laki-laki", "Perempuan"]} value={formData.jenis_kelamin || ""} onSelect={(val) => { updateFormData({ jenis_kelamin: val }); setErrors(prev => ({ ...prev, jenis_kelamin: undefined })); }} />
+          {errors.jenis_kelamin && <p className="text-xs text-red-500 mt-0.5">{errors.jenis_kelamin}</p>}
+        </div>
 
         <div className="space-y-1">
           <label className="text-[11px] font-bold text-secondary uppercase">No HP <span className="text-red-500">*</span></label>
-          <input type="text" value={formData.no_hp || ""} onChange={(e) => updateFormData({ no_hp: e.target.value })} className="w-full p-2.5 bg-white border border-fourth rounded-xl text-sm outline-none focus:ring-2 focus:ring-primary transition-all" placeholder="08..." />
+          <input type="text" inputMode="numeric" value={formData.no_hp || ""} onChange={(e) => { const val = e.target.value.replace(/\D/g, ''); updateFormData({ no_hp: val }); setErrors(prev => ({ ...prev, no_hp: undefined })); }} maxLength={13} className={`w-full p-2.5 bg-white border ${errors.no_hp ? 'border-red-400' : 'border-fourth'} rounded-xl text-sm outline-none focus:ring-2 focus:ring-primary transition-all`} placeholder="08..." />
+          {errors.no_hp && <p className="text-xs text-red-500 mt-0.5">{errors.no_hp}</p>}
         </div>
 
         {/* --- Baris 3 --- */}
         <div className="space-y-1">
           <label className="text-[11px] font-bold text-secondary uppercase">NIS <span className="text-red-500">*</span></label>
-          <input type="text" value={formData.nis || ""} onChange={(e) => updateFormData({ nis: e.target.value })} className="w-full p-2.5 bg-white border border-fourth rounded-xl text-sm outline-none focus:ring-2 focus:ring-primary transition-all" placeholder="NIS" />
+          <input type="text" value={formData.nis || ""} onChange={(e) => { updateFormData({ nis: e.target.value }); setErrors(prev => ({ ...prev, nis: undefined })); }} className={`w-full p-2.5 bg-white border ${errors.nis ? 'border-red-400' : 'border-fourth'} rounded-xl text-sm outline-none focus:ring-2 focus:ring-primary transition-all`} placeholder="NIS" />
+          {errors.nis && <p className="text-xs text-red-500 mt-0.5">{errors.nis}</p>}
         </div>
 
         <div className="space-y-1">
           <label className="text-[11px] font-bold text-secondary uppercase">NISN <span className="text-red-500">*</span></label>
-          <input type="text" value={formData.nisn || ""} onChange={(e) => updateFormData({ nisn: e.target.value })} className="w-full p-2.5 bg-white border border-fourth rounded-xl text-sm outline-none focus:ring-2 focus:ring-primary transition-all" placeholder="NISN" />
+          <input type="text" value={formData.nisn || ""} onChange={(e) => { updateFormData({ nisn: e.target.value }); setErrors(prev => ({ ...prev, nisn: undefined })); }} className={`w-full p-2.5 bg-white border ${errors.nisn ? 'border-red-400' : 'border-fourth'} rounded-xl text-sm outline-none focus:ring-2 focus:ring-primary transition-all`} placeholder="NISN" />
+          {errors.nisn && <p className="text-xs text-red-500 mt-0.5">{errors.nisn}</p>}
         </div>
 
         {/* --- Baris 4 --- */}
-        <YearsInput label="Tahun Masuk" isRequired={true} value={formData.tahun_masuk} onSelect={(val) => updateFormData({ tahun_masuk: val })} />
-        <YearsInput label="Tahun Lulus" isRequired={true} value={formData.tahun_lulus} onSelect={(val) => updateFormData({ tahun_lulus: val })} />
+        <div className="space-y-1">
+          <YearsInput label="Tahun Masuk" isRequired={true} value={formData.tahun_masuk} onSelect={(val) => { updateFormData({ tahun_masuk: val }); setErrors(prev => ({ ...prev, tahun_masuk: undefined })); }} />
+          {errors.tahun_masuk && <p className="text-xs text-red-500 mt-0.5">{errors.tahun_masuk}</p>}
+        </div>
+        <div className="space-y-1">
+          <YearsInput label="Tahun Lulus" isRequired={true} value={formData.tahun_lulus} onSelect={(val) => { updateFormData({ tahun_lulus: val }); setErrors(prev => ({ ...prev, tahun_lulus: undefined })); }} />
+          {errors.tahun_lulus && <p className="text-xs text-red-500 mt-0.5">{errors.tahun_lulus}</p>}
+        </div>
 
         {/* --- Baris 5 --- */}
         <div className="space-y-1">
           <label className="text-[11px] font-bold text-secondary uppercase">Tempat Lahir <span className="text-red-500">*</span></label>
           <div className="relative">
             <MapPin size={16} className="absolute left-3 top-3 text-third" />
-            <input type="text" value={formData.tempat_lahir || ""} onChange={(e) => updateFormData({ tempat_lahir: e.target.value })} className="w-full pl-9 p-2.5 bg-white border border-fourth rounded-xl text-sm outline-none focus:ring-2 focus:ring-primary transition-all" placeholder="Kota" />
+            <input type="text" value={formData.tempat_lahir || ""} onChange={(e) => { updateFormData({ tempat_lahir: e.target.value }); setErrors(prev => ({ ...prev, tempat_lahir: undefined })); }} className={`w-full pl-9 p-2.5 bg-white border ${errors.tempat_lahir ? 'border-red-400' : 'border-fourth'} rounded-xl text-sm outline-none focus:ring-2 focus:ring-primary transition-all`} placeholder="Kota" />
           </div>
+          {errors.tempat_lahir && <p className="text-xs text-red-500 mt-0.5">{errors.tempat_lahir}</p>}
         </div>
 
-        <DateOfBirthInput isRequired={true} value={formData.tanggal_lahir} onChange={(val) => updateFormData({ tanggal_lahir: val })} />
+        <div className="space-y-1">
+          <DateOfBirthInput isRequired={true} value={formData.tanggal_lahir} onChange={(val) => { updateFormData({ tanggal_lahir: val }); setErrors(prev => ({ ...prev, tanggal_lahir: undefined })); }} />
+          {errors.tanggal_lahir && <p className="text-xs text-red-500 mt-0.5">{errors.tanggal_lahir}</p>}
+        </div>
 
         {/* --- Baris 6 (Full Width) --- */}
         <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
            <div className="space-y-1">
               <label className="text-[11px] font-bold text-secondary uppercase">Alamat <span className="text-red-500">*</span></label>
-              <textarea rows="4" value={formData.alamat || ""} onChange={(e) => updateFormData({ alamat: e.target.value })} className="w-full p-2.5 bg-white border border-fourth rounded-xl text-sm outline-none focus:ring-2 focus:ring-primary resize-none transition-all h-[106px]" placeholder="Alamat lengkap..." />
+              <textarea rows="4" value={formData.alamat || ""} onChange={(e) => { updateFormData({ alamat: e.target.value }); setErrors(prev => ({ ...prev, alamat: undefined })); }} className={`w-full p-2.5 bg-white border ${errors.alamat ? 'border-red-400' : 'border-fourth'} rounded-xl text-sm outline-none focus:ring-2 focus:ring-primary resize-none transition-all h-[106px]`} placeholder="Alamat lengkap..." />
+              {errors.alamat && <p className="text-xs text-red-500 mt-0.5">{errors.alamat}</p>}
            </div>
            
            <div className="space-y-1">
@@ -255,7 +328,7 @@ export default function Step2Profile({ onNext, onBack, formData, updateFormData 
         <button onClick={onBack} className="flex items-center gap-2 px-5 py-2.5 border border-fourth rounded-xl text-xs font-bold text-secondary hover:bg-fourth transition-all active:scale-95">
           <ArrowLeft size={14} /> Kembali
         </button>
-        <button onClick={onNext} className="flex items-center gap-2 px-8 py-2.5 bg-primary text-white rounded-xl text-xs font-bold hover:opacity-90 transition-all active:scale-95 shadow-lg shadow-primary/20">
+        <button onClick={handleNext} className="flex items-center gap-2 px-8 py-2.5 bg-primary text-white rounded-xl text-xs font-bold hover:opacity-90 transition-all active:scale-95 shadow-lg shadow-primary/20">
           Selanjutnya <ArrowRight size={14} />
         </button>
       </div>
