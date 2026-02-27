@@ -130,14 +130,13 @@ const TambahLowongan = ({ isOpen, onClose, onSuccess, editJob = null }) => {
     setErrors({});
     try {
       if (isEditMode) {
-        // Update existing lowongan
-        const updateData = {
-          judul_lowongan: formData.judul,
-          nama_perusahaan: formData.perusahaan,
-          tipe_pekerjaan: formData.tipe_pekerjaan || undefined,
-          deskripsi: formData.deskripsi || undefined,
-        };
-        if (formData.tanggal_berakhir) updateData.lowongan_selesai = formData.tanggal_berakhir;
+        // Update existing lowongan using FormData for file upload support
+        const fd = new FormData();
+        fd.append('judul_lowongan', formData.judul);
+        fd.append('nama_perusahaan', formData.perusahaan);
+        if (formData.tipe_pekerjaan) fd.append('tipe_pekerjaan', formData.tipe_pekerjaan);
+        if (formData.deskripsi) fd.append('deskripsi', formData.deskripsi);
+        if (formData.tanggal_berakhir) fd.append('lowongan_selesai', formData.tanggal_berakhir);
 
         // Build lokasi from selected kota/provinsi names or use existing
         const selectedProvinsi = provinsiList.find(p => String(p.id) === String(formData.id_provinsi));
@@ -148,9 +147,12 @@ const TambahLowongan = ({ isOpen, onClose, onSuccess, editJob = null }) => {
         } else if (selectedProvinsi) {
           lokasiStr = selectedProvinsi.nama;
         }
-        if (lokasiStr) updateData.lokasi = lokasiStr;
+        if (lokasiStr) fd.append('lokasi', lokasiStr);
 
-        await adminApi.updateLowongan(editJob.id, updateData);
+        // Include foto if a new one was selected
+        if (formData.foto) fd.append('foto_lowongan', formData.foto);
+
+        await adminApi.updateLowongan(editJob.id, fd);
       } else {
         // Create new lowongan
         const fd = new FormData();

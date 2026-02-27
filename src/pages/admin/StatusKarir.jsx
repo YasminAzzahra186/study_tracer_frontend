@@ -223,7 +223,7 @@ export default function StatusKarir() {
           />
           
           <ManagedTable
-            title="Master Program Studi (Umum)"
+            title="Program Studi"
             icon={BookOpen}
             data={prodiData}
             placeholder="Contoh: Ilmu Komunikasi"
