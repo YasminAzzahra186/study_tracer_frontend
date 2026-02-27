@@ -70,7 +70,9 @@ export const adminApi = {
   },
 
   updateLowongan(id, data) {
-    return api.put(`/admin/lowongan/${id}`, data);
+    return api.post(`/admin/lowongan/${id}`, data, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
   },
 
   deleteLowongan(id) {
