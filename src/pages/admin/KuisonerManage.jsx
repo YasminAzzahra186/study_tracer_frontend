@@ -14,6 +14,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { adminApi } from "../../api/admin";
 import { masterDataApi } from "../../api/masterData";
+import { alertConfirm } from "../../utilitis/alert";
 
 export default function KuisonerManage() {
   const [filter, setFilter] = useState("Semua");
@@ -175,25 +176,38 @@ export default function KuisonerManage() {
   };
 
   const deleteQuestion = async (id) => {
-    if (!window.confirm("Apakah Anda yakin ingin menghapus pertanyaan ini?")) {
-      return;
+    const confrim = await alertConfirm("Apakah Anda yakin ingin menghapus pertanyaan ini?")
+
+    if (!confrim.isConfirmed) {
+      return
     }
+
 
     try {
       // Cari pertanyaan untuk mendapatkan kuesionerId
       const question = questions.find(q => q.id === id);
-      if (!question?.section) {
-        throw new Error("Data pertanyaan tidak lengkap");
+
+      // Ambil kuesioner ID dari section atau dari kuesioner langsung
+      const kuesionerId = question?.section?.id_kuesioner || question?.kuesioner?.id;
+
+      if (!kuesionerId) {
+        console.error("Data kuesioner tidak lengkap. Question:", question);
+        alert("Gagal menghapus pertanyaan: Data kuesioner tidak lengkap");
+        return;
       }
 
       // Optimistic update
       setQuestions((prev) => prev.filter((q) => q.id !== id));
 
-      // console.log("Delete pertanyaan:", id);
+      // Panggil API untuk delete permanent
+      await adminApi.deletePertanyaan(kuesionerId, id);
+
+      console.log(`✅ Pertanyaan ${id} berhasil dihapus`);
 
     } catch (error) {
       console.error("Gagal menghapus pertanyaan:", error);
-      alert("Gagal menghapus pertanyaan. Silakan coba lagi.");
+      console.error("Error details:", error.response?.data);
+      alert("Gagal menghapus pertanyaan: " + (error.response?.data?.message || error.message));
       // Revert jika gagal
       fetchData();
     }
@@ -360,7 +374,11 @@ export default function KuisonerManage() {
               </div>
 
               <div className="flex items-center gap-2 w-full sm:w-auto justify-end border-t sm:border-t-0 border-gray-100 pt-3 sm:pt-0 mt-2 sm:mt-0">
-                <button className="p-2 text-slate-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-all" title="Edit">
+                <button
+                  onClick={() => navigate(`/wb-admin/kuisoner/update-pertanyaan/${q.id}`)}
+                  className="cursor-pointer p-2 text-slate-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-all"
+                  title="Edit"
+                >
                   <Pencil size={18} />
                 </button>
 
@@ -369,7 +387,7 @@ export default function KuisonerManage() {
                   // DRAF: hanya tombol Publish
                   <button
                     onClick={() => updateStatus(q.id, "TERLIHAT")}
-                    className="p-2 rounded-lg transition-all text-green-600 bg-green-50 hover:bg-green-100"
+                    className="cursor-pointer p-2 rounded-lg transition-all text-green-600 bg-green-50 hover:bg-green-100"
                     title="Publish"
                   >
                     <Eye size={18} />
@@ -381,14 +399,14 @@ export default function KuisonerManage() {
                   <>
                     <button
                       onClick={() => updateStatus(q.id, "DRAF")}
-                      className="p-2 rounded-lg transition-all text-orange-600 bg-orange-50 hover:bg-orange-100"
+                      className="cursor-pointer p-2 rounded-lg transition-all text-orange-600 bg-orange-50 hover:bg-orange-100"
                       title="Ubah ke Draf"
                     >
                       <Archive size={18} />
                     </button>
                     <button
                       onClick={() => updateStatus(q.id, "TERSEMBUNYI")}
-                      className="p-2 rounded-lg transition-all text-slate-600 bg-slate-100 hover:bg-slate-200"
+                      className="cursor-pointer p-2 rounded-lg transition-all text-slate-600 bg-slate-100 hover:bg-slate-200"
                       title="Sembunyikan"
                     >
                       <EyeOff size={18} />
@@ -400,7 +418,7 @@ export default function KuisonerManage() {
                   // TERSEMBUNYI: hanya tombol Publish (tanpa Draft)
                   <button
                     onClick={() => updateStatus(q.id, "TERLIHAT")}
-                    className="p-2 rounded-lg transition-all text-green-600 bg-green-50 hover:bg-green-100"
+                    className="cursor-pointer p-2 rounded-lg transition-all text-green-600 bg-green-50 hover:bg-green-100"
                     title="Publish"
                   >
                     <Eye size={18} />
@@ -409,7 +427,7 @@ export default function KuisonerManage() {
 
                 <button
                   onClick={() => deleteQuestion(q.id)}
-                  className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
+                  className="cursor-pointer p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
                   title="Hapus"
                 >
                   <Trash2 size={18} />
