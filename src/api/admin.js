@@ -108,6 +108,10 @@ export const adminApi = {
     return api.get(`/admin/kuesioner/${id}`);
   },
 
+  updateStatusKuesioner(id, data) {
+    return api.patch(`/admin/kuesioner/${id}/status`, data)
+  },
+
   updateKuesioner(id, data) {
     return api.put(`/admin/kuesioner/${id}`, data);
   },
