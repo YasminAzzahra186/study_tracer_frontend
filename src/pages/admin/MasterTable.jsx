@@ -24,11 +24,11 @@ const PerusahaanTable = ({ data = [], onRefresh, kotaList }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isAdding, setIsAdding] = useState(false);
   const [editId, setEditId] = useState(null);
-  const [formData, setFormData] = useState({ nama_perusahaan: "", id_kota: "", alamat_perusahaan: "" });
+  const [formData, setFormData] = useState({ nama_perusahaan: "", id_kota: "", jalan: "" });
   const [saving, setSaving] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const resetForm = () => setFormData({ nama_perusahaan: "", id_kota: "", alamat_perusahaan: "" });
+  const resetForm = () => setFormData({ nama_perusahaan: "", id_kota: "", jalan: "" });
 
   // Fungsi cek duplikat nama perusahaan
   const isDuplicate = (name, currentId = null) => {
@@ -95,7 +95,7 @@ const PerusahaanTable = ({ data = [], onRefresh, kotaList }) => {
     setFormData({
       nama_perusahaan: item.nama || "",
       id_kota: item.kota?.id || item.id_kota || "",
-      alamat_perusahaan: item.jalan || item.alamat_perusahaan || "",
+      jalan: item.jalan || "",
     });
   };
 
@@ -153,7 +153,7 @@ const PerusahaanTable = ({ data = [], onRefresh, kotaList }) => {
                   </select>
                 </td>
                 <td className="py-2 px-3">
-                  <input type="text" value={formData.alamat_perusahaan} onChange={(e) => setFormData(p => ({ ...p, alamat_perusahaan: e.target.value }))} placeholder="Alamat" className="w-full px-2 py-1.5 text-xs border border-gray-200 rounded focus:ring-1 focus:ring-primary outline-none" />
+                  <input type="text" value={formData.jalan} onChange={(e) => setFormData(p => ({ ...p, jalan: e.target.value }))} placeholder="Alamat" className="w-full px-2 py-1.5 text-xs border border-gray-200 rounded focus:ring-1 focus:ring-primary outline-none" />
                 </td>
                 <td className="py-2 px-3">
                   <div className="flex justify-end gap-2">
