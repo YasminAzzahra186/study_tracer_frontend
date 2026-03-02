@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { School, BookOpen, Store } from "lucide-react";
-import { alertSuccess, alertError } from "../../utilitis/alert";
+import { alertSuccess, alertError, alertWarning } from "../../utilitis/alert";
 import { adminApi } from "../../api/admin";
 
 // --- IMPORT KOMPONEN REUSABLE ---
@@ -84,9 +84,30 @@ export default function StatusKarir() {
     fetchWirausaha();
   }, [fetchUniversitas, fetchProdi, fetchWirausaha]);
 
+
+  const isDuplicate = (category, name, currentId = null) => {
+    if (!name) return false;
+    const cleanName = name.toLowerCase().trim();
+    let targetData = [];
+
+    if (category === "univ") targetData = univData;
+    else if (category === "prodi") targetData = prodiData;
+    else if (category === "wirausaha") targetData = wirausahaData;
+
+    return targetData.some(item => 
+      (item.nama || "").toLowerCase().trim() === cleanName && item.id !== currentId
+    );
+  };
+
   // --- FUNGSI CREATE, UPDATE, DELETE ---
   const handleCreate = async (category, data) => {
     try {
+
+      const namaInput = data.nama_universitas || data.nama_prodi || data.nama_bidang || data.nama;
+      if (isDuplicate(category, namaInput)) {
+        return alertWarning(`Data "${namaInput}" sudah ada dalam daftar.`);
+      }
+
       if (category === "univ") {
         const res = await adminApi.createStatusKarierUniversitas({ nama: data.nama_universitas || data.nama });
         const newUnivId = res.data?.data?.id;
@@ -96,7 +117,7 @@ export default function StatusKarir() {
         }
         fetchUniversitas();
       } else if (category === "prodi") {
-        await adminApi.createStatusKarierProdi({ nama_jurusan: data.nama_prodi || data.nama }); 
+        await adminApi.createStatusKarierProdi({ nama_prodi: data.nama_prodi || data.nama }); 
         fetchProdi();
       } else if (category === "wirausaha") {
         await adminApi.createStatusKarierBidangUsaha({ nama_bidang: data.nama_bidang || data.nama }); 
@@ -110,6 +131,12 @@ export default function StatusKarir() {
 
   const handleUpdate = async (category, id, data) => {
     try {
+
+      const namaInput = data.nama_universitas || data.nama_prodi || data.nama_bidang || data.nama || Object.values(data)[0];
+      if (isDuplicate(category, namaInput, id)) {
+        return alertWarning(`Nama "${namaInput}" sudah digunakan oleh data lain.`);
+      }
+      
       if (category === "univ") {
         const nama = data.nama_universitas || data.nama || Object.values(data)[0];
         await adminApi.updateStatusKarierUniversitas(id, { nama });
@@ -133,7 +160,7 @@ export default function StatusKarir() {
         
         fetchUniversitas();
       } else if (category === "prodi") {
-        await adminApi.updateStatusKarierProdi(id, { nama_jurusan: data.nama_prodi || data.nama || Object.values(data)[0] }); 
+        await adminApi.updateStatusKarierProdi(id, { nama_prodi: data.nama_prodi || data.nama || Object.values(data)[0] }); 
         fetchProdi();
       } else if (category === "wirausaha") {
         await adminApi.updateStatusKarierBidangUsaha(id, { nama_bidang: data.nama_bidang || data.nama || Object.values(data)[0] }); 
