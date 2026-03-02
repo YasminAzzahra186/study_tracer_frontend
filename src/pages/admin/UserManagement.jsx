@@ -19,7 +19,7 @@ const PER_PAGE = 7;
 
 const UserManagementSkeleton = () => {
   return (
-    <div className="min-h-screen bg-[#F8FAFC] pb-20 animate-pulse p-6">
+    <div className="space-y-6 max-w-full overflow-hidden p-1 animate-in fade-in duration-700">
       <div className="space-y-8">
         {/* Stats Row Skeleton */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -306,7 +306,7 @@ export default function UserManagement() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] pb-20 p-6">
+    <div className="space-y-6 max-w-full overflow-hidden p-1 animate-in fade-in duration-700">
       <div className="space-y-8 animate-in fade-in duration-500">
 
         {/* STATS ROW */}
