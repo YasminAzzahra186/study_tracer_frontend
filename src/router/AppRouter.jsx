@@ -7,19 +7,15 @@ import UserManagement from "../pages/admin/UserManagement";
 import JobsManagement from "../pages/admin/JobsManagement";
 import JobDetail from "../pages/admin/JobDetail";
 import MasterTable from "../pages/admin/MasterTable";
-import KuisonerManage from "../pages/admin/KuisonerManage";
 import LupaPass from "../pages/LupaPass";
 import Register from "../pages/register/Register";
 import { useAuth } from "../context/AuthContext";
 import Logout from "../pages/Logout";
-import TambahPertanyaan from "../pages/admin/TambahKuesioner";
-import UpdateKuesioner from "../pages/admin/UpdateKuesioner";
-import LihatJawaban from "../pages/admin/LihatJawaban";
-import LihatJawabanDetail from "../pages/admin/LihatJawabanDetail";
 import StatusKarir from "../pages/admin/StatusKarir";
 import NotFound from "../pages/NotFound";
 import Kuesioner from "../pages/admin/Kuesioner";
 import TambahKuisioner from "../pages/admin/TambahKuisoner";
+import PreviewKuesioner from "../pages/admin/PreviewKuesioner";
 
 export default function AppRouter() {
   const { isAuthenticated, isAdmin, loading } = useAuth();
@@ -56,7 +52,8 @@ export default function AppRouter() {
           <Route path="master" element={<MasterTable />} />
           <Route path="kuisoner">
             <Route index element={<Kuesioner />} />
-            <Route path="tambah-kuesioner" element={<TambahKuisioner />} />
+            <Route path="tambah-kuesioner" element={<TambahKuisioner />} />      
+            <Route path="preview-kuesioner/:id" element={<PreviewKuesioner />} />      
             {/* <Route path="tambah-pertanyaan" element={<TambahPertanyaan />}
             <Route path="update-pertanyaan/:id" element={<UpdateKuesioner />} />
             <Route path="lihat-jawaban" >
