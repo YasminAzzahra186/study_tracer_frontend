@@ -1,7 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { GraduationCap, Search, User, LogOut, Lock } from 'lucide-react';
+import { Search, User, LogOut, Lock } from 'lucide-react'; // GraduationCap dihapus
 import { Link, useLocation } from 'react-router-dom';
 import { STORAGE_BASE_URL } from '../../api/axios';
+
+// Impor logo custom dari folder assets
+import logoIcon from '../../assets/icon.png';
 
 function getImageUrl(path) {
   if (!path) return null;
@@ -40,9 +43,11 @@ export default function Navbar({ user }) {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm transition-all">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 h-16 flex items-center justify-between">
-        {/* Logo */}
+        
+        {/* Logo Custom */}
         <div className="flex items-center gap-3">
-          <div className="bg-[#3C5759] text-white p-1.5 rounded-lg"><GraduationCap size={20} /></div>
+          {/* Menggunakan img tag untuk logo. Ukuran w-8 h-8 (32px) agar konsisten dengan ukuran sebelumnya */}
+          <img src={logoIcon} alt="Alumni Tracer Logo" className="w-8 h-8 object-contain drop-shadow-sm" />
           <span className="font-black text-slate-800 tracking-tight text-lg">Alumni Tracer</span>
         </div>
         
