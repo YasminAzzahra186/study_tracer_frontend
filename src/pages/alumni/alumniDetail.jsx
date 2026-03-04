@@ -99,24 +99,8 @@ export default function AlumniDetail() {
     foto: authUser?.alumni?.foto || authUser?.foto,
   };
 
-  const alumni = ALUMNI_DETAIL[id];
-
-  if (!alumni) {
-    return (
-      <div className="min-h-screen bg-slate-50 flex flex-col">
-        <Navbar user={user} />
-        <div className="flex-1 flex items-center justify-center">
-          <div className="text-center">
-            <h2 className="text-2xl font-black text-[#3C5759] mb-2">Alumni Tidak Ditemukan</h2>
-            <button onClick={() => navigate('/alumni')} className="mt-4 px-6 py-3 bg-[#3C5759] text-white rounded-xl font-bold hover:bg-[#2A3E3F] transition-all">
-              Kembali ke Direktori
-            </button>
-          </div>
-        </div>
-        <Footer />
-      </div>
-    );
-  }
+  // Gunakan data dummy: cari berdasarkan ID, atau fallback ke data pertama
+  const alumni = ALUMNI_DETAIL[id] || Object.values(ALUMNI_DETAIL)[0];
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans flex flex-col selection:bg-[#3C5759]/20">
