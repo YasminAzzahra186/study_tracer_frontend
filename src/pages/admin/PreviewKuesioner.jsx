@@ -101,7 +101,7 @@ export default function PreviewKuesioner() {
                                                 Waktu Mulai
                                             </p>
                                             <p className="text-sm font-medium text-gray-800">
-                                                {formatDateTime(dataHeader.tanggal_mulai)}
+                                                {formatDateTime(dataHeader.tanggal_mulai)} WIB
                                             </p>
                                         </div>
 
@@ -110,7 +110,7 @@ export default function PreviewKuesioner() {
                                                 Waktu Selesai
                                             </p>
                                             <p className="text-sm font-semibold text-red-600">
-                                                {formatDateTime(dataHeader.tanggal_selesai)}
+                                                {formatDateTime(dataHeader.tanggal_selesai)} WIB
                                             </p>
                                         </div>
 
