@@ -12,6 +12,8 @@ import {
   AlertCircle,
   Users
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 import Navbar from '../../components/alumni/Navbar';
 import Footer from '../../components/alumni/Footer';
 import Pagination from '../../components/admin/Pagination';
