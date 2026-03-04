@@ -26,11 +26,7 @@ const ChartKuesioner = ({ subtitle, series = [], labels = [] }) => {
         },
         dataLabels: {
             enabled: true,
-            formatter: (val) => `${val.toFixed(1)}%`,
-            style: {
-                fontSize: "12px",
-                fontWeight: 600,
-            },
+            formatter: (val, opts) => `${series[opts.seriesIndex]}%`,
         },
         legend: {
             position: "bottom",
@@ -48,8 +44,8 @@ const ChartKuesioner = ({ subtitle, series = [], labels = [] }) => {
         },
         tooltip: {
             y: {
-                formatter: (val) => `${val}%`,
-            },
+                formatter: (val, opts) => `${series[opts.seriesIndex]}%`
+            }
         },
         plotOptions: {
             pie: {

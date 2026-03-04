@@ -255,7 +255,7 @@ function StatistikKuesioner() {
 
                 <div className="flex justify-between items-center gap-4 mb-6">
                     <Link
-                        to="/wb-admin/kuisoner"
+                        to={`/wb-admin/kuisoner/tinjau-jawaban/${jawabanid}`}
                         className="flex items-center gap-2 text-third hover:text-primary transition-colors text-sm font-medium group"
                     >
                         <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
