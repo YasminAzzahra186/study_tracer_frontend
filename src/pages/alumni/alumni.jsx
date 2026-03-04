@@ -10,6 +10,7 @@ import {
   Rocket,
   LineChart
 } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
 import Navbar from '../../components/alumni/Navbar';
 import Footer from '../../components/alumni/Footer';
 import Pagination from '../../components/admin/Pagination';
@@ -45,7 +46,11 @@ const statusOptions = ['Semua Status', 'Bekerja', 'Kuliah', 'Wirausaha', 'Mencar
 const univOptions = ['Semua Universitas', 'Universitas Indonesia', 'Institut Teknologi Bandung', 'Universitas Gadjah Mada'];
 
 export default function Alumni() {
-  const user = { nama_alumni: 'User Test' }; 
+  const { user: authUser } = useAuth();
+  const user = { 
+    nama_alumni: authUser?.alumni?.nama_alumni || authUser?.nama || 'Alumni',
+    foto: authUser?.alumni?.foto || authUser?.foto 
+  };
   
   const [selectedTahun, setSelectedTahun] = useState('');
   const [selectedStatus, setSelectedStatus] = useState('');
