@@ -43,55 +43,59 @@ function LockOverlay({ message = "Fitur ini terkunci" }) {
   );
 }
 
-// --- Sub-Komponen ---
-
-function AlumniProfileCard({ data, locked }) {
+// --- Komponen Card Profil Alumni ---
+function AlumniProfileCard({ data, onImageClick, locked }) {
   if (!data) return null;
 
-  const tagColors = {
-    "Kuliah": "bg-blue-50 text-blue-600",
-    "Wirausaha": "bg-purple-50 text-purple-600",
-    "Mencari": "bg-amber-50 text-amber-600",
-    "Bekerja": "bg-[#3C5759]/10 text-[#3C5759]",
-    "Mencari Pekerjaan": "bg-amber-50 text-amber-600",
-  };
-
-  const initials = data.nama 
-    ? data.nama.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() 
-    : "??";
+  const displayName = data.nama || data.name || '?';
+  const fotoUrl = getImageUrl(data.foto) || data.image || `https://ui-avatars.com/api/?name=${displayName.replace(' ', '+')}&background=3C5759&color=fff&size=150`;
 
   return (
     <div className={`relative ${locked ? 'grayscale opacity-60' : ''}`}>
-      <motion.div whileHover={locked ? {} : { y: -5 }} className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex flex-col h-full">
-        <div className="flex justify-between items-start mb-3">
-          <div className="flex gap-3">
-            {data.foto ? (
-              <img src={getImageUrl(data.foto)} alt={data.nama} className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm" />
-            ) : (
-              <div className="w-12 h-12 rounded-full flex items-center justify-center bg-[#3C5759] text-white text-sm font-bold border-2 border-white shadow-sm">
-                {initials}
-              </div>
-            )}
-            <div>
-              <h3 className="font-bold text-[#3C5759] text-sm">{data.nama}</h3>
+      <motion.div whileHover={locked ? {} : { y: -5 }} className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex flex-col h-full cursor-pointer">
+        
+        {/* --- BAGIAN 1 & 2: Kontainer Atas --- */}
+        <div className="flex gap-4 mb-4 relative">
+
+          {/* BAGIAN 1: Gambar Profil */}
+          <div 
+            className="w-20 h-24 rounded-xl overflow-hidden shrink-0 bg-slate-100 border border-slate-200 cursor-pointer group"
+            onClick={(e) => {
+              if (locked) return;
+              e.stopPropagation();
+              onImageClick(fotoUrl);
+            }}
+          >
+            <img 
+              src={fotoUrl} 
+              alt={displayName} 
+              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+            />
+          </div>
+
+          {/* BAGIAN 2: Penjelasan (Teks) */}
+          <div className="flex-1 flex flex-col justify-center">
+            <div className="mb-2">
+              <h3 className="font-bold text-[#3C5759] text-sm line-clamp-1">{displayName}</h3>
               <p className="text-slate-400 text-[11px]">Angkatan {data.angkatan}</p>
+            </div>
+            
+            <div className="space-y-1.5">
+              <div className="flex items-start gap-1.5 text-slate-600">
+                <GraduationCap size={14} className="text-[#3C5759] shrink-0 mt-0.5" />
+                <span className="text-[11px] font-semibold line-clamp-2 leading-tight">{data.role || '-'}</span>
+              </div>
+              <div className="flex items-start gap-1.5 text-slate-500">
+                <Building2 size={14} className="text-slate-400 shrink-0 mt-0.5" />
+                <span className="text-[11px] font-medium line-clamp-2 leading-tight">{data.company || '-'}</span>
+              </div>
             </div>
           </div>
         </div>
-        
-        <div className="space-y-1.5 mb-4">
-          <div className="flex items-center gap-2 text-slate-600">
-            <GraduationCap size={14} className="text-[#3C5759]" />
-            <span className="text-[12px] font-semibold">{data.role || '-'}</span>
-          </div>
-          <div className="flex items-center gap-2 text-slate-500">
-            <Building2 size={14} className="text-slate-400" />
-            <span className="text-[11px] font-medium">{data.company || '-'}</span>
-          </div>
-        </div>
 
+        {/* --- BAGIAN 3: Footer (Tag Satu Warna) --- */}
         <div className="mt-auto pt-3 border-t border-slate-50 flex items-center justify-between">
-          <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase ${tagColors[data.tags] || 'bg-slate-100'}`}>
+          <span className="px-3 py-1 rounded-full text-[10px] font-bold uppercase bg-[#3C5759]/10 text-[#3C5759]">
             {data.tags}
           </span>
           {!locked && (
@@ -106,7 +110,7 @@ function AlumniProfileCard({ data, locked }) {
   );
 }
 
-// --- Komponen Card Lowongan ---
+// --- Komponen Card Lowongan (dengan Gelombang SVG) ---
 function JobPosterCard({ data, onImageClick, locked }) {
   if (!data) return null;
 
@@ -116,15 +120,19 @@ function JobPosterCard({ data, onImageClick, locked }) {
   const lokasi = data.perusahaan?.kota 
     ? `${data.perusahaan.kota.nama}${data.perusahaan.kota.provinsi ? ', ' + data.perusahaan.kota.provinsi.nama : ''}`
     : (data.lokasi || '-');
+  const waktuBerakhir = data.lowongan_selesai 
+    ? new Date(data.lowongan_selesai).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) + ', 23:59 WIB'
+    : null;
 
   return (
     <div className={`relative ${locked ? 'grayscale opacity-60' : ''}`}>
       <motion.div 
         whileHover={locked ? {} : { y: -8 }} 
-        className="bg-white rounded-3xl overflow-hidden border border-slate-100 shadow-sm flex flex-col h-full transition-all duration-300 group"
+        className="bg-white rounded-3xl overflow-hidden border border-slate-100 shadow-sm flex flex-col h-full cursor-pointer transition-all duration-300 group"
       >
+        {/* Kontainer Gambar */}
         <div 
-          className="h-56 overflow-hidden relative"
+          className="h-56 overflow-hidden relative cursor-pointer"
           onClick={(e) => {
             if (locked) return;
             e.stopPropagation();
@@ -137,10 +145,25 @@ function JobPosterCard({ data, onImageClick, locked }) {
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             onError={(e) => { e.target.src = "https://placehold.co/600x400?text=Poster+Not+Found"; }} 
           />
-          <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/20 to-transparent z-10" />
+          
+          {/* --- EFEK GELOMBANG MENGGUNAKAN SVG --- */}
+          <svg 
+            className="absolute -bottom-[1px] left-0 w-full h-8 z-20" 
+            viewBox="0 0 1440 100" 
+            preserveAspectRatio="none" 
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path 
+              fill="#ffffff" 
+              d="M0,32L80,42.7C160,53,320,75,480,74.7C640,75,800,53,960,42.7C1120,32,1280,32,1360,32L1440,32L1440,100L1360,100C1280,100,1120,100,960,100C800,100,640,100,480,100C320,100,160,100,80,100L0,100Z"
+            ></path>
+          </svg>
+          
+          {/* Overlay gradasi halus */}
+          <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/10 to-transparent z-10" />
         </div>
 
-        <div className="p-5 flex-1 flex flex-col relative z-20">
+        <div className="p-5 pt-4 flex-1 flex flex-col relative z-20">
           <div className="flex justify-between items-start mb-1">
             <h3 className="font-black text-[#3C5759] text-lg leading-tight flex-1 line-clamp-2">{data.judul}</h3>
             {deadline && deadline !== '-' && (
@@ -150,10 +173,10 @@ function JobPosterCard({ data, onImageClick, locked }) {
             )}
           </div>
           
-          {data.lowongan_selesai && (
+          {waktuBerakhir && (
             <div className="mb-3">
               <span className="text-slate-500 flex items-center gap-1 text-[11px] font-medium">
-                Berakhir: {new Date(data.lowongan_selesai).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}
+                Berakhir: {waktuBerakhir}
               </span>
             </div>
           )}
@@ -172,9 +195,13 @@ function JobPosterCard({ data, onImageClick, locked }) {
             </div>
           </div>
 
-          {data.deskripsi && (
+          {data.deskripsi ? (
             <p className="text-slate-500 text-[12px] leading-relaxed mb-6 line-clamp-3" 
                dangerouslySetInnerHTML={{ __html: data.deskripsi }} />
+          ) : (
+            <p className="text-slate-500 text-[12px] leading-relaxed mb-6 line-clamp-3">
+              Bergabunglah bersama tim profesional kami untuk mengelola infrastruktur IT dan memberikan dukungan teknis terbaik bagi perusahaan.
+            </p>
           )}
 
           <div className="mt-auto pt-4 border-t border-slate-50 flex justify-between items-center">
@@ -351,7 +378,7 @@ export default function Beranda() {
                       <div className="flex-1 ml-2 md:ml-0">
                         <h3 className="text-base font-bold text-slate-800 mb-1">Status Verifikasi Akun</h3>
                         <p className="text-slate-500 text-sm max-w-3xl leading-relaxed">
-                          Akun Anda sedang dalam proses peninjauan. Anda tetap dapat memperbarui profil dan mengisi kuesioner, namun akses ke fitur bursa kerja dan jejaring alumni akan dikunci hingga proses verifikasi selesai.
+                          Akun Anda sedang dalam proses peninjauan. Anda tetap dapat memperbarui profil, namun akses ke fitur bursa kerja dan jejaring alumni akan dikunci hingga proses verifikasi selesai.
                         </p>
                       </div>
                       <button 
@@ -364,7 +391,7 @@ export default function Beranda() {
                   </motion.div>
                 )}
 
-                {/* 2. TUGAS KUESIONER (for verified but kuesioner incomplete, OR unverified with pending kuesioner) */}
+                {/* 2. TUGAS KUESIONER */}
                 {kuesionerPending.length > 0 && (isVerified ? !hasCompletedKuesioner : true) && (
                   <motion.div 
                     key="kuesioner-alert"
@@ -380,10 +407,7 @@ export default function Beranda() {
                       <div className="flex-1 ml-2 md:ml-0">
                         <h3 className="text-base font-bold text-slate-800 mb-1">Tugas Kuesioner</h3>
                         <p className="text-slate-500 text-sm max-w-3xl leading-relaxed">
-                          {!isVerified 
-                            ? `Sambil menunggu verifikasi, silakan isi ${kuesionerPending.length} kuesioner tracer study sesuai status karir Anda.`
-                            : `Anda memiliki ${kuesionerPending.length} kuesioner yang belum diselesaikan. Isi kuesioner untuk membuka akses penuh ke semua fitur.`
-                          }
+                          Anda memiliki formulir kuesioner tracer study yang belum diselesaikan. Mohon luangkan waktu untuk mengisi kuesioner demi peningkatan kualitas pembelajaran almamater kita.
                         </p>
                       </div>
                       <button 
@@ -423,8 +447,13 @@ export default function Beranda() {
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
                 {alumniTerbaru.data?.length > 0 ? (
-                  alumniTerbaru.data.map((alumni) => (
-                    <AlumniProfileCard key={alumni.id} data={alumni} locked={alumniTerbaru.locked} />
+                  alumniTerbaru.data.slice(0, 4).map((alumni) => (
+                    <AlumniProfileCard 
+                      key={alumni.id} 
+                      data={alumni} 
+                      locked={alumniTerbaru.locked}
+                      onImageClick={(img) => !alumniTerbaru.locked && setSelectedImage(img)} 
+                    />
                   ))
                 ) : (
                   <div className="col-span-full text-center py-12 text-slate-400">
@@ -455,7 +484,7 @@ export default function Beranda() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
                 {lowonganTerbaru.data?.length > 0 ? (
-                  lowonganTerbaru.data.map((job) => (
+                  lowonganTerbaru.data.slice(0, 4).map((job) => (
                     <JobPosterCard 
                       key={job.id} 
                       data={job} 
@@ -479,7 +508,7 @@ export default function Beranda() {
                 <div className="divide-y divide-slate-50">
                   {topPerusahaan.data?.length > 0 ? (
                     topPerusahaan.data.map((comp, idx) => (
-                      <div key={comp.id || idx} className="flex items-center justify-between py-5 group hover:bg-slate-50/50 transition-all px-4 rounded-xl">
+                      <div key={comp.id || idx} className="flex items-center justify-between py-5 group hover:bg-slate-50/50 transition-all px-4 rounded-xl cursor-pointer">
                         <div className="flex items-center gap-5">
                           <div className="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center text-[#3C5759] group-hover:bg-white group-hover:shadow-sm transition-all border border-slate-100">
                             <Building2 size={22} />
