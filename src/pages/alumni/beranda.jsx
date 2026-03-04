@@ -43,40 +43,42 @@ function LockOverlay({ message = "Fitur ini terkunci" }) {
   );
 }
 
-// --- Komponen Card Profil Alumni ---
-function AlumniProfileCard({ data, onImageClick, locked }) {
+// --- Sub-Komponen ---
+
+// --- 1. Komponen Card Profil Alumni (Layout Kiri-Kanan, 1 Warna Tag) ---
+function AlumniProfileCard({ data, locked, onImageClick }) {
   if (!data) return null;
 
-  const displayName = data.nama || data.name || '?';
-  const fotoUrl = getImageUrl(data.foto) || data.image || `https://ui-avatars.com/api/?name=${displayName.replace(' ', '+')}&background=3C5759&color=fff&size=150`;
+  const defaultAvatar = `https://ui-avatars.com/api/?name=${data.nama ? data.nama.replace(' ', '+') : 'A'}&background=3C5759&color=fff&size=150`;
+  const imageSrc = data.foto ? getImageUrl(data.foto) : defaultAvatar;
 
   return (
-    <div className={`relative ${locked ? 'grayscale opacity-60' : ''}`}>
-      <motion.div whileHover={locked ? {} : { y: -5 }} className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex flex-col h-full cursor-pointer">
+    <div className={`relative ${locked ? 'grayscale opacity-60' : ''} h-full`}>
+      <motion.div whileHover={locked ? {} : { y: -5 }} className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex flex-col h-full">
         
-        {/* --- BAGIAN 1 & 2: Kontainer Atas --- */}
+        {/* BAGIAN 1 & 2: Kontainer Atas */}
         <div className="flex gap-4 mb-4 relative">
-
+          
           {/* BAGIAN 1: Gambar Profil */}
           <div 
-            className="w-20 h-24 rounded-xl overflow-hidden shrink-0 bg-slate-100 border border-slate-200 cursor-pointer group"
+            className={`w-20 h-24 rounded-xl overflow-hidden shrink-0 bg-slate-100 border border-slate-200 ${locked ? '' : 'cursor-pointer group'}`}
             onClick={(e) => {
-              if (locked) return;
+              if (locked || !onImageClick) return;
               e.stopPropagation();
-              onImageClick(fotoUrl);
+              onImageClick(imageSrc);
             }}
           >
             <img 
-              src={fotoUrl} 
-              alt={displayName} 
-              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+              src={imageSrc} 
+              alt={data.nama} 
+              className={`w-full h-full object-cover ${locked ? '' : 'transition-transform duration-300 group-hover:scale-110'}`}
             />
           </div>
 
           {/* BAGIAN 2: Penjelasan (Teks) */}
           <div className="flex-1 flex flex-col justify-center">
             <div className="mb-2">
-              <h3 className="font-bold text-[#3C5759] text-sm line-clamp-1">{displayName}</h3>
+              <h3 className="font-bold text-[#3C5759] text-sm line-clamp-1">{data.nama}</h3>
               <p className="text-slate-400 text-[11px]">Angkatan {data.angkatan}</p>
             </div>
             
@@ -93,10 +95,10 @@ function AlumniProfileCard({ data, onImageClick, locked }) {
           </div>
         </div>
 
-        {/* --- BAGIAN 3: Footer (Tag Satu Warna) --- */}
+        {/* BAGIAN 3: Footer (Tag Satu Warna) */}
         <div className="mt-auto pt-3 border-t border-slate-50 flex items-center justify-between">
           <span className="px-3 py-1 rounded-full text-[10px] font-bold uppercase bg-[#3C5759]/10 text-[#3C5759]">
-            {data.tags}
+            {data.tags || '-'}
           </span>
           {!locked && (
             <button className="flex items-center gap-1 text-[12px] font-bold text-[#3C5759] hover:underline transition-all cursor-pointer">
@@ -110,7 +112,7 @@ function AlumniProfileCard({ data, onImageClick, locked }) {
   );
 }
 
-// --- Komponen Card Lowongan (dengan Gelombang SVG) ---
+// --- 2. Komponen Card Lowongan (Dengan Gelombang SVG) ---
 function JobPosterCard({ data, onImageClick, locked }) {
   if (!data) return null;
 
@@ -125,16 +127,16 @@ function JobPosterCard({ data, onImageClick, locked }) {
     : null;
 
   return (
-    <div className={`relative ${locked ? 'grayscale opacity-60' : ''}`}>
+    <div className={`relative ${locked ? 'grayscale opacity-60' : ''} h-full`}>
       <motion.div 
         whileHover={locked ? {} : { y: -8 }} 
         className="bg-white rounded-3xl overflow-hidden border border-slate-100 shadow-sm flex flex-col h-full cursor-pointer transition-all duration-300 group"
       >
         {/* Kontainer Gambar */}
         <div 
-          className="h-56 overflow-hidden relative cursor-pointer"
+          className={`h-56 overflow-hidden relative ${locked ? '' : 'cursor-pointer'}`}
           onClick={(e) => {
-            if (locked) return;
+            if (locked || !onImageClick) return;
             e.stopPropagation();
             onImageClick(fotoUrl || "/Desain Poster Job.jpg");
           }}
@@ -142,11 +144,11 @@ function JobPosterCard({ data, onImageClick, locked }) {
           <img 
             src={fotoUrl || "/Desain Poster Job.jpg"} 
             alt="Lowongan" 
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            className={`w-full h-full object-cover ${locked ? '' : 'transition-transform duration-500 group-hover:scale-105'}`}
             onError={(e) => { e.target.src = "https://placehold.co/600x400?text=Poster+Not+Found"; }} 
           />
           
-          {/* --- EFEK GELOMBANG MENGGUNAKAN SVG --- */}
+          {/* EFEK GELOMBANG MENGGUNAKAN SVG */}
           <svg 
             className="absolute -bottom-[1px] left-0 w-full h-8 z-20" 
             viewBox="0 0 1440 100" 
@@ -158,9 +160,8 @@ function JobPosterCard({ data, onImageClick, locked }) {
               d="M0,32L80,42.7C160,53,320,75,480,74.7C640,75,800,53,960,42.7C1120,32,1280,32,1360,32L1440,32L1440,100L1360,100C1280,100,1120,100,960,100C800,100,640,100,480,100C320,100,160,100,80,100L0,100Z"
             ></path>
           </svg>
-          
-          {/* Overlay gradasi halus */}
-          <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/10 to-transparent z-10" />
+
+          <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/20 to-transparent z-10" />
         </div>
 
         <div className="p-5 pt-4 flex-1 flex flex-col relative z-20">
@@ -195,13 +196,9 @@ function JobPosterCard({ data, onImageClick, locked }) {
             </div>
           </div>
 
-          {data.deskripsi ? (
-            <p className="text-slate-500 text-[12px] leading-relaxed mb-6 line-clamp-3" 
-               dangerouslySetInnerHTML={{ __html: data.deskripsi }} />
-          ) : (
-            <p className="text-slate-500 text-[12px] leading-relaxed mb-6 line-clamp-3">
-              Bergabunglah bersama tim profesional kami untuk mengelola infrastruktur IT dan memberikan dukungan teknis terbaik bagi perusahaan.
-            </p>
+          {data.deskripsi && (
+            <div className="text-slate-500 text-[12px] leading-relaxed mb-6 line-clamp-3" 
+                dangerouslySetInnerHTML={{ __html: data.deskripsi }} />
           )}
 
           <div className="mt-auto pt-4 border-t border-slate-50 flex justify-between items-center">
@@ -362,7 +359,7 @@ export default function Beranda() {
             <div className="mb-12 flex flex-col gap-4">
               <AnimatePresence mode="popLayout">
                 
-                {/* 1. STATUS VERIFIKASI (Muncul jika BELUM terverifikasi) */}
+                {/* 1. STATUS VERIFIKASI */}
                 {!isVerified && (
                   <motion.div 
                     key="verifikasi-alert"
@@ -445,14 +442,14 @@ export default function Beranda() {
                   Lihat Semua <ArrowRight size={14}/>
                 </button>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 items-stretch">
                 {alumniTerbaru.data?.length > 0 ? (
                   alumniTerbaru.data.slice(0, 4).map((alumni) => (
                     <AlumniProfileCard 
                       key={alumni.id} 
                       data={alumni} 
-                      locked={alumniTerbaru.locked}
-                      onImageClick={(img) => !alumniTerbaru.locked && setSelectedImage(img)} 
+                      locked={alumniTerbaru.locked} 
+                      onImageClick={(img) => !alumniTerbaru.locked && setSelectedImage(img)}
                     />
                   ))
                 ) : (
@@ -482,7 +479,7 @@ export default function Beranda() {
                   Lihat Semua <ArrowRight size={14}/>
                 </button>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8 items-stretch">
                 {lowonganTerbaru.data?.length > 0 ? (
                   lowonganTerbaru.data.slice(0, 4).map((job) => (
                     <JobPosterCard 
@@ -584,7 +581,7 @@ export default function Beranda() {
                 </button>
               </div>
               <div className="p-4 sm:p-5 text-center bg-white border-t border-slate-100">
-                <h3 className="text-sm sm:text-base font-bold text-[#3C5759]">Pratinjau Poster Lowongan</h3>
+                <h3 className="text-sm sm:text-base font-bold text-[#3C5759]">Pratinjau Gambar</h3>
               </div>
             </motion.div>
           </div>
