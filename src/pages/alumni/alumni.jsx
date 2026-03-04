@@ -65,6 +65,7 @@ function AlumniSkeleton() {
 }
 
 export default function Alumni() {
+  const navigate = useNavigate();
   const { user: authUser } = useAuth();
 
   // Data state
@@ -263,12 +264,14 @@ export default function Alumni() {
                   <motion.div 
                     whileHover={{ y: -8 }}
                     key={alumni.id} 
-                    className="bg-white rounded-3xl flex flex-col overflow-hidden border border-[#3C5759]/5 shadow-md hover:shadow-xl transition-all duration-300 group"
+                    onClick={() => navigate(`/alumni/${alumni.id}`)}
+                    className="bg-white rounded-3xl flex flex-col overflow-hidden border border-[#3C5759]/5 shadow-md hover:shadow-xl transition-all duration-300 group cursor-pointer"
                   >
                     {/* AREA GAMBAR */}
                     <div 
                       className="h-56 w-full bg-white relative overflow-hidden cursor-pointer"
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.stopPropagation();
                         if (imageSrc) setSelectedImage(imageSrc);
                       }}
                     >
@@ -319,7 +322,10 @@ export default function Alumni() {
 
                       {/* Tombol Lihat Profil */}
                       <div className="mt-auto pt-4 border-t border-[#3C5759]/10 flex items-center justify-end">
-                        <button className="flex items-center gap-1.5 text-[13px] font-bold text-[#3C5759] hover:text-[#2A3E3F] hover:underline transition-all cursor-pointer">
+                        <button 
+                          onClick={(e) => { e.stopPropagation(); navigate(`/alumni/${alumni.id}`); }}
+                          className="flex items-center gap-1.5 text-[13px] font-bold text-[#3C5759] hover:text-[#2A3E3F] hover:underline transition-all cursor-pointer"
+                        >
                           Lihat Profil <ArrowRight size={16} />
                         </button>
                       </div>
