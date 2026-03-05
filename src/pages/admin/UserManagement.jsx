@@ -309,7 +309,7 @@ export default function UserManagement() {
             />
 
             <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
-              <div className="relative group flex-1 md:w-64 min-w-[200px]">
+              <div className="relative group flex-1 md:w-64 min-w-50">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors" size={18} />
                 <input
                   type="text"
@@ -339,7 +339,7 @@ export default function UserManagement() {
               <button
                 onClick={handleExport}
                 disabled={exportLoading}
-                className="flex items-center gap-2 px-5 py-2.5 bg-[#3C5759] text-white font-bold rounded-xl hover:bg-[#2A3E3F] transition-all text-xs shadow-md disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
+                className="flex items-center gap-2 px-5 py-2.5 bg-primary text-white font-bold rounded-xl hover:bg-[#2A3E3F] transition-all text-xs shadow-md disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
               >
                 {exportLoading ? <Loader2 size={16} className="animate-pulse" /> : <Download size={16} />}
                 <span className="hidden sm:inline">Eksport CSV</span>
@@ -381,7 +381,7 @@ export default function UserManagement() {
         {/* Modal Pop-up Foto Bulat */}
         {showPhotoPreview && createPortal(
           <div
-            className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in zoom-in duration-300"
+            className="fixed inset-0 z-9999 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in zoom-in duration-300"
             onClick={() => setShowPhotoPreview(false)}
           >
             <div className="relative max-w-lg w-full bg-white p-2 rounded-3xl shadow-2xl" onClick={e => e.stopPropagation()}>

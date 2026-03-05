@@ -184,7 +184,7 @@ function LowonganCard({ data, onImageClick, onToggleSave, savingId }) {
     <motion.div
       whileHover={{ y: -8 }}
       onClick={() => navigate(`/lowongan/${data.id}`)}
-      className="bg-white rounded-3xl flex flex-col overflow-hidden border border-[#3C5759]/5 shadow-md hover:shadow-xl transition-all duration-300 group cursor-pointer"
+      className="bg-white rounded-3xl flex flex-col overflow-hidden border border-primary/5 shadow-md hover:shadow-xl transition-all duration-300 group cursor-pointer"
     >
       <div
         className="h-56 w-full bg-white relative overflow-hidden cursor-pointer"
@@ -202,7 +202,7 @@ function LowonganCard({ data, onImageClick, onToggleSave, savingId }) {
         
         {/* Efek Gelombang Bawah */}
         <svg 
-          className="absolute bottom-0 left-0 w-[102%] -translate-x-[1%] h-10 z-20 translate-y-[1px]" 
+          className="absolute bottom-0 left-0 w-[102%] -translate-x-[1%] h-10 z-20 translate-y-px" 
           viewBox="0 0 1440 100" 
           preserveAspectRatio="none" 
           xmlns="http://www.w3.org/2000/svg"
@@ -216,7 +216,7 @@ function LowonganCard({ data, onImageClick, onToggleSave, savingId }) {
 
       <div className="p-6 pt-1 flex-1 flex flex-col relative z-20 bg-white">
         <div className="flex justify-between items-start mb-2 gap-2">
-          <h3 className="font-black text-[#3C5759] text-lg leading-tight flex-1 line-clamp-2">{data.judul}</h3>
+          <h3 className="font-black text-primary text-lg leading-tight flex-1 line-clamp-2">{data.judul}</h3>
           {deadline && deadline !== '-' && (
             <span className="text-red-500 text-[10px] font-black uppercase bg-red-50 px-2.5 py-1 rounded-md shrink-0">
               {deadline}
@@ -234,12 +234,12 @@ function LowonganCard({ data, onImageClick, onToggleSave, savingId }) {
         )}
 
         <div className="space-y-3 mb-5 px-1">
-          <div className="flex items-start gap-3 text-[#3C5759]/80">
-            <Building2 size={16} className="text-[#3C5759]/50 shrink-0 mt-0.5" />
+          <div className="flex items-start gap-3 text-primary/80">
+            <Building2 size={16} className="text-primary/50 shrink-0 mt-0.5" />
             <p className="text-sm font-semibold line-clamp-2">{perusahaanNama}</p>
           </div>
-          <div className="flex items-start gap-3 text-[#3C5759]/80">
-            <MapPin size={16} className="text-[#3C5759]/50 shrink-0 mt-0.5" />
+          <div className="flex items-start gap-3 text-primary/80">
+            <MapPin size={16} className="text-primary/50 shrink-0 mt-0.5" />
             <p className="text-sm font-semibold line-clamp-2">{lokasi}</p>
           </div>
         </div>
@@ -247,20 +247,20 @@ function LowonganCard({ data, onImageClick, onToggleSave, savingId }) {
         {data.skills && data.skills.length > 0 && (
           <div className="flex flex-wrap gap-1.5 mb-6 px-1">
             {data.skills.slice(0, 3).map((skill, idx) => (
-              <span key={idx} className="bg-[#3C5759]/5 text-[#3C5759] text-[10px] font-bold px-2.5 py-1 rounded-full border border-[#3C5759]/10">
+              <span key={idx} className="bg-primary/5 text-primary text-[10px] font-bold px-2.5 py-1 rounded-full border border-primary/10">
                 {skill.nama || skill}
               </span>
             ))}
             {data.skills.length > 3 && (
-              <span className="text-[#3C5759]/60 text-[10px] font-bold px-1.5 py-1">+{data.skills.length - 3}</span>
+              <span className="text-primary/60 text-[10px] font-bold px-1.5 py-1">+{data.skills.length - 3}</span>
             )}
           </div>
         )}
 
-        <div className="mt-auto pt-4 border-t border-[#3C5759]/10 flex justify-between items-center">
+        <div className="mt-auto pt-4 border-t border-primary/10 flex justify-between items-center">
           <div className="flex flex-col">
             {data.tipe_pekerjaan && (
-              <span className="text-[#3C5759]/50 text-[11px] font-bold uppercase tracking-wider">{data.tipe_pekerjaan}</span>
+              <span className="text-primary/50 text-[11px] font-bold uppercase tracking-wider">{data.tipe_pekerjaan}</span>
             )}
           </div>
           <div className="flex gap-2">
@@ -270,13 +270,13 @@ function LowonganCard({ data, onImageClick, onToggleSave, savingId }) {
               className="p-2 hover:bg-slate-100 rounded-full transition-colors cursor-pointer disabled:opacity-50"
             >
               {data.is_saved ? (
-                <Bookmark size={18} className="text-[#3C5759]" fill="currentColor" />
+                <Bookmark size={18} className="text-primary" fill="currentColor" />
               ) : (
-                <Bookmark size={18} className="text-slate-300 hover:text-[#3C5759]" />
+                <Bookmark size={18} className="text-slate-300 hover:text-primary" />
               )}
             </button>
-            <button className="p-2 bg-[#3C5759]/5 hover:bg-[#3C5759]/10 rounded-full transition-colors cursor-pointer">
-              <ArrowRight size={18} className="text-[#3C5759]" />
+            <button className="p-2 bg-primary/5 hover:bg-primary/10 rounded-full transition-colors cursor-pointer">
+              <ArrowRight size={18} className="text-primary" />
             </button>
           </div>
         </div>
@@ -644,7 +644,7 @@ export default function Lowongan() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f8f9fa] font-sans flex flex-col selection:bg-[#3C5759]/20 overflow-x-hidden">
+    <div className="min-h-screen bg-[#f8f9fa] font-sans flex flex-col selection:bg-primary/20 overflow-x-hidden">
       <Navbar user={navUser} />
 
       {/* --- HEADER SECTION --- */}
@@ -661,11 +661,11 @@ export default function Lowongan() {
           <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-b from-transparent to-[#f8f9fa]"></div>
         </div>
 
-        <div className="relative z-10 max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12">
+        <div className="relative z-10 max-w-360 mx-auto px-4 sm:px-6 lg:px-8 xl:px-12">
           
           <div className="mb-6">
-            <h1 className="text-3xl md:text-4xl font-black text-[#3C5759] tracking-tight mb-2 uppercase">Bursa Kerja</h1>
-            <p className="text-[#3C5759]/90 text-sm md:text-base max-w-2xl font-semibold drop-shadow-sm">
+            <h1 className="text-3xl md:text-4xl font-black text-primary tracking-tight mb-2 uppercase">Bursa Kerja</h1>
+            <p className="text-primary/90 text-sm md:text-base max-w-2xl font-semibold drop-shadow-sm">
               Temukan dan lamar peluang karir terbaik dari perusahaan mitra kami.
             </p>
           </div>
@@ -677,7 +677,7 @@ export default function Lowongan() {
               <button
                 onClick={() => { setActiveTab('semua'); setCurrentPage(1); }}
                 className={`px-5 py-2.5 rounded-2xl text-[13px] font-bold transition-all cursor-pointer ${
-                  activeTab === 'semua' ? 'bg-[#3C5759] text-white shadow-md' : 'bg-white text-[#3C5759]/70 hover:text-[#3C5759] border border-[#3C5759]/10'
+                  activeTab === 'semua' ? 'bg-primary text-white shadow-md' : 'bg-white text-primary/70 hover:text-primary border border-primary/10'
                 }`}
               >
                 Semua Lowongan
@@ -685,7 +685,7 @@ export default function Lowongan() {
               <button
                 onClick={() => { setActiveTab('disimpan'); setCurrentPage(1); }}
                 className={`px-5 py-2.5 rounded-2xl text-[13px] font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
-                  activeTab === 'disimpan' ? 'bg-[#3C5759] text-white shadow-md' : 'bg-white text-[#3C5759]/70 hover:text-[#3C5759] border border-[#3C5759]/10'
+                  activeTab === 'disimpan' ? 'bg-primary text-white shadow-md' : 'bg-white text-primary/70 hover:text-primary border border-primary/10'
                 }`}
               >
                 <Bookmark size={14} fill={activeTab === 'disimpan' ? 'currentColor' : 'none'} /> Disimpan
@@ -703,7 +703,7 @@ export default function Lowongan() {
             {/* BUTTON TRIGGER MODAL */}
             <button 
               onClick={() => setIsModalOpen(true)}
-              className="bg-white border border-[#3C5759]/20 text-[#3C5759] px-5 py-2.5 rounded-2xl text-[13px] font-bold shadow-sm hover:bg-[#3C5759] hover:text-white transition-all cursor-pointer flex items-center justify-center gap-2"
+              className="bg-white border border-primary/20 text-primary px-5 py-2.5 rounded-2xl text-[13px] font-bold shadow-sm hover:bg-primary hover:text-white transition-all cursor-pointer flex items-center justify-center gap-2"
             >
               <Plus size={16} /> Tambah Lowongan
             </button>
@@ -779,7 +779,7 @@ export default function Lowongan() {
       {/* Image Preview Modal */}
       <AnimatePresence>
         {selectedImage && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -809,7 +809,7 @@ export default function Lowongan() {
                 </button>
               </div>
               <div className="p-4 sm:p-5 text-center bg-white border-t border-slate-100">
-                <h3 className="text-sm sm:text-base font-bold text-[#3C5759]">Pratinjau Poster Lowongan</h3>
+                <h3 className="text-sm sm:text-base font-bold text-primary">Pratinjau Poster Lowongan</h3>
               </div>
             </motion.div>
           </div>

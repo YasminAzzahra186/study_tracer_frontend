@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { User, Briefcase, Award, Loader2, Check } from 'lucide-react';
+import { User, Briefcase, Award, Check } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 import Navbar from '../../components/alumni/Navbar';
 import Footer from '../../components/alumni/Footer';
 import ProfileHeader from '../../components/alumni/ProfileHeader';
-import ProfileSidebar from '../../components/alumni/ProfileSidebar'; // <--- IMPORT KOMPONEN SIDEBAR
+import ProfileSidebar from '../../components/alumni/ProfileSidebar'; 
 import { alumniApi } from '../../api/alumni';
 import { useAuth } from '../../context/AuthContext';
 
@@ -13,6 +13,7 @@ import { useAuth } from '../../context/AuthContext';
 import TabDetailPribadi from '../../components/alumni/TabDetailPribadi';
 import TabStatusKarier from '../../components/alumni/TabStatusKarier';
 import TabKeahlian from '../../components/alumni/TabKeahlian';
+import { ProfilSkeleton } from '../../components/alumni/skeleton';
 
 export default function Profil() {
   const navigate = useNavigate();
@@ -24,12 +25,12 @@ export default function Profil() {
   const [successMsg, setSuccessMsg] = useState('');
   
   // State Navigasi Tab SPA
-  const [activeTab, setActiveTab] = useState('detail'); // 'detail' | 'karier' | 'keahlian'
+  const [activeTab, setActiveTab] = useState('detail'); 
   const [triggerEdit, setTriggerEdit] = useState(false);
 
   function handlePerbarui() {
     setActiveTab('detail');
-    setTriggerEdit(prev => !prev); // toggle to trigger useEffect
+    setTriggerEdit(prev => !prev); 
   }
 
   useEffect(() => { 
@@ -59,7 +60,7 @@ export default function Profil() {
     can_access_all: true 
   };
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center"><Loader2 size={36} className="animate-spin text-[#3C5759]" /></div>;
+  if (loading) return <ProfilSkeleton />;
 
   return (
     <div className="min-h-screen bg-[#f8f9fa] font-sans flex flex-col">

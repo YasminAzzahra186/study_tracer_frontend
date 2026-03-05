@@ -31,38 +31,17 @@ function getImageUrl(path) {
 // Helper untuk ikon status
 const getStatusIcon = (status) => {
   switch (status) {
-    case 'Kuliah': return <GraduationCap size={16} className="text-[#3C5759]/50 shrink-0 mt-0.5" />;
-    case 'Wirausaha': return <Rocket size={16} className="text-[#3C5759]/50 shrink-0 mt-0.5" />;
+    case 'Kuliah': return <GraduationCap size={16} className="text-primary/50 shrink-0 mt-0.5" />;
+    case 'Wirausaha': return <Rocket size={16} className="text-primary/50 shrink-0 mt-0.5" />;
     case 'Mencari Pekerjaan': 
-    case 'Mencari': return <LineChart size={16} className="text-[#3C5759]/50 shrink-0 mt-0.5" />;
+    case 'Mencari': return <LineChart size={16} className="text-primary/50 shrink-0 mt-0.5" />;
     case 'Bekerja': 
-    default: return <Briefcase size={16} className="text-[#3C5759]/50 shrink-0 mt-0.5" />;
+    default: return <Briefcase size={16} className="text-primary/50 shrink-0 mt-0.5" />;
   }
 };
 
-// --- Loading Skeleton ---
-function AlumniSkeleton() {
-  return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-      {[1,2,3,4,5,6,7,8].map(i => (
-        <div key={i} className="bg-white rounded-3xl overflow-hidden border border-[#3C5759]/5 shadow-md animate-pulse">
-          <div className="h-56 bg-slate-200" />
-          <div className="p-6 pt-4 space-y-4">
-            <div className="flex flex-col items-center gap-2">
-              <div className="h-5 bg-slate-200 rounded w-32" />
-              <div className="h-3 bg-slate-100 rounded w-20" />
-            </div>
-            <div className="space-y-3">
-              <div className="h-4 bg-slate-100 rounded w-full" />
-              <div className="h-4 bg-slate-100 rounded w-3/4" />
-              <div className="h-4 bg-slate-100 rounded w-1/2" />
-            </div>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
+// Skeleton import
+import { AlumniSkeleton } from '../../components/alumni/skeleton';
 
 export default function Alumni() {
   const navigate = useNavigate();
@@ -193,36 +172,36 @@ export default function Alumni() {
           <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-b from-transparent to-[#f8f9fa]"></div>
         </div>
 
-        <div className="relative z-10 max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12">
+        <div className="relative z-10 max-w-360 mx-auto px-4 sm:px-6 lg:px-8 xl:px-12">
           <div className="mb-8">
-            <h1 className="text-3xl md:text-4xl font-black text-[#3C5759] tracking-tight mb-2 uppercase">Direktori Alumni</h1>
-            <p className="text-[#3C5759]/90 text-sm md:text-base max-w-2xl font-semibold drop-shadow-sm">
+            <h1 className="text-3xl md:text-4xl font-black text-primary tracking-tight mb-2 uppercase">Direktori Alumni</h1>
+            <p className="text-primary/90 text-sm md:text-base max-w-2xl font-semibold drop-shadow-sm">
               Terhubung dengan para lulusan dan perluas jaringan profesional Anda.
             </p>
           </div>
 
           <form onSubmit={handleSearch} className="flex flex-col xl:flex-row gap-4 relative">
             {/* Kolom Pencarian */}
-            <div className="relative flex-1 group shadow-sm border border-[#3C5759]/10 rounded-2xl bg-white">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#3C5759]/40 group-focus-within:text-[#3C5759] transition-colors" size={20} />
+            <div className="relative flex-1 group shadow-sm border border-primary/10 rounded-2xl bg-white">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-primary/40 group-focus-within:text-primary transition-colors" size={20} />
               <input 
                 type="text" 
                 placeholder="cari berdasarkan nama, perusahaan, atau peran..." 
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 bg-transparent rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-[#3C5759]/20 focus:border-transparent transition-all h-[52px] text-[#3C5759] placeholder:text-[#3C5759]/40"
+                className="w-full pl-12 pr-4 py-3 bg-transparent rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-transparent transition-all h-[52px] text-primary placeholder:text-primary/40"
               />
             </div>
 
             {/* Dropdown Filters */}
             <div className="flex flex-wrap sm:flex-nowrap gap-3 shrink-0">
-              <div className="w-44  border-[#3C5759]/10">
+              <div className="w-44  border-primary/10">
                 <SmoothDropdown options={tahunOptions} value={selectedTahun} onSelect={(val) => setSelectedTahun(val === 'Semua Tahun' ? '' : val)} placeholder="Tahun Kelulusan" />
               </div>
-              <div className="w-48  border-[#3C5759]/10">
+              <div className="w-48  border-primary/10">
                 <SmoothDropdown options={statusOptions} value={selectedStatus} onSelect={(val) => setSelectedStatus(val === 'Semua Status' ? '' : val)} placeholder="Status Pekerjaan" />
               </div>
-              <div className="w-52  border-[#3C5759]/10">
+              <div className="w-52  border-primary/10">
                 <SmoothDropdown options={univOptions} value={selectedUniv} onSelect={(val) => setSelectedUniv(val === 'Semua Universitas' ? '' : val)} placeholder="Universitas" isSearchable={true} />
               </div>
             </div>
@@ -241,7 +220,7 @@ export default function Alumni() {
               <AlertCircle size={48} className="text-red-400 mx-auto mb-4" />
               <h2 className="text-lg font-bold text-slate-700 mb-2">Gagal Memuat Data</h2>
               <p className="text-slate-500 text-sm mb-4">{error}</p>
-              <button onClick={() => fetchAlumni(currentPage)} className="bg-[#3C5759] text-white px-6 py-2 rounded-xl text-sm font-bold cursor-pointer">
+              <button onClick={() => fetchAlumni(currentPage)} className="bg-primary text-white px-6 py-2 rounded-xl text-sm font-bold cursor-pointer">
                 Coba Lagi
               </button>
             </div>
@@ -265,7 +244,7 @@ export default function Alumni() {
                     whileHover={{ y: -8 }}
                     key={alumni.id} 
                     onClick={() => navigate(`/alumni/${alumni.id}`, { state: { alumni } })}
-                    className="bg-white rounded-3xl flex flex-col overflow-hidden border border-[#3C5759]/5 shadow-md hover:shadow-xl transition-all duration-300 group cursor-pointer"
+                    className="bg-white rounded-3xl flex flex-col overflow-hidden border border-primary/5 shadow-md hover:shadow-xl transition-all duration-300 group cursor-pointer"
                   >
                     {/* AREA GAMBAR */}
                     <div 
@@ -278,7 +257,7 @@ export default function Alumni() {
                       {imageSrc ? (
                         <img src={imageSrc} alt={alumni.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center text-5xl font-bold text-[#3C5759]/20 bg-[#3C5759]/5">
+                        <div className="w-full h-full flex items-center justify-center text-5xl font-bold text-primary/20 bg-primary/5">
                           {alumni.name?.charAt(0) || 'A'}
                         </div>
                       )}
@@ -300,31 +279,31 @@ export default function Alumni() {
                     {/* AREA KONTEN BAWAH */}
                     <div className="p-6 pt-1 flex-1 flex flex-col relative z-20 bg-white">
                       <div className="mb-5 text-center">
-                        <h3 className="font-black text-[#3C5759] text-xl leading-tight line-clamp-1">{alumni.name}</h3>
-                        <p className="text-[11px] font-bold text-[#3C5759]/40 mt-1 uppercase tracking-widest">Angkatan {alumni.angkatan}</p>
+                        <h3 className="font-black text-primary text-xl leading-tight line-clamp-1">{alumni.name}</h3>
+                        <p className="text-[11px] font-bold text-primary/40 mt-1 uppercase tracking-widest">Angkatan {alumni.angkatan}</p>
                       </div>
 
                       {/* Penjelasan Detail */}
                       <div className="space-y-3 mb-6 px-1">
-                        <div className="flex items-start gap-3 text-[#3C5759]/80">
-                          <Briefcase size={16} className="text-[#3C5759]/50 shrink-0 mt-0.5" />
+                        <div className="flex items-start gap-3 text-primary/80">
+                          <Briefcase size={16} className="text-primary/50 shrink-0 mt-0.5" />
                           <p className="text-sm font-semibold line-clamp-2">{alumni.role || '-'}</p>
                         </div>
-                        <div className="flex items-start gap-3 text-[#3C5759]/80">
-                          <Building2 size={16} className="text-[#3C5759]/50 shrink-0 mt-0.5" />
+                        <div className="flex items-start gap-3 text-primary/80">
+                          <Building2 size={16} className="text-primary/50 shrink-0 mt-0.5" />
                           <p className="text-sm font-semibold line-clamp-2">{alumni.company || '-'}</p>
                         </div>
-                        <div className="flex items-start gap-3 text-[#3C5759]/80">
+                        <div className="flex items-start gap-3 text-primary/80">
                           {getStatusIcon(alumni.status)}
                           <p className="text-sm font-semibold line-clamp-2">{alumni.status || '-'}</p>
                         </div>
                       </div>
 
                       {/* Tombol Lihat Profil */}
-                      <div className="mt-auto pt-4 border-t border-[#3C5759]/10 flex items-center justify-end">
+                      <div className="mt-auto pt-4 border-t border-primary/10 flex items-center justify-end">
                         <button 
                           onClick={(e) => { e.stopPropagation(); navigate(`/alumni/${alumni.id}`, { state: { alumni } }); }}
-                          className="flex items-center gap-1.5 text-[13px] font-bold text-[#3C5759] hover:text-[#2A3E3F] hover:underline transition-all cursor-pointer"
+                          className="flex items-center gap-1.5 text-[13px] font-bold text-primary hover:text-[#2A3E3F] hover:underline transition-all cursor-pointer"
                         >
                           Lihat Profil <ArrowRight size={16} />
                         </button>
@@ -336,7 +315,7 @@ export default function Alumni() {
             </div>
 
             {/* --- PAGINATION --- */}
-            <div className="mt-12 mb-4 bg-white rounded-xl shadow-sm border border-[#3C5759]/10 overflow-hidden">
+            <div className="mt-12 mb-4 bg-white rounded-xl shadow-sm border border-primary/10 overflow-hidden">
               <Pagination 
                 currentPage={currentPage}
                 totalPages={totalPages}
@@ -385,7 +364,7 @@ export default function Alumni() {
                 </button>
               </div>
               <div className="p-4 sm:p-5 text-center bg-white border-t border-slate-100">
-                <h3 className="text-sm sm:text-base font-bold text-[#3C5759]">Pratinjau Foto Profil</h3>
+                <h3 className="text-sm sm:text-base font-bold text-primary">Pratinjau Foto Profil</h3>
               </div>
             </motion.div>
           </div>
