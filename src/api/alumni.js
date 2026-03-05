@@ -25,6 +25,10 @@ export const alumniApi = {
     return api.post('/alumni/career-status', data);
   },
 
+  updateExistingCareerStatus(id, data) {
+    return api.put(`/alumni/career-status/${id}`, data);
+  },
+
   // Lowongan (restricted - needs verified + kuesioner)
   getLowongan(params = {}) {
     return api.get('/alumni/lowongan', { params });
