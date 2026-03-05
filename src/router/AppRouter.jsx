@@ -24,8 +24,6 @@ import Alumni from "../pages/alumni/alumni";
 import AlumniDetail from "../pages/alumni/alumniDetail";
 import Lowongan from "../pages/alumni/lowongan"; 
 import Profil from "../pages/alumni/profil";
-import Profil2 from "../pages/alumni/profil2"; 
-import Profil3 from "../pages/alumni/profil3";
 import StatistikKuesioner from "../pages/admin/StatistikKuesioner";
 
 export default function AppRouter() {
@@ -96,12 +94,7 @@ export default function AppRouter() {
       <Route path="/profil" element={
         isAuthenticated && !isAdmin ? <Profil /> : <Navigate to="/login" replace />
       } />
-      <Route path="/profil2" element={
-        isAuthenticated && !isAdmin ? <Profil2 /> : <Navigate to="/login" replace />
-      } />
-      <Route path="/profil3" element={
-        isAuthenticated && !isAdmin ? <Profil3 /> : <Navigate to="/login" replace />
-      } />
+
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
