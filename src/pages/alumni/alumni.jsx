@@ -216,13 +216,13 @@ export default function Alumni() {
 
             {/* Dropdown Filters */}
             <div className="flex flex-wrap sm:flex-nowrap gap-3 shrink-0">
-              <div className="w-44 bg-white rounded-2xl shadow-sm border border-[#3C5759]/10">
+              <div className="w-44  border-[#3C5759]/10">
                 <SmoothDropdown options={tahunOptions} value={selectedTahun} onSelect={(val) => setSelectedTahun(val === 'Semua Tahun' ? '' : val)} placeholder="Tahun Kelulusan" />
               </div>
-              <div className="w-48 bg-white rounded-2xl shadow-sm border border-[#3C5759]/10">
+              <div className="w-48  border-[#3C5759]/10">
                 <SmoothDropdown options={statusOptions} value={selectedStatus} onSelect={(val) => setSelectedStatus(val === 'Semua Status' ? '' : val)} placeholder="Status Pekerjaan" />
               </div>
-              <div className="w-52 bg-white rounded-2xl shadow-sm border border-[#3C5759]/10">
+              <div className="w-52  border-[#3C5759]/10">
                 <SmoothDropdown options={univOptions} value={selectedUniv} onSelect={(val) => setSelectedUniv(val === 'Semua Universitas' ? '' : val)} placeholder="Universitas" isSearchable={true} />
               </div>
             </div>
