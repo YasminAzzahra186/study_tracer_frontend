@@ -11,6 +11,7 @@ import Footer from '../../components/alumni/Footer';
 import PublicProfileBar from '../../components/alumni/PublicProfileBar';
 import { alumniApi } from '../../api/alumni';
 import { STORAGE_BASE_URL } from '../../api/axios';
+import { AlumniDetailSkeleton } from '../../components/alumni/skeleton';
 
 function getImageUrl(path) {
   if (!path) return null;
@@ -20,12 +21,12 @@ function getImageUrl(path) {
 
 const getStatusIcon = (status) => {
   switch (status) {
-    case 'Kuliah': return <GraduationCap size={18} className="text-[#3C5759]/40" />;
-    case 'Wirausaha': return <Rocket size={18} className="text-[#3C5759]/40" />;
+    case 'Kuliah': return <GraduationCap size={18} className="text-primary/40" />;
+    case 'Wirausaha': return <Rocket size={18} className="text-primary/40" />;
     case 'Mencari Pekerjaan':
-    case 'Mencari': return <LineChart size={18} className="text-[#3C5759]/40" />;
+    case 'Mencari': return <LineChart size={18} className="text-primary/40" />;
     case 'Bekerja':
-    default: return <Briefcase size={18} className="text-[#3C5759]/40" />;
+    default: return <Briefcase size={18} className="text-primary/40" />;
   }
 };
 
@@ -79,12 +80,7 @@ export default function AlumniDetail() {
     return (
       <div className="min-h-screen bg-[#f8f9fa] font-sans flex flex-col">
         <Navbar user={user} />
-        <main className="flex-1 flex items-center justify-center">
-          <div className="text-center">
-            <Loader2 size={48} className="animate-spin text-[#3C5759] mx-auto mb-4" />
-            <p className="text-sm text-[#3C5759]/60 font-medium">Memuat profil...</p>
-          </div>
-        </main>
+        <AlumniDetailSkeleton />
         <Footer />
       </div>
     );
@@ -97,13 +93,13 @@ export default function AlumniDetail() {
         <main className="flex-1 flex items-center justify-center">
           <div className="text-center px-6">
             <AlertCircle size={56} className="text-red-400 mx-auto mb-4" />
-            <h2 className="text-2xl font-black text-[#3C5759] mb-2">{error || 'Profil Tidak Ditemukan'}</h2>
-            <p className="text-sm text-[#3C5759]/60 font-medium mb-6 max-w-md">
+            <h2 className="text-2xl font-black text-primary mb-2">{error || 'Profil Tidak Ditemukan'}</h2>
+            <p className="text-sm text-primary/60 font-medium mb-6 max-w-md">
               {error ? 'Terjadi kesalahan saat memuat profil. Silakan coba lagi.' : 'Profil alumni yang Anda cari tidak tersedia.'}
             </p>
             <button
               onClick={() => navigate('/alumni')}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-[#3C5759] text-white rounded-xl text-sm font-bold shadow-md hover:bg-[#2A3E3F] transition-all cursor-pointer"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-xl text-sm font-bold shadow-md hover:bg-[#2A3E3F] transition-all cursor-pointer"
             >
               <ArrowLeft size={16} /> Ke Direktori Alumni
             </button>
@@ -145,7 +141,7 @@ export default function AlumniDetail() {
       <Navbar user={user} />
 
       {/* --- BACKGROUND HERO --- */}
-      <div className="relative h-64 md:h-80 bg-gradient-to-br from-[#3C5759] via-[#4A6B6D] to-[#2A3E3F] overflow-hidden">
+      <div className="relative h-64 md:h-80 bg-gradient-to-br from-primary via-[#4A6B6D] to-[#2A3E3F] overflow-hidden">
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-10 left-10 w-40 h-40 rounded-full bg-white/20 blur-3xl" />
           <div className="absolute bottom-10 right-20 w-60 h-60 rounded-full bg-white/10 blur-3xl" />
@@ -180,7 +176,7 @@ export default function AlumniDetail() {
                 {imageSrc ? (
                   <img src={imageSrc} alt={alumni.nama} className="w-full h-full object-cover" />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center text-5xl font-black text-[#3C5759]/20 bg-[#3C5759]/5">
+                  <div className="w-full h-full flex items-center justify-center text-5xl font-black text-primary/20 bg-primary/5">
                     {alumni.nama?.charAt(0) || 'A'}
                   </div>
                 )}
@@ -193,26 +189,26 @@ export default function AlumniDetail() {
             </motion.div>
 
             <div className="flex-1">
-              <h1 className="text-3xl md:text-5xl font-black text-[#3C5759] tracking-tight leading-none mb-3">
+              <h1 className="text-3xl md:text-5xl font-black text-primary tracking-tight leading-none mb-3">
                 {alumni.nama}
               </h1>
-              <div className="flex flex-wrap items-center gap-y-3 gap-x-6 text-sm font-bold text-[#3C5759]/60">
+              <div className="flex flex-wrap items-center gap-y-3 gap-x-6 text-sm font-bold text-primary/60">
                 {currentRole && (
                   <span className="flex items-center gap-2">
                     {getStatusIcon(currentStatus)} {currentRole}
                     {currentCompany && currentCompany !== '-' && (
-                      <> di <span className="text-[#3C5759]">{currentCompany}</span></>
+                      <> di <span className="text-primary">{currentCompany}</span></>
                     )}
                   </span>
                 )}
                 {alumni.jurusan?.nama && (
                   <span className="flex items-center gap-2">
-                    <GraduationCap size={16} className="text-[#3C5759]/30" /> {alumni.jurusan.nama}
+                    <GraduationCap size={16} className="text-primary/30" /> {alumni.jurusan.nama}
                   </span>
                 )}
                 {alumni.tahun_masuk && (
                   <span className="flex items-center gap-2">
-                    <MapPin size={16} className="text-[#3C5759]/30" /> Angkatan {alumni.tahun_masuk}
+                    <MapPin size={16} className="text-primary/30" /> Angkatan {alumni.tahun_masuk}
                   </span>
                 )}
               </div>
@@ -228,38 +224,38 @@ export default function AlumniDetail() {
             {/* Status Karier Card */}
             {currentCareer && (
               <div className="bg-white rounded-[2rem] p-8 border border-slate-100 shadow-sm">
-                <h2 className="text-xs font-black text-[#3C5759]/30 uppercase tracking-[0.2em] mb-6 flex items-center gap-3">
+                <h2 className="text-xs font-black text-primary/30 uppercase tracking-[0.2em] mb-6 flex items-center gap-3">
                   {getStatusIcon(currentStatus)} Status Karier Saat Ini
                 </h2>
                 <div className="space-y-4">
                   <div>
-                    <p className="text-[10px] font-black text-[#3C5759]/30 uppercase tracking-widest mb-1">Status</p>
+                    <p className="text-[10px] font-black text-primary/30 uppercase tracking-widest mb-1">Status</p>
                     <div className="flex items-center gap-2">
                       <div className={`w-2.5 h-2.5 rounded-full ${getStatusColor(currentStatus)}`} />
-                      <span className="text-sm font-bold text-[#3C5759]">{currentStatus}</span>
+                      <span className="text-sm font-bold text-primary">{currentStatus}</span>
                     </div>
                   </div>
                   {currentRole && (
                     <div>
-                      <p className="text-[10px] font-black text-[#3C5759]/30 uppercase tracking-widest mb-1">Posisi / Peran</p>
-                      <span className="text-sm font-bold text-[#3C5759]">{currentRole}</span>
+                      <p className="text-[10px] font-black text-primary/30 uppercase tracking-widest mb-1">Posisi / Peran</p>
+                      <span className="text-sm font-bold text-primary">{currentRole}</span>
                     </div>
                   )}
                   {currentCompany && currentCompany !== '-' && (
                     <div>
-                      <p className="text-[10px] font-black text-[#3C5759]/30 uppercase tracking-widest mb-1">
+                      <p className="text-[10px] font-black text-primary/30 uppercase tracking-widest mb-1">
                         {currentStatus === 'Kuliah' ? 'Universitas' : currentStatus === 'Wirausaha' ? 'Nama Usaha' : 'Perusahaan'}
                       </p>
                       <div className="flex items-center gap-2">
-                        <Building2 size={14} className="text-[#3C5759]/40" />
-                        <span className="text-sm font-bold text-[#3C5759]">{currentCompany}</span>
+                        <Building2 size={14} className="text-primary/40" />
+                        <span className="text-sm font-bold text-primary">{currentCompany}</span>
                       </div>
                     </div>
                   )}
                   {currentPeriod && (
                     <div>
-                      <p className="text-[10px] font-black text-[#3C5759]/30 uppercase tracking-widest mb-1">Periode</p>
-                      <span className="text-sm font-bold text-[#3C5759]">{currentPeriod}</span>
+                      <p className="text-[10px] font-black text-primary/30 uppercase tracking-widest mb-1">Periode</p>
+                      <span className="text-sm font-bold text-primary">{currentPeriod}</span>
                     </div>
                   )}
                 </div>
@@ -268,38 +264,38 @@ export default function AlumniDetail() {
 
             {/* Info Akademik */}
             <div className="bg-white rounded-[2rem] p-8 border border-slate-100 shadow-sm">
-              <h2 className="text-xs font-black text-[#3C5759]/30 uppercase tracking-[0.2em] mb-6 flex items-center gap-3">
+              <h2 className="text-xs font-black text-primary/30 uppercase tracking-[0.2em] mb-6 flex items-center gap-3">
                 <GraduationCap size={14} /> Informasi Akademik
               </h2>
               <div className="space-y-4">
                 {alumni.jurusan?.nama && (
                   <div>
-                    <p className="text-[10px] font-black text-[#3C5759]/30 uppercase tracking-widest mb-1">Jurusan</p>
-                    <span className="text-sm font-bold text-[#3C5759]">{alumni.jurusan.nama}</span>
+                    <p className="text-[10px] font-black text-primary/30 uppercase tracking-widest mb-1">Jurusan</p>
+                    <span className="text-sm font-bold text-primary">{alumni.jurusan.nama}</span>
                   </div>
                 )}
                 {alumni.tahun_masuk && (
                   <div>
-                    <p className="text-[10px] font-black text-[#3C5759]/30 uppercase tracking-widest mb-1">Tahun Masuk</p>
-                    <span className="text-sm font-bold text-[#3C5759]">{alumni.tahun_masuk}</span>
+                    <p className="text-[10px] font-black text-primary/30 uppercase tracking-widest mb-1">Tahun Masuk</p>
+                    <span className="text-sm font-bold text-primary">{alumni.tahun_masuk}</span>
                   </div>
                 )}
                 {alumni.tahun_lulus && (
                   <div>
-                    <p className="text-[10px] font-black text-[#3C5759]/30 uppercase tracking-widest mb-1">Tahun Lulus</p>
-                    <span className="text-sm font-bold text-[#3C5759]">{new Date(alumni.tahun_lulus).getFullYear()}</span>
+                    <p className="text-[10px] font-black text-primary/30 uppercase tracking-widest mb-1">Tahun Lulus</p>
+                    <span className="text-sm font-bold text-primary">{new Date(alumni.tahun_lulus).getFullYear()}</span>
                   </div>
                 )}
                 {alumni.tempat_lahir && (
                   <div>
-                    <p className="text-[10px] font-black text-[#3C5759]/30 uppercase tracking-widest mb-1">Tempat Lahir</p>
-                    <span className="text-sm font-bold text-[#3C5759]">{alumni.tempat_lahir}</span>
+                    <p className="text-[10px] font-black text-primary/30 uppercase tracking-widest mb-1">Tempat Lahir</p>
+                    <span className="text-sm font-bold text-primary">{alumni.tempat_lahir}</span>
                   </div>
                 )}
                 {alumni.jenis_kelamin && (
                   <div>
-                    <p className="text-[10px] font-black text-[#3C5759]/30 uppercase tracking-widest mb-1">Jenis Kelamin</p>
-                    <span className="text-sm font-bold text-[#3C5759]">{alumni.jenis_kelamin}</span>
+                    <p className="text-[10px] font-black text-primary/30 uppercase tracking-widest mb-1">Jenis Kelamin</p>
+                    <span className="text-sm font-bold text-primary">{alumni.jenis_kelamin}</span>
                   </div>
                 )}
               </div>
@@ -308,12 +304,12 @@ export default function AlumniDetail() {
             {/* Skills */}
             {skills.length > 0 && (
               <div className="bg-white rounded-[2rem] p-8 border border-slate-100 shadow-sm">
-                <h2 className="text-xs font-black text-[#3C5759]/30 uppercase tracking-[0.2em] mb-6 flex items-center gap-3">
+                <h2 className="text-xs font-black text-primary/30 uppercase tracking-[0.2em] mb-6 flex items-center gap-3">
                   <Award size={14} /> Keahlian
                 </h2>
                 <div className="flex flex-wrap gap-2">
                   {skills.map((skill, idx) => (
-                    <span key={idx} className="px-4 py-2 text-[11px] font-black text-[#3C5759]/70 bg-[#3C5759]/5 rounded-xl border border-[#3C5759]/5">
+                    <span key={idx} className="px-4 py-2 text-[11px] font-black text-primary/70 bg-primary/5 rounded-xl border border-primary/5">
                       {skill.nama}
                     </span>
                   ))}
@@ -324,32 +320,32 @@ export default function AlumniDetail() {
             {/* Social Media */}
             {(alumni.instagram || alumni.linkedin || alumni.github || alumni.facebook || alumni.website) && (
               <div className="bg-white rounded-[2rem] p-8 border border-slate-100 shadow-sm">
-                <h2 className="text-xs font-black text-[#3C5759]/30 uppercase tracking-[0.2em] mb-6 flex items-center gap-3">
+                <h2 className="text-xs font-black text-primary/30 uppercase tracking-[0.2em] mb-6 flex items-center gap-3">
                   <Globe size={14} /> Media Sosial
                 </h2>
                 <div className="flex flex-wrap gap-3">
                   {alumni.linkedin && (
-                    <a href={alumni.linkedin} target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-2xl bg-[#3C5759]/5 flex items-center justify-center text-[#3C5759]/60 hover:bg-[#0077B5] hover:text-white transition-all">
+                    <a href={alumni.linkedin} target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-2xl bg-primary/5 flex items-center justify-center text-primary/60 hover:bg-[#0077B5] hover:text-white transition-all">
                       <FaLinkedin size={20} />
                     </a>
                   )}
                   {alumni.github && (
-                    <a href={alumni.github} target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-2xl bg-[#3C5759]/5 flex items-center justify-center text-[#3C5759]/60 hover:bg-black hover:text-white transition-all">
+                    <a href={alumni.github} target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-2xl bg-primary/5 flex items-center justify-center text-primary/60 hover:bg-black hover:text-white transition-all">
                       <FaGithub size={20} />
                     </a>
                   )}
                   {alumni.instagram && (
-                    <a href={alumni.instagram} target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-2xl bg-[#3C5759]/5 flex items-center justify-center text-[#3C5759]/60 hover:bg-gradient-to-br hover:from-purple-500 hover:to-pink-500 hover:text-white transition-all">
+                    <a href={alumni.instagram} target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-2xl bg-primary/5 flex items-center justify-center text-primary/60 hover:bg-gradient-to-br hover:from-purple-500 hover:to-pink-500 hover:text-white transition-all">
                       <FaInstagram size={20} />
                     </a>
                   )}
                   {alumni.facebook && (
-                    <a href={alumni.facebook} target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-2xl bg-[#3C5759]/5 flex items-center justify-center text-[#3C5759]/60 hover:bg-[#1877F2] hover:text-white transition-all">
+                    <a href={alumni.facebook} target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-2xl bg-primary/5 flex items-center justify-center text-primary/60 hover:bg-[#1877F2] hover:text-white transition-all">
                       <FaFacebook size={20} />
                     </a>
                   )}
                   {alumni.website && (
-                    <a href={alumni.website} target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-2xl bg-[#3C5759]/5 flex items-center justify-center text-[#3C5759]/60 hover:bg-[#3C5759] hover:text-white transition-all">
+                    <a href={alumni.website} target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-2xl bg-primary/5 flex items-center justify-center text-primary/60 hover:bg-primary hover:text-white transition-all">
                       <FaGlobe size={20} />
                     </a>
                   )}
@@ -363,7 +359,7 @@ export default function AlumniDetail() {
             {/* Riwayat Karier */}
             {riwayat.length > 0 && (
               <div className="bg-white rounded-[2.5rem] p-8 md:p-10 border border-slate-100 shadow-sm">
-                <h2 className="text-xl font-black text-[#3C5759] tracking-tight flex items-center gap-3 mb-10">
+                <h2 className="text-xl font-black text-primary tracking-tight flex items-center gap-3 mb-10">
                   <Briefcase size={22} /> Riwayat Karier
                 </h2>
                 <div className="relative pl-8 border-l-2 border-slate-100 space-y-12">
@@ -391,11 +387,11 @@ export default function AlumniDetail() {
 
                     return (
                       <div key={item.id || idx} className="relative">
-                        <div className="absolute -left-[41px] top-0 w-5 h-5 rounded-full bg-white border-4 border-[#3C5759] z-10" />
-                        <span className="text-[10px] font-black text-[#3C5759]/40 uppercase tracking-[0.2em]">{periode}</span>
-                        <h3 className="text-lg font-black text-[#3C5759] mt-1">{title}</h3>
-                        {subtitle && <p className="text-sm font-bold text-[#3C5759]/50 mb-2">{subtitle}</p>}
-                        {location && <p className="text-sm text-[#3C5759]/60 font-medium">{location}</p>}
+                        <div className="absolute -left-[41px] top-0 w-5 h-5 rounded-full bg-white border-4 border-primary z-10" />
+                        <span className="text-[10px] font-black text-primary/40 uppercase tracking-[0.2em]">{periode}</span>
+                        <h3 className="text-lg font-black text-primary mt-1">{title}</h3>
+                        {subtitle && <p className="text-sm font-bold text-primary/50 mb-2">{subtitle}</p>}
+                        {location && <p className="text-sm text-primary/60 font-medium">{location}</p>}
                       </div>
                     );
                   })}
@@ -404,8 +400,8 @@ export default function AlumniDetail() {
             )}
 
             {/* Privacy Note */}
-            <div className="bg-[#3C5759]/5 rounded-2xl p-6 border border-[#3C5759]/10">
-              <p className="text-sm text-[#3C5759]/60 font-medium text-center">
+            <div className="bg-primary/5 rounded-2xl p-6 border border-primary/10">
+              <p className="text-sm text-primary/60 font-medium text-center">
                 Informasi sensitif seperti email, nomor telepon, dan alamat tidak ditampilkan untuk menjaga privasi alumni.
               </p>
             </div>

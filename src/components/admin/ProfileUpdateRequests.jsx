@@ -54,11 +54,11 @@ export default function ProfileUpdateRequests() {
       <div className="mt-12 mb-4 animate-in fade-in slide-in-from-bottom-4 duration-700">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
-            <h2 className="text-xl font-black text-[#3C5759] tracking-tight">Permintaan Pembaruan Status Karier</h2>
+            <h2 className="text-xl font-black text-primary tracking-tight">Permintaan Pembaruan Status Karier</h2>
           </div>
         </div>
         <div className="flex items-center justify-center py-12">
-          <Loader2 size={24} className="animate-spin text-[#3C5759]" />
+          <Loader2 size={24} className="animate-spin text-primary" />
         </div>
       </div>
     );
@@ -69,10 +69,10 @@ export default function ProfileUpdateRequests() {
       <div className="mt-12 mb-4 animate-in fade-in slide-in-from-bottom-4 duration-700">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
-            <h2 className="text-xl font-black text-[#3C5759] tracking-tight">Permintaan Pembaruan Status Karier</h2>
-            <span className="px-3 py-1 bg-[#3C5759]/10 text-[#3C5759] text-xs font-black rounded-full">0 Menunggu</span>
+            <h2 className="text-xl font-black text-primary tracking-tight">Permintaan Pembaruan Status Karier</h2>
+            <span className="px-3 py-1 bg-primary/10 text-primary text-xs font-black rounded-full">0 Menunggu</span>
           </div>
-          <button onClick={fetchPendingUpdates} className="text-sm font-bold text-[#3C5759] hover:underline cursor-pointer flex items-center gap-1">
+          <button onClick={fetchPendingUpdates} className="text-sm font-bold text-primary hover:underline cursor-pointer flex items-center gap-1">
             <RefreshCw size={14} /> Refresh
           </button>
         </div>
@@ -88,12 +88,12 @@ export default function ProfileUpdateRequests() {
       {/* Header Title */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <h2 className="text-xl font-black text-[#3C5759] tracking-tight">Permintaan Pembaruan Status Karier</h2>
-          <span className="px-3 py-1 bg-[#3C5759]/10 text-[#3C5759] text-xs font-black rounded-full">
+          <h2 className="text-xl font-black text-primary tracking-tight">Permintaan Pembaruan Status Karier</h2>
+          <span className="px-3 py-1 bg-primary/10 text-primary text-xs font-black rounded-full">
             {requests.length} Menunggu
           </span>
         </div>
-        <button onClick={fetchPendingUpdates} className="text-sm font-bold text-[#3C5759] hover:underline cursor-pointer flex items-center gap-1">
+        <button onClick={fetchPendingUpdates} className="text-sm font-bold text-primary hover:underline cursor-pointer flex items-center gap-1">
           <RefreshCw size={14} /> Refresh
         </button>
       </div>
@@ -106,7 +106,7 @@ export default function ProfileUpdateRequests() {
             className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col relative overflow-hidden group"
           >
             {/* Garis Aksen di Atas Card */}
-            <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#3C5759]/40 to-[#3C5759] opacity-50 group-hover:opacity-100 transition-opacity"></div>
+            <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-primary/40 to-primary opacity-50 group-hover:opacity-100 transition-opacity"></div>
             
             {/* Profil & Waktu */}
             <div className="flex justify-between items-start mb-6 mt-2">
@@ -114,7 +114,7 @@ export default function ProfileUpdateRequests() {
                 {req.image ? (
                   <img src={req.image} alt={req.name} className="w-12 h-12 rounded-full object-cover border-2 border-slate-50" />
                 ) : (
-                  <div className="w-12 h-12 rounded-full bg-[#3C5759]/10 text-[#3C5759] flex items-center justify-center font-black text-lg border-2 border-slate-50">
+                  <div className="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center font-black text-lg border-2 border-slate-50">
                     {req.initials || (req.name || 'A').substring(0, 2).toUpperCase()}
                   </div>
                 )}
@@ -131,7 +131,7 @@ export default function ProfileUpdateRequests() {
             {/* Label Bidang */}
             <div className="mb-4 flex items-center gap-2">
               <span className="w-1.5 h-4 bg-amber-400 rounded-full"></span>
-              <p className="font-bold text-[#3C5759] text-sm">{req.field}</p>
+              <p className="font-bold text-primary text-sm">{req.field}</p>
             </div>
 
             {/* Perubahan (Old -> New) */}
@@ -164,7 +164,7 @@ export default function ProfileUpdateRequests() {
               <button 
                 onClick={() => handleApprove(req.id)} 
                 disabled={actionLoading === req.id}
-                className="flex items-center justify-center gap-1.5 flex-1 py-2.5 rounded-xl font-bold text-white bg-[#3C5759] shadow-md shadow-[#3C5759]/20 hover:bg-[#2A3E3F] transition-colors cursor-pointer text-xs disabled:opacity-50"
+                className="flex items-center justify-center gap-1.5 flex-1 py-2.5 rounded-xl font-bold text-white bg-primary shadow-md shadow-primary/20 hover:bg-[#2A3E3F] transition-colors cursor-pointer text-xs disabled:opacity-50"
               >
                 {actionLoading === req.id ? <Loader2 size={14} className="animate-spin" /> : <Check size={14} strokeWidth={3} />} Terima
               </button>

@@ -14,7 +14,7 @@ import { STORAGE_BASE_URL } from '../../api/axios';
 import { useAuth } from '../../context/AuthContext';
 
 // Import Komponen Eksternal
-import BerandaSkeleton from '../../components/alumni/BerandaSkeleton';
+import { BerandaSkeleton } from '../../components/alumni/skeleton';
 import AlumniProfileCard from '../../components/alumni/AlumniProfileCard';
 import JobPosterCard from '../../components/alumni/JobPosterCard';
 import TopPerusahaan from '../../components/alumni/TopPerusahaan';
