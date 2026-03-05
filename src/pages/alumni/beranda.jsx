@@ -306,6 +306,8 @@ export default function Beranda() {
     can_access_all: canAccessAll,
   };
 
+  // console.log(canAccessAll)
+
   return (
     <div className="min-h-screen flex flex-col bg-slate-50 font-sans selection:bg-[#3C5759]/20 overflow-x-hidden relative">
       <Navbar user={navUser} />

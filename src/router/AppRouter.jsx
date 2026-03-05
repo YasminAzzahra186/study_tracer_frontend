@@ -25,6 +25,7 @@ import AlumniDetail from "../pages/alumni/alumniDetail";
 import Lowongan from "../pages/alumni/lowongan"; 
 import Profil from "../pages/alumni/profil";
 import StatistikKuesioner from "../pages/admin/StatistikKuesioner";
+import KuesionerModal from "../pages/alumni/KuesionerModal";
 
 export default function AppRouter() {
   const { isAuthenticated, isAdmin, loading } = useAuth();
@@ -72,7 +73,6 @@ export default function AppRouter() {
           </Route>
         </Route>
       </Route>
-      {/* --- Alumni/User Routes --- */}
       
       <Route path="/" element={
         isAuthenticated && !isAdmin ? <Beranda /> : <Navigate to="/login" replace />
@@ -88,6 +88,10 @@ export default function AppRouter() {
       
       <Route path="/lowongan" element={
         isAuthenticated && !isAdmin ? <Lowongan /> : <Navigate to="/login" replace />
+      } />
+
+      <Route path="/kuesioner/:id" element={
+        isAuthenticated && !isAdmin ? <KuesionerModal /> : <Navigate to="/login" replace />
       } />
 
       {/* --- Tambahkan Route Profil --- */}

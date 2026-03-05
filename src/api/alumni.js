@@ -39,6 +39,10 @@ export const alumniApi = {
   },
 
   // Kuesioner
+  getKuesioner(filters = {}, perPage = 15) {
+    return api.get('/alumni/kuesioner', { params: { ...filters, per_page: perPage } });
+  },
+
   getKuesionerByStatus(statusId) {
     return api.get(`/alumni/kuesioner/status/${statusId}`);
   },
