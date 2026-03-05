@@ -15,6 +15,9 @@ import { STORAGE_BASE_URL } from '../../api/axios';
 import { useAuth } from '../../context/AuthContext';
 import hitungMundur from '../../utilitis/hitungMundurTanggal';
 
+// --- IMPORT MODAL ---
+import TambahLowongan from '../../components/alumni/TambahLowongan';
+
 function getImageUrl(path) {
   if (!path) return null;
   if (path.startsWith('http')) return path;
@@ -125,7 +128,6 @@ function LowonganCard({ data, onImageClick, onToggleSave, savingId }) {
               className="p-2 hover:bg-slate-100 rounded-full transition-colors cursor-pointer disabled:opacity-50"
             >
               {data.is_saved ? (
-                // Ikon Full Warna (Fill) saat disimpan
                 <Bookmark size={18} className="text-[#3C5759]" fill="currentColor" />
               ) : (
                 <Bookmark size={18} className="text-slate-300 hover:text-[#3C5759]" />
@@ -178,7 +180,7 @@ export default function Lowongan() {
   const [savingId, setSavingId] = useState(null);
   
   // State Tabs
-  const [activeTab, setActiveTab] = useState('semua'); // 'semua' | 'disimpan'
+  const [activeTab, setActiveTab] = useState('semua');
 
   // State Filters
   const [selectedTipe, setSelectedTipe] = useState('');
@@ -190,6 +192,10 @@ export default function Lowongan() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
+  // Modal State
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingJob, setEditingJob] = useState(null);
+
   const fetchLowongan = useCallback(async (page = 1) => {
     try {
       setLoading(true);
@@ -198,7 +204,6 @@ export default function Lowongan() {
       const params = { page, per_page: 12 };
       if (searchQuery.trim()) params.search = searchQuery.trim();
       
-      // Filter API payloads
       if (selectedTipe && selectedTipe !== 'Semua Tipe') params.tipe_pekerjaan = selectedTipe;
       if (selectedProvinsi && selectedProvinsi !== 'Semua Provinsi') params.provinsi = selectedProvinsi;
       if (selectedKota && selectedKota !== 'Semua Kota') params.kota = selectedKota;
@@ -250,11 +255,11 @@ export default function Lowongan() {
     fetchLowongan(1);
   }, [fetchLowongan]);
 
-  // Lock scroll when image modal open
+  // Lock scroll when image modal or add job modal is open
   useEffect(() => {
-    document.body.style.overflow = selectedImage ? 'hidden' : 'unset';
+    document.body.style.overflow = (selectedImage || isModalOpen) ? 'hidden' : 'unset';
     return () => { document.body.style.overflow = 'unset'; };
-  }, [selectedImage]);
+  }, [selectedImage, isModalOpen]);
 
   const handleSearch = (e) => {
     if (e) e.preventDefault();
@@ -276,6 +281,16 @@ export default function Lowongan() {
     }
   };
 
+  // Handler for Modal
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+    setEditingJob(null);
+  };
+
+  const handleFormSuccess = () => {
+    fetchLowongan(currentPage);
+  };
+
   const navUser = { 
     nama_alumni: user.nama_alumni,
     foto: user.foto 
@@ -286,7 +301,6 @@ export default function Lowongan() {
       <Navbar user={navUser} />
 
       {/* --- HEADER SECTION --- */}
-      {/* z-40 agar elemen menu dropown melayang di atas konten lain */}
       <div className="relative pt-24 pb-8 w-full z-40">
         
         {/* GAMBAR BACKGROUND */}
@@ -331,9 +345,9 @@ export default function Lowongan() {
               </button>
             </div>
 
-            {/* Tombol Tambah Lowongan */}
+            {/* BUTTON TRIGGER MODAL */}
             <button 
-              onClick={() => navigate('/lowongan/tambah')}
+              onClick={() => setIsModalOpen(true)}
               className="bg-white border border-[#3C5759]/20 text-[#3C5759] px-5 py-2.5 rounded-2xl text-[13px] font-bold shadow-sm hover:bg-[#3C5759]/5 transition-all cursor-pointer flex items-center justify-center gap-2"
             >
               <Plus size={16} /> Tambah Lowongan
@@ -343,7 +357,6 @@ export default function Lowongan() {
           {/* SEARCH BAR & DROPDOWN FILTERS */}
           <div className="flex flex-col xl:flex-row gap-4 relative">
             
-            {/* Kolom Pencarian */}
             <form onSubmit={handleSearch} className="relative flex-1 group shadow-sm border border-[#3C5759]/10 rounded-2xl bg-white flex z-[70]">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#3C5759]/40 group-focus-within:text-[#3C5759] transition-colors" size={20} />
               <input 
@@ -358,18 +371,18 @@ export default function Lowongan() {
               </button>
             </form>
 
-            {/* Dropdown Filters - Z-Index Menurun Agar Tidak Saling Tertumpuk (Bug Fix) */}
             <div className="flex flex-wrap lg:flex-nowrap gap-3 shrink-0">
-              <div className="w-[calc(50%-6px)] lg:w-36 bg-white rounded-2xl shadow-sm border border-[#3C5759]/10 relative z-[60]">
+              {/* Hapus bg-white, rounded-2xl, shadow-sm, dan border di sini */}
+              <div className="w-[calc(50%-6px)] lg:w-36 relative z-[60]">
                 <SmoothDropdown options={tipeOptions} value={selectedTipe} onSelect={(val) => setSelectedTipe(val === 'Semua Tipe' ? '' : val)} placeholder="Tipe Pekerjaan" />
               </div>
-              <div className="w-[calc(50%-6px)] lg:w-40 bg-white rounded-2xl shadow-sm border border-[#3C5759]/10 relative z-[50]">
+              <div className="w-[calc(50%-6px)] lg:w-40 relative z-[50]">
                 <SmoothDropdown options={provinsiOptions} value={selectedProvinsi} onSelect={(val) => setSelectedProvinsi(val === 'Semua Provinsi' ? '' : val)} placeholder="Provinsi" isSearchable={true} />
               </div>
-              <div className="w-[calc(50%-6px)] lg:w-40 bg-white rounded-2xl shadow-sm border border-[#3C5759]/10 relative z-[40]">
+              <div className="w-[calc(50%-6px)] lg:w-40 relative z-[40]">
                 <SmoothDropdown options={kotaOptions} value={selectedKota} onSelect={(val) => setSelectedKota(val === 'Semua Kota' ? '' : val)} placeholder="Kota" isSearchable={true} />
               </div>
-              <div className="w-[calc(50%-6px)] lg:w-48 bg-white rounded-2xl shadow-sm border border-[#3C5759]/10 relative z-[30]">
+              <div className="w-[calc(50%-6px)] lg:w-48 relative z-[30]">
                 <SmoothDropdown options={waktuOptions} value={selectedWaktu} onSelect={(val) => setSelectedWaktu(val)} placeholder="Urutkan Waktu" />
               </div>
             </div>
@@ -419,7 +432,6 @@ export default function Lowongan() {
               ))}
             </div>
 
-            {/* Pagination Component */}
             {totalPages > 1 && (
               <div className="mt-12 mb-4 bg-white rounded-xl shadow-sm border border-[#3C5759]/10 overflow-hidden">
                 <Pagination 
@@ -437,6 +449,14 @@ export default function Lowongan() {
       </main>
 
       <Footer />
+
+      {/* MODAL TAMBAH LOWONGAN */}
+      <TambahLowongan
+        isOpen={isModalOpen}
+        onClose={handleModalClose}
+        onSuccess={handleFormSuccess}
+        editJob={editingJob}
+      />
 
       {/* Image Preview Modal */}
       <AnimatePresence>
