@@ -152,7 +152,7 @@ export default function AlumniDetail() {
       </div>
 
       {/* --- MAIN CONTENT AREA --- */}
-      <main className="flex-1 w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12 relative z-20 -mt-32 pb-20">
+      <main className="flex-1 w-full max-w-360 mx-auto px-4 sm:px-6 lg:px-12 relative z-20 -mt-32 pb-20">
 
         {/* BAR PROFIL PUBLIK (hanya muncul jika dari halaman profil) */}
         {fromProfile && <PublicProfileBar alumniId={id} alumniNama={alumni.nama} />}
@@ -223,7 +223,7 @@ export default function AlumniDetail() {
           <div className="lg:col-span-4 space-y-8">
             {/* Status Karier Card */}
             {currentCareer && (
-              <div className="bg-white rounded-[2rem] p-8 border border-slate-100 shadow-sm">
+              <div className="bg-white rounded-4xl p-8 border border-slate-100 shadow-sm">
                 <h2 className="text-xs font-black text-primary/30 uppercase tracking-[0.2em] mb-6 flex items-center gap-3">
                   {getStatusIcon(currentStatus)} Status Karier Saat Ini
                 </h2>
@@ -263,7 +263,7 @@ export default function AlumniDetail() {
             )}
 
             {/* Info Akademik */}
-            <div className="bg-white rounded-[2rem] p-8 border border-slate-100 shadow-sm">
+            <div className="bg-white rounded-4xl p-8 border border-slate-100 shadow-sm">
               <h2 className="text-xs font-black text-primary/30 uppercase tracking-[0.2em] mb-6 flex items-center gap-3">
                 <GraduationCap size={14} /> Informasi Akademik
               </h2>
@@ -303,7 +303,7 @@ export default function AlumniDetail() {
 
             {/* Skills */}
             {skills.length > 0 && (
-              <div className="bg-white rounded-[2rem] p-8 border border-slate-100 shadow-sm">
+              <div className="bg-white rounded-4xl p-8 border border-slate-100 shadow-sm">
                 <h2 className="text-xs font-black text-primary/30 uppercase tracking-[0.2em] mb-6 flex items-center gap-3">
                   <Award size={14} /> Keahlian
                 </h2>
@@ -319,7 +319,7 @@ export default function AlumniDetail() {
 
             {/* Social Media */}
             {(alumni.instagram || alumni.linkedin || alumni.github || alumni.facebook || alumni.website) && (
-              <div className="bg-white rounded-[2rem] p-8 border border-slate-100 shadow-sm">
+              <div className="bg-white rounded-4xl p-8 border border-slate-100 shadow-sm">
                 <h2 className="text-xs font-black text-primary/30 uppercase tracking-[0.2em] mb-6 flex items-center gap-3">
                   <Globe size={14} /> Media Sosial
                 </h2>
@@ -387,7 +387,7 @@ export default function AlumniDetail() {
 
                     return (
                       <div key={item.id || idx} className="relative">
-                        <div className="absolute -left-[41px] top-0 w-5 h-5 rounded-full bg-white border-4 border-primary z-10" />
+                        <div className="absolute -left-10.25 top-0 w-5 h-5 rounded-full bg-white border-4 border-primary z-10" />
                         <span className="text-[10px] font-black text-primary/40 uppercase tracking-[0.2em]">{periode}</span>
                         <h3 className="text-lg font-black text-primary mt-1">{title}</h3>
                         {subtitle && <p className="text-sm font-bold text-primary/50 mb-2">{subtitle}</p>}

@@ -89,7 +89,7 @@ export default function Beranda() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 font-sans selection:bg-[#3C5759]/20 overflow-x-hidden relative">
+    <div className="min-h-screen flex flex-col bg-slate-50 font-sans selection:bg-primary/20 overflow-x-hidden relative">
       <Navbar user={navUser} />
 
       {/* HERO SECTION */}
@@ -97,12 +97,12 @@ export default function Beranda() {
         <div className="absolute inset-0 bg-black/40 z-0" />
         <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-b from-transparent to-slate-50 z-1" />
 
-        <div className="relative z-10 max-w-[1440px] mx-auto px-6 lg:px-12 text-white mt-4">
+        <div className="relative z-10 max-w-360 mx-auto px-6 lg:px-12 text-white mt-4">
           <div className="flex items-center gap-4">
             {profile?.foto ? (
               <img src={getImageUrl(profile.foto)} alt={namaAlumni} className="w-16 h-16 rounded-2xl border-2 border-white/40 shadow-xl object-cover" />
             ) : (
-              <div className="w-16 h-16 rounded-2xl bg-[#3C5759] border-2 border-white/40 shadow-xl flex items-center justify-center text-xl font-black">
+              <div className="w-16 h-16 rounded-2xl bg-primary border-2 border-white/40 shadow-xl flex items-center justify-center text-xl font-black">
                 {namaAlumni.charAt(0)}
               </div>
             )}
@@ -117,7 +117,7 @@ export default function Beranda() {
         </div>
       </div>
 
-      <main className="relative z-20 flex-1 max-w-[1440px] mx-auto px-6 lg:px-12 -mt-16 pb-20 w-full">
+      <main className="relative z-20 flex-1 max-w-360 mx-auto px-6 lg:px-12 -mt-16 pb-20 w-full">
         {loading ? (
           <BerandaSkeleton />
         ) : error && !berandaData ? (
@@ -126,7 +126,7 @@ export default function Beranda() {
               <AlertCircle size={48} className="text-red-400 mx-auto mb-4" />
               <h2 className="text-lg font-bold text-slate-700 mb-2">Gagal Memuat Data</h2>
               <p className="text-slate-500 text-sm mb-4">{error}</p>
-              <button onClick={() => window.location.reload()} className="bg-[#3C5759] text-white px-6 py-2 rounded-xl text-sm font-bold cursor-pointer">
+              <button onClick={() => window.location.reload()} className="bg-primary text-white px-6 py-2 rounded-xl text-sm font-bold cursor-pointer">
                 Coba Lagi
               </button>
             </div>
@@ -151,7 +151,7 @@ export default function Beranda() {
                           Akun Anda sedang dalam proses peninjauan. Anda tetap dapat memperbarui profil, namun akses ke fitur bursa kerja dan jejaring alumni akan dikunci hingga proses verifikasi selesai.
                         </p>
                       </div>
-                      <button onClick={() => setIsStatusOpen(true)} className="w-full md:w-auto mt-2 md:mt-0 bg-[#3C5759] text-white px-6 py-2.5 rounded-xl text-sm font-bold shadow-md shadow-[#3C5759]/20 hover:bg-[#2A3E3F] hover:shadow-lg transition-all cursor-pointer whitespace-nowrap">
+                      <button onClick={() => setIsStatusOpen(true)} className="w-full md:w-auto mt-2 md:mt-0 bg-primary text-white px-6 py-2.5 rounded-xl text-sm font-bold shadow-md shadow-primary/20 hover:bg-[#2A3E3F] hover:shadow-lg transition-all cursor-pointer whitespace-nowrap">
                         LIHAT STATUS
                       </button>
                     </div>
@@ -172,7 +172,7 @@ export default function Beranda() {
                           Anda memiliki formulir kuesioner tracer study yang belum diselesaikan. Mohon luangkan waktu untuk mengisi kuesioner demi peningkatan kualitas pembelajaran almamater kita.
                         </p>
                       </div>
-                      <button onClick={() => { if (kuesionerPending[0]?.id) navigate(`/kuesioner/${kuesionerPending[0].id}`); }} className="w-full md:w-auto mt-2 md:mt-0 bg-[#3C5759] text-white px-6 py-2.5 rounded-xl text-sm font-bold shadow-md shadow-[#3C5759]/20 hover:bg-[#2A3E3F] hover:shadow-lg transition-all cursor-pointer whitespace-nowrap">
+                      <button onClick={() => { if (kuesionerPending[0]?.id) navigate(`/kuesioner/${kuesionerPending[0].id}`); }} className="w-full md:w-auto mt-2 md:mt-0 bg-primary text-white px-6 py-2.5 rounded-xl text-sm font-bold shadow-md shadow-primary/20 hover:bg-[#2A3E3F] hover:shadow-lg transition-all cursor-pointer whitespace-nowrap">
                         ISI SEKARANG
                       </button>
                     </div>
@@ -185,10 +185,10 @@ export default function Beranda() {
             <section className="mb-16">
               <div className="flex justify-between items-end mb-8">
                 <div>
-                  <h2 className="text-2xl font-black text-[#3C5759] tracking-tight">Jejaring Alumni Terbaru</h2>
-                  <p className="text-[#3C5759] text-sm font-medium mt-1">Saling terhubung dengan rekan satu almamater</p>
+                  <h2 className="text-2xl font-black text-primary tracking-tight">Jejaring Alumni Terbaru</h2>
+                  <p className="text-primary text-sm font-medium mt-1">Saling terhubung dengan rekan satu almamater</p>
                 </div>
-                <button onClick={() => { if (canAccessAll) navigate('/alumni'); }} className={`flex items-center gap-2 text-[12px] font-bold bg-white border border-slate-200 px-5 py-2.5 rounded-full shadow-sm transition-all ${canAccessAll ? 'text-[#3C5759] hover:bg-slate-50 cursor-pointer' : 'text-slate-300 cursor-not-allowed'}`}>
+                <button onClick={() => { if (canAccessAll) navigate('/alumni'); }} className={`flex items-center gap-2 text-[12px] font-bold bg-white border border-slate-200 px-5 py-2.5 rounded-full shadow-sm transition-all ${canAccessAll ? 'text-primary hover:bg-slate-50 cursor-pointer' : 'text-slate-300 cursor-not-allowed'}`}>
                   Lihat Semua <ArrowRight size={14}/>
                 </button>
               </div>
@@ -210,10 +210,10 @@ export default function Beranda() {
             <section className="mb-16">
               <div className="flex justify-between items-end mb-8">
                 <div>
-                  <h2 className="text-2xl font-black text-[#3C5759] tracking-tight">Lowongan Pekerjaan</h2>
-                  <p className="text-[#3C5759] text-sm font-medium mt-1">Peluang karir terbaik dari perusahaan mitra</p>
+                  <h2 className="text-2xl font-black text-primary tracking-tight">Lowongan Pekerjaan</h2>
+                  <p className="text-primary text-sm font-medium mt-1">Peluang karir terbaik dari perusahaan mitra</p>
                 </div>
-                <button onClick={() => { if (canAccessAll) navigate('/lowongan'); }} className={`flex items-center gap-2 text-[12px] font-bold bg-white border border-slate-200 px-5 py-2.5 rounded-full shadow-sm transition-all ${canAccessAll ? 'text-[#3C5759] hover:bg-slate-50 cursor-pointer' : 'text-slate-300 cursor-not-allowed'}`}>
+                <button onClick={() => { if (canAccessAll) navigate('/lowongan'); }} className={`flex items-center gap-2 text-[12px] font-bold bg-white border border-slate-200 px-5 py-2.5 rounded-full shadow-sm transition-all ${canAccessAll ? 'text-primary hover:bg-slate-50 cursor-pointer' : 'text-slate-300 cursor-not-allowed'}`}>
                   Lihat Semua <ArrowRight size={14}/>
                 </button>
               </div>
@@ -244,7 +244,7 @@ export default function Beranda() {
         <StatusPengajuanModal isOpen={isStatusOpen} onClose={() => setIsStatusOpen(false)} data={statusPengajuan} />
 
         {selectedImage && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelectedImage(null)} className="absolute inset-0 bg-black/70 backdrop-blur-sm cursor-pointer" />
             <motion.div initial={{ opacity: 0, scale: 0.95, y: 10 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 10 }} transition={{ type: 'spring', damping: 25, stiffness: 300 }} className="relative w-max max-w-[90vw] md:max-w-[70vw] lg:max-w-4xl bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col">
               <div className="relative overflow-hidden flex items-center justify-center bg-slate-100">
@@ -254,7 +254,7 @@ export default function Beranda() {
                 </button>
               </div>
               <div className="p-4 sm:p-5 text-center bg-white border-t border-slate-100">
-                <h3 className="text-sm sm:text-base font-bold text-[#3C5759]">Pratinjau Gambar</h3>
+                <h3 className="text-sm sm:text-base font-bold text-primary">Pratinjau Gambar</h3>
               </div>
             </motion.div>
           </div>

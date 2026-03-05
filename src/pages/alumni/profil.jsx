@@ -66,7 +66,7 @@ export default function Profil() {
     <div className="min-h-screen bg-[#f8f9fa] font-sans flex flex-col">
       <Navbar user={navUser} />
 
-      <main className="flex-1 w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-16">
+      <main className="flex-1 w-full max-w-360 mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-16">
         
         {/* Notifikasi Sukses Melayang */}
         {successMsg && (
@@ -87,17 +87,17 @@ export default function Profil() {
           />
 
           {/* --- KONTEN KANAN DENGAN TAB SPA --- */}
-          <div className="lg:col-span-8 bg-white rounded-[2rem] shadow-sm flex flex-col overflow-hidden border border-slate-100">
+          <div className="lg:col-span-8 bg-white rounded-4xl shadow-sm flex flex-col overflow-hidden border border-slate-100">
             
             {/* Header Tabs */}
             <div className="flex border-b border-slate-100 px-2 overflow-x-auto hide-scrollbar">
-              <button onClick={() => setActiveTab('detail')} className={`flex items-center gap-2 px-6 py-5 text-sm font-bold border-b-2 whitespace-nowrap cursor-pointer transition-all ${activeTab === 'detail' ? 'border-[#3C5759] text-[#3C5759]' : 'border-transparent text-slate-400 hover:bg-slate-50 hover:text-[#3C5759]/70'}`}>
+              <button onClick={() => setActiveTab('detail')} className={`flex items-center gap-2 px-6 py-5 text-sm font-bold border-b-2 whitespace-nowrap cursor-pointer transition-all ${activeTab === 'detail' ? 'border-primary text-primary' : 'border-transparent text-slate-400 hover:bg-slate-50 hover:text-primary/70'}`}>
                 <User size={16} /> Detail Pribadi
               </button>
-              <button onClick={() => setActiveTab('karier')} className={`flex items-center gap-2 px-6 py-5 text-sm font-bold border-b-2 whitespace-nowrap cursor-pointer transition-all ${activeTab === 'karier' ? 'border-[#3C5759] text-[#3C5759]' : 'border-transparent text-slate-400 hover:bg-slate-50 hover:text-[#3C5759]/70'}`}>
+              <button onClick={() => setActiveTab('karier')} className={`flex items-center gap-2 px-6 py-5 text-sm font-bold border-b-2 whitespace-nowrap cursor-pointer transition-all ${activeTab === 'karier' ? 'border-primary text-primary' : 'border-transparent text-slate-400 hover:bg-slate-50 hover:text-primary/70'}`}>
                 <Briefcase size={16} /> Status Karier
               </button>
-              <button onClick={() => setActiveTab('keahlian')} className={`flex items-center gap-2 px-6 py-5 text-sm font-bold border-b-2 whitespace-nowrap cursor-pointer transition-all ${activeTab === 'keahlian' ? 'border-[#3C5759] text-[#3C5759]' : 'border-transparent text-slate-400 hover:bg-slate-50 hover:text-[#3C5759]/70'}`}>
+              <button onClick={() => setActiveTab('keahlian')} className={`flex items-center gap-2 px-6 py-5 text-sm font-bold border-b-2 whitespace-nowrap cursor-pointer transition-all ${activeTab === 'keahlian' ? 'border-primary text-primary' : 'border-transparent text-slate-400 hover:bg-slate-50 hover:text-primary/70'}`}>
                 <Award size={16} /> Keahlian
               </button>
             </div>
